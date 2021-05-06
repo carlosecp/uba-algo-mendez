@@ -38,6 +38,11 @@
 #define MAX_PANDA 43
 #define MAX_PARDO 63
 
+// Diferencia entre miniscula y mayuscula
+#define MAYUSCULA_MINISCULA 32
+#define MIN_MINUSCULA 'a'
+#define MAX_MINUSCULA 'z'
+
 bool es_canal_tv_valido(char letra_ingresada) {
 	return (letra_ingresada == ANIME || letra_ingresada == POP || letra_ingresada == LIMPIEZA);
 }
@@ -57,6 +62,16 @@ bool es_nivel_grito_valido(int nivel_grito) {
 bool es_piso_torre_valido(int piso_torre) {
 	bool es_intervalo_cerrado = true;
 	return esta_incluido_en_intervalo(MIN_PISOS_TORRE, MAX_PISOS_TORRE, piso_torre);
+}
+
+bool es_letra_minuscula(char letra_evaluada) {
+	return ((letra_evaluada >= MIN_MINUSCULA) && (letra_evaluada <= MAX_MINUSCULA));
+}
+
+void capitalizar_caracter(char *caracter_ingresado) {
+	if (es_letra_minuscula(*caracter_ingresado)) {
+		*caracter_ingresado -= MAYUSCULA_MINISCULA;
+	}
 }
 
 int calcular_puntaje_segun_canal_tv(char canal_ingresado) {
@@ -96,6 +111,7 @@ int resultados_alimento() {
 	do {
 		printf("-> Solo podes guardar un alimento en tu vianda - Bambú (B), Pescado (P), Focas (F): ");
 		scanf(" %c", &alimento_ingresado);
+		capitalizar_caracter(&alimento_ingresado);
 	} while(!es_alimento_valido(alimento_ingresado));
 	return calcular_puntaje_segun_alimento(alimento_ingresado);
 }
@@ -105,6 +121,7 @@ int resultados_canal_tv() {
 	do {
 		printf("-> Vas a ver televisión un rato, pones el canal de - Anime (A), Musica Pop (M), Limpieza (L): ");
 		scanf(" %c", &canal_ingresado);
+		capitalizar_caracter(&canal_ingresado);
 	} while(!es_canal_tv_valido(canal_ingresado));
 	return calcular_puntaje_segun_canal_tv(canal_ingresado);
 }
