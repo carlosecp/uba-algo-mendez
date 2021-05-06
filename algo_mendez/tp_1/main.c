@@ -33,7 +33,7 @@
 #define MIN_NIVEL_GRITO 1
 
 // Intervalos Resultados
-#define MIN_POLAR 5
+#define MIN_PUNTAJE 5
 #define MAX_POLAR 24
 #define MAX_PANDA 43
 #define MAX_PARDO 63
@@ -106,6 +106,10 @@ int calcular_puntaje_segun_alimento(char alimento_ingresado) {
 	return puntos_segun_alimento;
 }
 
+int calcular_puntaje_total(int pts_segun_alimento, int pts_segun_canal_tv, int pts_nivel_grito, int pts_piso_torre) {
+	return (pts_segun_alimento * pts_segun_canal_tv) + pts_piso_torre + pts_nivel_grito;
+}
+
 int resultados_alimento() {
 	char alimento_ingresado;
 	do {
@@ -144,14 +148,10 @@ int resultados_piso_torre() {
 	return piso_torre_ingresado;
 }
 
-int calcular_puntaje_total(int pts_segun_alimento, int pts_segun_canal_tv, int pts_nivel_grito, int pts_piso_torre) {
-	return (pts_segun_alimento * pts_segun_canal_tv) + pts_piso_torre + pts_nivel_grito;
-}
-
 void asignar_personalidad(int pts_totales) {
 	char *personalidad_asignada;
 	char *descripcion_personalidad;
-	if (pts_totales >= MIN_POLAR && pts_totales <= MAX_POLAR)
+	if (pts_totales >= MIN_PUNTAJE && pts_totales <= MAX_POLAR)
 	{
 		personalidad_asignada = "Polar";
 		descripcion_personalidad = ("Podes ser el más joven, pero eso no te quita tu madurez.");
