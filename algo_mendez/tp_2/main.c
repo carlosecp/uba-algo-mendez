@@ -18,13 +18,27 @@ void dibujar_tablero()
 	}
 }
 
+typedef struct tablero
+{
+	bool casillas_ocupadas[CANTIDAD_FILAS][CANTIDAD_COLUMNAS];
+} tablero_t;
+
+bool coordenada_esta_ocupada(tablero_t tablero, coordenada_t coordenada)
+{
+	int fila = coordenada.fil;
+	int columna = coordenada.col;
+
+	return tablero.casillas_ocupadas[fila][columna];
+}
+
 coordenada_t generar_coordenada()
 {
 	srand((unsigned)time(NULL));
 	int fila = rand() % CANTIDAD_FILAS;
 	int columna = rand() % CANTIDAD_COLUMNAS;
 
-	return (coordenada_t){fila, columna};
+	coordenada_t coordenada_generada = {fila, columna};
+	return coordenada_generada;
 }
 
 void ubicar_personaje(juego_t *juego)
