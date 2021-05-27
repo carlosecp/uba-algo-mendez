@@ -1,60 +1,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+
 #include "osos_contra_reloj.h"
+#include "tablero.h"
 
-#define CANTIDAD_FILAS 20
-#define CANTIDAD_COLUMNAS 30
-
-void dibujar_tablero()
+void ubicar_personaje()
 {
-	for (int i = 0; i < CANTIDAD_FILAS; i++)
-	{
-		for (int j = 0; j < CANTIDAD_COLUMNAS; j++)
-		{
-			printf(" . ");
-		}
-		printf("\n");
-	}
-}
-
-typedef struct tablero
-{
-	bool casillas_ocupadas[CANTIDAD_FILAS][CANTIDAD_COLUMNAS];
-} tablero_t;
-
-bool coordenada_esta_ocupada(tablero_t tablero, coordenada_t coordenada)
-{
-	int fila = coordenada.fil;
-	int columna = coordenada.col;
-
-	return tablero.casillas_ocupadas[fila][columna];
-}
-
-coordenada_t generar_coordenada()
-{
-	srand((unsigned)time(NULL));
-	int fila = rand() % CANTIDAD_FILAS;
-	int columna = rand() % CANTIDAD_COLUMNAS;
-
-	coordenada_t coordenada_generada = {fila, columna};
-	return coordenada_generada;
-}
-
-void ubicar_personaje(juego_t *juego)
-{
-	coordenada_t coordenada_personaje = generar_coordenada();
-}
-
-void inicializar_juego(juego_t *juego, char tipo_personaje)
-{
+	coordenada_t coordenada_personaje = generar_coordernada_aleatoria();
+	printf("Coordenada: {%i, %i}", coordenada_personaje.fil, coordenada_personaje.col);
 }
 
 int main()
 {
-	personaje_t Carlos;
-	Carlos.tipo = 'C';
-
-	dibujar_tablero();
+	coordenada_t coordenada = generar_coordernada_aleatoria();
+	printf("Coordenada: {%i, %i}", coordenada.fil, coordenada.col);
 	return 0;
 }
