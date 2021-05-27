@@ -1,19 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include "osos_contra_reloj.h"
 #include "tablero.h"
 
-bool coordenada_esta_ocupada(tablero_t tablero, coordenada_t coordernada_a_buscar)
+bool coordenada_esta_ocupada(juego_t juego, coordenada_t coordernada_a_buscar)
 {
-	int fila = coordernada_a_buscar.fil;
-	int columna = coordernada_a_buscar.col;
-
-	return tablero.casillas[fila][columna] != -1;
+	for (int i = 0; i < CANTIDAD_FILAS; i++)
+	{
+		for (int j = 0; j < CANTIDAD_COLUMNAS; j++)
+		{
+				}
+	}
 }
 
-coordenada_t generar_coordernada_aleatoria()
+coordenada_t generar_coordenada_aleatoria()
 {
 	srand((unsigned)time(NULL));
 	int nueva_fila = rand() % CANTIDAD_FILAS;
@@ -21,6 +24,12 @@ coordenada_t generar_coordernada_aleatoria()
 
 	coordenada_t coordenada_generada = {nueva_fila, nueva_columna};
 	return coordenada_generada;
+}
+
+void ubicar_en_tablero(personaje_t *personaje)
+{
+	coordenada_t nueva_coordenada = generar_coordenada_aleatoria();
+	personaje->posicion = nueva_coordenada;
 }
 
 void inicializar_tablero(tablero_t *tablero)
@@ -40,7 +49,8 @@ void imprimir_tablero(tablero_t tablero)
 	{
 		for (int j = 0; j < CANTIDAD_COLUMNAS; j++)
 		{
-			printf("%i", tablero.casillas[i][j]);
+			printf(" %c ", tablero.casillas[i][j]);
 		}
+		printf("\n");
 	}
 }

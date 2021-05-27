@@ -11,7 +11,7 @@ typedef struct tablero
 
 bool coordenada_esta_ocupada(tablero_t tablero, coordenada_t coordernada_a_buscar);
 
-coordenada_t generar_coordernada_aleatoria();
+coordenada_t generar_coordenada_aleatoria();
 
 void inicializar_tablero(tablero_t *tablero);
 
