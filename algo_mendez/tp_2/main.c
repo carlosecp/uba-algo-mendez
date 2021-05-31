@@ -7,7 +7,6 @@
 int main()
 {
 	coordenada_t coordenada = generar_coordenada_aleatoria();
-	printf("Coordenada: {%i, %i}\n", coordenada.fil, coordenada.col);
 
 	personaje_t personaje;
 	personaje.posicion = coordenada;
@@ -16,7 +15,13 @@ int main()
 	juego_t juego;
 	juego.personaje = personaje;
 
-	renderizar_mapa(juego);
+	while (true)
+	{
+		char jugada;
+		printf("Presione una tecla: ");
+		scanf(" %c", &jugada);
+		realizar_jugada(&juego, jugada);
+	}
 
 	return 0;
 }

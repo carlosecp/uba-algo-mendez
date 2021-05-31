@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <time.h>
-
 #include "osos_contra_reloj.h"
 #include "mapa.h"
 
@@ -14,13 +12,6 @@ coordenada_t generar_coordenada_aleatoria()
 
 	coordenada_t coordenada_generada = {fila_generada, columna_generada};
 	return coordenada_generada;
-}
-
-void asignar_posicion_inicial(coordenada_t *elemento_a_ubicar)
-{
-	coordenada_t coordenada_generada = generar_coordenada_aleatoria();
-	elemento_a_ubicar->fil = coordenada_generada.fil;
-	elemento_a_ubicar->col = coordenada_generada.col;
 }
 
 void llenar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
@@ -39,19 +30,8 @@ void posicionar_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada
 	mapa[posicion_elemento.fil][posicion_elemento.col] = representacion_elemento;
 }
 
-void renderizar_mapa(juego_t juego)
+void mover_elemento(coordenada_t *posicion_actual, int incremento_fila, int incremento_columna)
 {
-	char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS];
-	llenar_mapa(mapa);
-
-	posicionar_en_mapa(mapa, juego.personaje.posicion, juego.personaje.tipo);
-
-	for (int i = 0; i < CANTIDAD_FILAS; i++)
-	{
-		for (int j = 0; j < CANTIDAD_COLUMNAS; j++)
-		{
-			printf(" %c ", mapa[i][j]);
-		}
-		printf("\n");
-	}
+	posicion_actual->fil -= incremento_fila;
+	posicion_actual->col -= incremento_columna;
 }
