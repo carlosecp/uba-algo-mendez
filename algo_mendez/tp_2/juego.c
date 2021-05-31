@@ -1,5 +1,10 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include "osos_contra_reloj.h"
 
-void realizar_jugada(juego_t *juego, char jugada) {
-	printf("testing this");
+int main()
+{
+	juego_t juego;
+	inicializar_juego(&juego, 'X');
+	return 0;
 }
