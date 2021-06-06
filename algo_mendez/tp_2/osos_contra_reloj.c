@@ -17,16 +17,19 @@ const coordenada_t MOVER_IZQUIERDA = {0, -1};
 
 void inicializar_juego(juego_t *juego, char tipo_personaje)
 {
-	generar_obstaculos(juego->obstaculos, &juego->cantidad_obstaculos);
+	generar_obstaculos(juego);
 	generar_personaje(&(juego->personaje), tipo_personaje);
+
+	printf("%i", juego->cantidad_obstaculos);
 
 	while (true)
 	{
-		printf("%i", juego->cantidad_obstaculos);
+		mostrar_juego(*juego);
 		char jugada;
-		printf("Presione una tecla: ");
+		printf("Realizar jugada: ");
 		scanf(" %c", &jugada);
 		realizar_jugada(juego, jugada);
+		system("clear");
 	}
 }
 

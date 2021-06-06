@@ -16,7 +16,7 @@
 
 void generar_personaje(personaje_t *personaje, char tipo_personaje);
 
-void generar_obstaculos(elemento_del_mapa_t obstaculos[MAX_OBSTACULOS], int *cantidad_obstaculos);
+void generar_obstaculos(juego_t *juego);
 
 void llenar_mochila(elemento_mochila_t mochila[MAX_HERRAMIENTAS]);
 
