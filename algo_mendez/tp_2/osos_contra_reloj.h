@@ -63,7 +63,6 @@ void inicializar_juego(juego_t *juego, char tipo_personaje);
  * -> 0 si el estado es jugando. 
  * -> -1 si el estado es terminado.
  */
-
 int estado_juego(juego_t juego);
 
 /*

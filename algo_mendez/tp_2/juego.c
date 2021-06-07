@@ -5,8 +5,12 @@
 
 int main()
 {
+	system("clear");
 	srand((unsigned)time(NULL));
+
 	juego_t juego;
-	inicializar_juego(&juego, 'X');
+	char tipo_personaje = 'X';
+	inicializar_juego(&juego, tipo_personaje);
+
 	return 0;
 }
