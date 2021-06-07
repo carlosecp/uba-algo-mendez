@@ -20,8 +20,6 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 	generar_obstaculos(juego);
 	generar_personaje(&(juego->personaje), tipo_personaje);
 
-	printf("%i", juego->cantidad_obstaculos);
-
 	while (true)
 	{
 		mostrar_juego(*juego);
@@ -61,6 +59,11 @@ void mostrar_juego(juego_t juego)
 	llenar_tablero(tablero);
 
 	posicionar_en_tablero(tablero, juego.personaje.posicion, juego.personaje.tipo);
+
+	for (int i = 0; i < MAX_OBSTACULOS; i++)
+	{
+		posicionar_en_tablero(tablero, juego.obstaculos[i].posicion, juego.obstaculos[i].tipo);
+	}
 
 	for (int i = 0; i < CANTIDAD_FILAS; i++)
 	{

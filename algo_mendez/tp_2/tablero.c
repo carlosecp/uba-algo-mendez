@@ -6,7 +6,6 @@
 
 coordenada_t generar_coordenada_aleatoria()
 {
-	srand((unsigned)time(NULL));
 	int fila_generada = rand() % CANTIDAD_FILAS;
 	int columna_generada = rand() % CANTIDAD_COLUMNAS;
 
