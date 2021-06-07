@@ -27,10 +27,18 @@ void preparar_mapa_para_renderizado(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS]
 void posicionar_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t posicion_elemento, char tipo_elemento);
 
 /** 
- * Genera una coordenada aleatoria que no ha sido utilizada por otro elemento.
+ * Genera una coordenada aleatoria.
  * @pre Debe haberse establecido una semilla, de tal forma que las coordenadas generadas sean aleatorias.
  * @return Nueva coordenada valida.
 */
 coordenada_t generar_coordenada();
+
+/** 
+ * Compara una coordenada generada de manera aleatoria para ver si esta no ha sido utilizada por otro elemento del mapa.
+ * @param coordenada_buscada Coordenada generada de manera aleatoria.
+ * @param juego Instancia del juego que contiene la ubicacion de todos los elementos previamente ubicados.
+ * @return Validez de la coordenada buscada (si ya existe una previamente en esa posicion).
+*/
+bool es_coordenada_ocupada(coordenada_t coordenada_buscada, juego_t juego);
 
 #endif

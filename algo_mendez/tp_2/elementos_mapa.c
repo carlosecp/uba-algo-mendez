@@ -14,25 +14,25 @@ void generar_personaje(personaje_t *personaje, char tipo_personaje)
 	return;
 }
 
-int agregar_obstaculo(elemento_del_mapa_t obstaculos[MAX_OBSTACULOS], char tipo_obstaculo, int cantidad_a_agregar)
-{
-	if (cantidad_a_agregar <= 0)
-	{
-		return 0;
-	}
-
-	elemento_del_mapa_t nuevo_obstaculo = {
-		.tipo = tipo_obstaculo,
-		.posicion = generar_coordenada(),
-		.visible = true};
-
-	*obstaculos = nuevo_obstaculo;
-	return 1 + agregar_obstaculo(++obstaculos, tipo_obstaculo, --cantidad_a_agregar);
-}
-
 void generar_obstaculos(elemento_del_mapa_t obstaculos[MAX_OBSTACULOS], int *cantidad_obstaculos)
 {
-	*cantidad_obstaculos += agregar_obstaculo(obstaculos, ARBOL, CANTIDAD_ARBOLES) + agregar_obstaculo(obstaculos, PIEDRA, CANTIDAD_PIEDRAS);
+	for (int i = 0; i < CANTIDAD_ARBOLES; i++)
+	{
+		obstaculos[*cantidad_obstaculos] = generar_nuevo_obstaculo(ARBOL);
+		(*cantidad_obstaculos)++;
+	}
 
-	printf("%i", *cantidad_obstaculos);
+	for (int i = 0; i < CANTIDAD_PIEDRAS; i++)
+	{
+		obstaculos[*cantidad_obstaculos] = generar_nuevo_obstaculo(PIEDRA);
+		(*cantidad_obstaculos)++;
+	}
+}
+
+elemento_del_mapa_t generar_nuevo_obstaculo(char tipo_obstaculo)
+{
+	elemento_del_mapa_t nuevo_obstaculo = {.posicion = generar_coordenada(),
+										   .tipo = tipo_obstaculo,
+										   .visible = false};
+	return nuevo_obstaculo;
 }
