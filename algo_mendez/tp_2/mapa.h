@@ -29,6 +29,7 @@ void posicionar_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada
 /** 
  * Genera una coordenada aleatoria.
  * @pre Debe haberse establecido una semilla, de tal forma que las coordenadas generadas sean aleatorias.
+ * @param juego Instancia del juego actual, del cual se van a obtener las coordenadas de los elementos ya existentes para verificar si no hay conflicto.
  * @return Nueva coordenada valida.
 */
 coordenada_t generar_coordenada();
@@ -39,6 +40,14 @@ coordenada_t generar_coordenada();
  * @param juego Instancia del juego que contiene la ubicacion de todos los elementos previamente ubicados.
  * @return Validez de la coordenada buscada (si ya existe una previamente en esa posicion).
 */
-bool es_coordenada_ocupada(coordenada_t coordenada_buscada, juego_t juego);
+bool es_coordenada_vacia(coordenada_t coordenada_buscada, juego_t juego);
+
+/** 
+ * Compara dos coordenadas entre si.
+ * @param coordenada_a Primera coordenada a comparar.
+ * @param coordenada_b Segunda coordenada a comparar.
+ * @return Determina si las coordenadas son las mismas.
+*/
+bool son_misma_coordenada(coordenada_t coordenada_a, coordenada_t coordenada_b);
 
 #endif

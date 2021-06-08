@@ -18,6 +18,7 @@
  * @pre Se debe crear una instancia del juego actual y un personaje sin propiedades asignadas. Tambien se deben haber obtenido los resultados del "test de personalidad".
  * @param personaje Valor por referencia del personaje controlable por el usuario de la instancia actual del juego. 
  * @param tipo_personaje Resultados del "test de personalidad". Este valor representa al personaje en el tablero.
+ * @param juego Instancia actual del juego. Este valor se utiliza para generar coordenadas que no estan ocupadas por otro elemento.
 */
 void generar_personaje(personaje_t *personaje, char tipo_personaje);
 
