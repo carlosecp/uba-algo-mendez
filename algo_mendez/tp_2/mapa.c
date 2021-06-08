@@ -1,70 +1,49 @@
-#include <stdlib.h>
-#include <stdbool.h>
 #include "osos_contra_reloj.h"
 #include "mapa.h"
+#include "inicializar_elementos.h"
 
-coordenada_t generar_coordenada(juego_t juego)
-{
-	int fila = rand() % CANTIDAD_FILAS;
-	int columna = rand() % CANTIDAD_COLUMNAS;
-	coordenada_t nueva_coordenada = {
-		.fil = fila,
-		.col = columna};
+/* ==== COORDENADAS ===== */
 
-	if (!coordenada_esta_ocupada(nueva_coordenada, juego))
-		nueva_coordenada = generar_coordenada(juego);
+coordenada_t generar_coordenada() {
+	int fila_aleatoria = rand() % CANTIDAD_FILAS;
+	int columna_aleatoria = rand() % CANTIDAD_COLUMNAS;
+	coordenada_t coordenada_aleatoria = {
+		.fil = fila_aleatoria,
+		.col = columna_aleatoria
+	};
 
-	return nueva_coordenada;
+	return coordenada_aleatoria;
 }
 
-bool son_misma_coordenada(coordenada_t coordenada_a, coordenada_t coordenada_b)
-{
-	return ((coordenada_a.fil == coordenada_b.fil) && (coordenada_a.col == coordenada_b.col));
+bool coordenadas_coinciden(coordenada_t coordenada_a, coordenada_t coordenada_b) {
+	return ((coordenada_a.fil == coordenada_b.fil) &&
+	(coordenada_a.col == coordenada_b.col));
 }
 
-bool coordenada_esta_ocupada(coordenada_t coordenada_buscada, juego_t juego)
-{
-	bool esta_ocupada = false;
+/* ==== MAPA (TABLERO) ===== */
 
-	if (son_misma_coordenada(coordenada_buscada, juego.amiga_chloe))
-	{
-		esta_ocupada = true;
-	}
-
-	int i = 0;
-	while (!esta_ocupada && juego.cantidad_obstaculos--)
-	{
-		coordenada_t coordenada_obstaculo = juego.obstaculos[i].posicion;
-		if (son_misma_coordenada(coordenada_buscada, coordenada_obstaculo))
-		{
-			esta_ocupada = true;
+void inicializar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS]) {
+	for (int i = 0; i < CANTIDAD_FILAS; i++) {
+		for (int j = 0; j < CANTIDAD_COLUMNAS; j++) {
+			mapa[i][j] = ESPACIO_VACIO_MAPA;
 		}
-		i++;
-	}
-
-	return true;
-}
-
-void llenar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
-{
-	for (int i = 0; i < CANTIDAD_FILAS; i++)
-	{
-		for (int j = 0; j < CANTIDAD_COLUMNAS; j++)
-			mapa[i][j] = '.';
 	}
 }
 
-void preparar_mapa_para_renderizado(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], juego_t juego)
-{
-	llenar_mapa(mapa);
-	posicionar_en_mapa(mapa, juego.personaje.posicion, juego.personaje.tipo);
-	for (int i = 0; i < 20; i++)
-	{
-		posicionar_en_mapa(mapa, juego.obstaculos[i].posicion, juego.obstaculos[i].tipo);
+void posicionar_elementos_del_juego_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], juego_t juego)  {
+	inicializar_mapa(mapa);
+	posicionar_elemento_del_tipo_en_mapa(mapa, juego.personaje.posicion, juego.personaje.tipo);
+	posicionar_elemento_del_tipo_en_mapa(mapa, juego.amiga_chloe, CHLOE);
+	for (int i = 0; i < juego.cantidad_obstaculos; i++) {
+		elemento_del_mapa_t obstaculo_a_posicionar = juego.obstaculos[i];
+		posicionar_elemento_del_tipo_en_mapa(mapa, obstaculo_a_posicionar.posicion, obstaculo_a_posicionar.tipo);
+	}
+	for (int i = 0; i < juego.cantidad_herramientas; i++) {
+		elemento_del_mapa_t herramienta_a_posicionar = juego.herramientas[i];
+		posicionar_elemento_del_tipo_en_mapa(mapa, herramienta_a_posicionar.posicion, herramienta_a_posicionar.tipo);
 	}
 }
 
-void posicionar_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t posicion_elemento, char tipo_elemento)
-{
-	mapa[posicion_elemento.fil][posicion_elemento.col] = tipo_elemento;
+void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t coordenada_elemento, char tipo_elemento) {
+	mapa[coordenada_elemento.fil][coordenada_elemento.col] = tipo_elemento;
 }
