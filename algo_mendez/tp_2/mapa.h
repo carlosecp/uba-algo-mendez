@@ -17,4 +17,7 @@ void inicializar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS]);
 void posicionar_elementos_del_juego_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], juego_t juego);
 
 void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t coordenada_elemento, char tipo_elemento);
+
+void renderizar_bordes_horizontales_mapa();
+
 #endif

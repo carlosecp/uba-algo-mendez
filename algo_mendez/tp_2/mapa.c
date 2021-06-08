@@ -47,3 +47,14 @@ void posicionar_elementos_del_juego_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_C
 void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t coordenada_elemento, char tipo_elemento) {
 	mapa[coordenada_elemento.fil][coordenada_elemento.col] = tipo_elemento;
 }
+
+void renderizar_bordes_horizontales_mapa() {
+	for (int i = 0; i < (CANTIDAD_COLUMNAS * 3); i++) {
+		printf("■");
+	}
+	printf("\n");
+}
+
+void renderizar_estadisticas() {
+	// Ultimo movimiento, tiempo faltante
+}
