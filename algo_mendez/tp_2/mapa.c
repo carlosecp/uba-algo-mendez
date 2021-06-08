@@ -48,13 +48,22 @@ void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COL
 	mapa[coordenada_elemento.fil][coordenada_elemento.col] = tipo_elemento;
 }
 
-void renderizar_bordes_horizontales_mapa() {
+void renderizar_bordes_mapa() {
 	for (int i = 0; i < (CANTIDAD_COLUMNAS * 3); i++) {
 		printf("■");
 	}
 	printf("\n");
 }
 
-void renderizar_estadisticas() {
+void renderizar_estadisticas(double tiempo_actual, char ultimo_movimiento) {
 	// Ultimo movimiento, tiempo faltante
+	// Cantidad herramientas, etc...
+	printf(" » Segundos transcurrido: %.0fs\n", tiempo_actual);
+
+	if (ultimo_movimiento != ' ') {
+		printf(" » Ultimo movimiento: %c\n", ultimo_movimiento);
+	}
+	else {
+		printf(" » Ultimo movimiento: NO HAY MOVIMIENTOS\n");
+	}
 }
