@@ -3,22 +3,25 @@
 #include "osos_contra_reloj.h"
 #include "elementos_mapa.h"
 #include "mapa.h"
+#include "mecanicas.h"
 
 #define CONTINUAR_JUEGO 0
 
 void inicializar_juego(juego_t *juego, char tipo_personaje)
 {
-	generar_personaje(&(juego->personaje), tipo_personaje);
-	generar_obstaculos(juego->obstaculos, &(juego->cantidad_obstaculos));
-
-	coordenada_esta_ocupada(juego->personaje.posicion, *juego);
+	generar_personaje(&(juego->personaje), tipo_personaje, *juego);
+	generar_obstaculos(juego->obstaculos, &(juego->cantidad_obstaculos), *juego);
 
 	char jugada;
 	while (true)
 	{
+		system("clear");
 		mostrar_juego(*juego);
+
 		printf("Realizar jugada: ");
 		scanf(" %c", &jugada);
+
+		realizar_jugada(juego, jugada);
 	}
 }
 
@@ -29,6 +32,26 @@ int estado_juego(juego_t juego)
 
 void realizar_jugada(juego_t *juego, char jugada)
 {
+	coordenada_t direccion_movimiento = {.fil = 0,
+		.col = 0};
+	switch (jugada)
+	{
+		case TECLA_MOVER_ARRIBA:
+			direccion_movimiento = mover_elemento_arriba;
+			break;
+		case TECLA_MOVER_ABAJO:
+			direccion_movimiento = mover_elemento_abajo;
+			break;
+		case TECLA_MOVER_DERECHA:
+			direccion_movimiento = mover_elemento_derecha;
+			break;
+		case TECLA_MOVER_IZQUIERDA:
+			direccion_movimiento = mover_elemento_izquierda;
+			break;
+	}
+
+	if (es_jugada_valida(jugada))
+	mover_elemento(&(juego->personaje.posicion), direccion_movimiento);
 }
 
 void mostrar_juego(juego_t juego)
@@ -48,5 +71,8 @@ void mostrar_juego(juego_t juego)
 
 bool es_jugada_valida(char jugada)
 {
-	return true;
+	return ((jugada == TECLA_MOVER_ARRIBA) ||
+	(jugada == TECLA_MOVER_ABAJO) ||
+	(jugada == TECLA_MOVER_DERECHA) ||
+	(jugada == TECLA_MOVER_IZQUIERDA));
 }

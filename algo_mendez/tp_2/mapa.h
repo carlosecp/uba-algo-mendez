@@ -12,15 +12,7 @@
 * @param juego Instancia del juego actual, del cual se van a obtener las coordenadas de los elementos ya existentes para verificar si no hay conflicto.
 * @return Nueva coordenada valida.
 */
-coordenada_t generar_coordenada();
-
-/**
-* Genera una coordenada aleatoria.
-* @pre Debe haberse establecido una semilla, de tal forma que las coordenadas generadas sean aleatorias.
-* @param juego Instancia del juego actual, del cual se van a obtener las coordenadas de los elementos ya existentes para verificar si no hay conflicto.
-* @return Nueva coordenada valida.
-*/
-coordenada_t generar_coordenada_recur(juego_t juego);
+coordenada_t generar_coordenada(juego_t juego);
 
 /**
 * Compara dos coordenadas entre si.

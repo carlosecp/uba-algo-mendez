@@ -2,10 +2,10 @@
 #include "elementos_mapa.h"
 #include "mapa.h"
 
-void generar_personaje(personaje_t *personaje, char tipo_personaje)
+void generar_personaje(personaje_t *personaje, char tipo_personaje, juego_t juego)
 {
 	personaje->tipo = tipo_personaje;
-	personaje->posicion = generar_coordenada();
+	personaje->posicion = generar_coordenada(juego);
 	// personaje->mochila;
 	// personaje->cantidad_elementos;
 	// personaje->elemento_en_uso;
@@ -14,25 +14,25 @@ void generar_personaje(personaje_t *personaje, char tipo_personaje)
 	return;
 }
 
-void generar_obstaculos(elemento_del_mapa_t obstaculos[MAX_OBSTACULOS], int *cantidad_obstaculos)
+void generar_obstaculos(elemento_del_mapa_t obstaculos[MAX_OBSTACULOS], int *cantidad_obstaculos, juego_t juego)
 {
 	for (int i = 0; i < CANTIDAD_ARBOLES; i++)
 	{
-		obstaculos[*cantidad_obstaculos] = generar_nuevo_obstaculo(ARBOL);
+		obstaculos[*cantidad_obstaculos] = generar_nuevo_obstaculo(ARBOL, juego);
 		(*cantidad_obstaculos)++;
 	}
 
 	for (int i = 0; i < CANTIDAD_PIEDRAS; i++)
 	{
-		obstaculos[*cantidad_obstaculos] = generar_nuevo_obstaculo(PIEDRA);
+		obstaculos[*cantidad_obstaculos] = generar_nuevo_obstaculo(PIEDRA, juego);
 		(*cantidad_obstaculos)++;
 	}
 }
 
-elemento_del_mapa_t generar_nuevo_obstaculo(char tipo_obstaculo)
+elemento_del_mapa_t generar_nuevo_obstaculo(char tipo_obstaculo, juego_t juego)
 {
-	elemento_del_mapa_t nuevo_obstaculo = {.posicion = generar_coordenada(),
-										   .tipo = tipo_obstaculo,
-										   .visible = false};
+	elemento_del_mapa_t nuevo_obstaculo = {.posicion = generar_coordenada(juego),
+		.tipo = tipo_obstaculo,
+		.visible = false};
 	return nuevo_obstaculo;
 }

@@ -20,21 +20,23 @@
  * @param tipo_personaje Resultados del "test de personalidad". Este valor representa al personaje en el tablero.
  * @param juego Instancia actual del juego. Este valor se utiliza para generar coordenadas que no estan ocupadas por otro elemento.
 */
-void generar_personaje(personaje_t *personaje, char tipo_personaje);
+void generar_personaje(personaje_t *personaje, char tipo_personaje, juego_t juego);
 
 /** 
  * Toma el vector que contiene todos los obstculos de una instancia del juego y agrega todos los obstaculos de los diferentes tipos, en sus cantidades correspondientes. 
  * @pre Se debe crear una instancia del juego actual. 
  * @param obstaculos Vector vacio en el que se guardan los obstaculos generados.
  * @param cantidad_obstaculos Cantidad inicial de obstaculos incluidos en el vector. Esta variable se pasa por referencia, ya que su valor va a ir incrementando conforme se vayan agregando nuevos obstaculos.
+ * @param juego Instancia actual del juego. Este valor se utiliza para generar coordenadas que no estan ocupadas por otro elemento.
 */
-void generar_obstaculos(elemento_del_mapa_t obstaculos[MAX_OBSTACULOS], int *cantidad_obstaculos);
+void generar_obstaculos(elemento_del_mapa_t obstaculos[MAX_OBSTACULOS], int *cantidad_obstaculos, juego_t juego);
 
 /** 
  * Genera un nuevo obstaculo generico (de un tipo especifico) con valores por defecto: posicion valida, tipo indicado y no visible en primera instancia.
  * @param tipo_obstaculo Representacion grafica (caracter) que representa el elemento en el mapa.
+ * @param juego Instancia actual del juego. Este valor se utiliza para generar coordenadas que no estan ocupadas por otro elemento.
  * @return Nuevo obstaculo oculto.
 */
-elemento_del_mapa_t generar_nuevo_obstaculo(char tipo_obstaculo);
+elemento_del_mapa_t generar_nuevo_obstaculo(char tipo_obstaculo, juego_t juego);
 
 #endif

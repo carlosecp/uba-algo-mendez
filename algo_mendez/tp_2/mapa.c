@@ -3,7 +3,7 @@
 #include "osos_contra_reloj.h"
 #include "mapa.h"
 
-coordenada_t generar_coordenada()
+coordenada_t generar_coordenada(juego_t juego)
 {
 	int fila = rand() % CANTIDAD_FILAS;
 	int columna = rand() % CANTIDAD_COLUMNAS;
@@ -29,9 +29,6 @@ bool coordenada_esta_ocupada(coordenada_t coordenada_buscada, juego_t juego)
 	if (son_misma_coordenada(coordenada_buscada, juego.amiga_chloe))
 	{
 		esta_ocupada = true;
-		printf("Coordenadas coincide: {%i, %i} == {%i, %i}\n",
-			   coordenada_buscada.fil, coordenada_buscada.col,
-			   juego.amiga_chloe.fil, juego.amiga_chloe.col);
 	}
 
 	int i = 0;
@@ -41,9 +38,6 @@ bool coordenada_esta_ocupada(coordenada_t coordenada_buscada, juego_t juego)
 		if (son_misma_coordenada(coordenada_buscada, coordenada_obstaculo))
 		{
 			esta_ocupada = true;
-			printf("Coordenadas coincide: {%i, %i} == {%i, %i}\n",
-				   coordenada_buscada.fil, coordenada_buscada.col,
-				   coordenada_obstaculo.fil, coordenada_obstaculo.col);
 		}
 		i++;
 	}
@@ -64,7 +58,7 @@ void preparar_mapa_para_renderizado(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS]
 {
 	llenar_mapa(mapa);
 	posicionar_en_mapa(mapa, juego.personaje.posicion, juego.personaje.tipo);
-	for (int i = 0; i < MAX_OBSTACULOS; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		posicionar_en_mapa(mapa, juego.obstaculos[i].posicion, juego.obstaculos[i].tipo);
 	}
