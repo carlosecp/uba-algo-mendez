@@ -11,6 +11,8 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 	generar_personaje(&(juego->personaje), tipo_personaje);
 	generar_obstaculos(juego->obstaculos, &(juego->cantidad_obstaculos));
 
+	coordenada_esta_ocupada(juego->personaje.posicion, *juego);
+
 	char jugada;
 	while (true)
 	{

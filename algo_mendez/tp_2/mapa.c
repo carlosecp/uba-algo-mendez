@@ -3,7 +3,7 @@
 #include "osos_contra_reloj.h"
 #include "mapa.h"
 
-coordenada_t generar_coordenada(juego_t juego)
+coordenada_t generar_coordenada()
 {
 	int fila = rand() % CANTIDAD_FILAS;
 	int columna = rand() % CANTIDAD_COLUMNAS;
@@ -11,37 +11,44 @@ coordenada_t generar_coordenada(juego_t juego)
 		.fil = fila,
 		.col = columna};
 
-	if (!es_coordenada_ocupada(nueva_coordenada, juego))
-		return nueva_coordenada;
+	if (!coordenada_esta_ocupada(nueva_coordenada, juego))
+		nueva_coordenada = generar_coordenada(juego);
 
-	generar_coordenada(juego);
+	return nueva_coordenada;
 }
 
 bool son_misma_coordenada(coordenada_t coordenada_a, coordenada_t coordenada_b)
 {
-	return ((coordenada_a.fil == coordenada_b.fil) &&
-			(coordenada_a.col == coordenada_b.col));
+	return ((coordenada_a.fil == coordenada_b.fil) && (coordenada_a.col == coordenada_b.col));
 }
 
-bool es_coordenada_ocupada(coordenada_t coordenada_buscada, juego_t juego)
+bool coordenada_esta_ocupada(coordenada_t coordenada_buscada, juego_t juego)
 {
-	bool coordenada_ocupada = false;
+	bool esta_ocupada = false;
 
 	if (son_misma_coordenada(coordenada_buscada, juego.amiga_chloe))
-		coordenada_ocupada = true;
+	{
+		esta_ocupada = true;
+		printf("Coordenadas coincide: {%i, %i} == {%i, %i}\n",
+			   coordenada_buscada.fil, coordenada_buscada.col,
+			   juego.amiga_chloe.fil, juego.amiga_chloe.col);
+	}
 
 	int i = 0;
-	while (!coordenada_ocupada && (i < juego.cantidad_obstaculos))
+	while (!esta_ocupada && juego.cantidad_obstaculos--)
 	{
 		coordenada_t coordenada_obstaculo = juego.obstaculos[i].posicion;
 		if (son_misma_coordenada(coordenada_buscada, coordenada_obstaculo))
-			coordenada_ocupada = true;
-
-		juego.cantidad_obstaculos--;
+		{
+			esta_ocupada = true;
+			printf("Coordenadas coincide: {%i, %i} == {%i, %i}\n",
+				   coordenada_buscada.fil, coordenada_buscada.col,
+				   coordenada_obstaculo.fil, coordenada_obstaculo.col);
+		}
 		i++;
 	}
 
-	return coordenada_ocupada;
+	return true;
 }
 
 void llenar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
@@ -49,9 +56,7 @@ void llenar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
 	for (int i = 0; i < CANTIDAD_FILAS; i++)
 	{
 		for (int j = 0; j < CANTIDAD_COLUMNAS; j++)
-		{
 			mapa[i][j] = '.';
-		}
 	}
 }
 

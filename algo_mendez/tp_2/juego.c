@@ -2,10 +2,11 @@
 #include <stdio.h>
 #include <time.h>
 #include "osos_contra_reloj.h"
+#include "mapa.h"
 
 int main()
 {
-	system("clear");
+	// system("clear");
 	srand((unsigned)time(NULL));
 
 	juego_t juego;
