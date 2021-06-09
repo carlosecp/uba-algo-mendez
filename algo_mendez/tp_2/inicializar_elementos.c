@@ -90,7 +90,7 @@ void inicializar_obstaculos(elemento_del_mapa_t obstaculos[MAX_OBSTACULOS], int 
 	}
 }
 
-void inicializar_herramientas(elemento_del_mapa_t herramientas[MAX_HERRAMIENTAS], int *cantidad_herramientas)
+void inicializar_herramientas(elemento_del_mapa_t herramientas[MAX_HERRAMIENTAS], int *cantidad_herramientas, coordenada_t coordenadas_ocupadas)
 {
 	(*cantidad_herramientas) = 0;
 	for (int i = 0; i < CANTIDAD_PILAS_MAPA; i++) {

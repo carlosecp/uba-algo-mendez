@@ -31,7 +31,6 @@ void inicializar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS]) {
 
 void posicionar_elementos_del_juego_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], juego_t juego)  {
 	inicializar_mapa(mapa);
-	posicionar_elemento_del_tipo_en_mapa(mapa, juego.personaje.posicion, juego.personaje.tipo);
 	posicionar_elemento_del_tipo_en_mapa(mapa, juego.amiga_chloe, CHLOE);
 	// for (int i = 0; i < juego.cantidad_obstaculos; i++) {
 	// elemento_del_mapa_t obstaculo_a_posicionar = juego.obstaculos[i];
@@ -41,6 +40,7 @@ void posicionar_elementos_del_juego_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_C
 	// elemento_del_mapa_t herramienta_a_posicionar = juego.herramientas[i];
 	// posicionar_elemento_del_tipo_en_mapa(mapa, herramienta_a_posicionar.posicion, herramienta_a_posicionar.tipo);
 	// }
+	posicionar_elemento_del_tipo_en_mapa(mapa, juego.personaje.posicion, juego.personaje.tipo);
 }
 
 void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t coordenada_elemento, char tipo_elemento) {

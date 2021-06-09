@@ -1,8 +1,8 @@
 #include "osos_contra_reloj.h"
 #include "inicializar_elementos.h"
 #include "mapa.h"
-#include "utiles.h"
 #include "jugabilidad.h"
+#include "utiles.h"
 
 void inicializar_juego(juego_t *juego, char tipo_personaje) {
 	juego->personaje = inicializar_personaje(tipo_personaje);
@@ -12,7 +12,8 @@ void inicializar_juego(juego_t *juego, char tipo_personaje) {
 
 	iniciar_cronometro();
 
-	while(estado_juego(*juego) == 0) {
+	// while(estado_juego(*juego) == 0) {
+	while (true) {
 		system("clear");
 		mostrar_juego(*juego);
 		char jugada;
