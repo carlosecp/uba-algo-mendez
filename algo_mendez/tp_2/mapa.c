@@ -1,6 +1,5 @@
-#include "osos_contra_reloj.h"
+#include <string.h>
 #include "mapa.h"
-#include "inicializar_elementos.h"
 
 /* ==== COORDENADAS ===== */
 
@@ -34,14 +33,14 @@ void posicionar_elementos_del_juego_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_C
 	inicializar_mapa(mapa);
 	posicionar_elemento_del_tipo_en_mapa(mapa, juego.personaje.posicion, juego.personaje.tipo);
 	posicionar_elemento_del_tipo_en_mapa(mapa, juego.amiga_chloe, CHLOE);
-	for (int i = 0; i < juego.cantidad_obstaculos; i++) {
-		elemento_del_mapa_t obstaculo_a_posicionar = juego.obstaculos[i];
-		posicionar_elemento_del_tipo_en_mapa(mapa, obstaculo_a_posicionar.posicion, obstaculo_a_posicionar.tipo);
-	}
-	for (int i = 0; i < juego.cantidad_herramientas; i++) {
-		elemento_del_mapa_t herramienta_a_posicionar = juego.herramientas[i];
-		posicionar_elemento_del_tipo_en_mapa(mapa, herramienta_a_posicionar.posicion, herramienta_a_posicionar.tipo);
-	}
+	// for (int i = 0; i < juego.cantidad_obstaculos; i++) {
+	// elemento_del_mapa_t obstaculo_a_posicionar = juego.obstaculos[i];
+	// posicionar_elemento_del_tipo_en_mapa(mapa, obstaculo_a_posicionar.posicion, obstaculo_a_posicionar.tipo);
+	// }
+	// for (int i = 0; i < juego.cantidad_herramientas; i++) {
+	// elemento_del_mapa_t herramienta_a_posicionar = juego.herramientas[i];
+	// posicionar_elemento_del_tipo_en_mapa(mapa, herramienta_a_posicionar.posicion, herramienta_a_posicionar.tipo);
+	// }
 }
 
 void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t coordenada_elemento, char tipo_elemento) {
@@ -55,15 +54,39 @@ void renderizar_bordes_mapa() {
 	printf("\n");
 }
 
-void renderizar_estadisticas(double tiempo_actual, char ultimo_movimiento) {
+void renderizar_estadisticas(double tiempo_actual, char *ultimo_movimiento) {
 	// Ultimo movimiento, tiempo faltante
 	// Cantidad herramientas, etc...
 	printf(" » Segundos transcurrido: %.0fs\n", tiempo_actual);
 
-	if (ultimo_movimiento != ' ') {
-		printf(" » Ultimo movimiento: %c\n", ultimo_movimiento);
-	}
-	else {
+	if ((*ultimo_movimiento) == SIMBOLO_SIN_MOVIMIENTOS) {
 		printf(" » Ultimo movimiento: NO HAY MOVIMIENTOS\n");
 	}
+	else if ((*ultimo_movimiento) == SIMBOLO_MOVIMIENTO_INVALIDO) {
+		printf(" » Ultimo movimiento: MOVIMIENTO INVALIDO\n");
+	}
+	else {
+		mostrar_direccion_ultimo_movimiento(ultimo_movimiento);
+	}
+}
+
+void mostrar_direccion_ultimo_movimiento(char *ultimo_movimiento) {
+	char direccion_ultimo_movimiento[MAX_DESCRIPCION_MOVIMIENTO];
+
+	switch(*ultimo_movimiento){
+		case TECLA_MOVER_ARRIBA:
+			strcpy(direccion_ultimo_movimiento, DESCRIPCION_MOVIMIENTO_ARRIBA);
+			break;
+		case TECLA_MOVER_ABAJO:
+			strcpy(direccion_ultimo_movimiento, DESCRIPCION_MOVIMIENTO_ABAJO);
+			break;
+		case TECLA_MOVER_DERECHA:
+			strcpy(direccion_ultimo_movimiento, DESCRIPCION_MOVIMIENTO_DERECHA);
+			break;
+		case TECLA_MOVER_IZQUIERDA:
+			strcpy(direccion_ultimo_movimiento, DESCRIPCION_MOVIMIENTO_IZQUIERDA);
+			break;
+	}
+
+	printf(" » Ultimo movimiento: %s\n", direccion_ultimo_movimiento);
 }

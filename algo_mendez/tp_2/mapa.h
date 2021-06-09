@@ -2,6 +2,8 @@
 #define __MAPA_H__
 
 #include "osos_contra_reloj.h"
+#include "inicializar_elementos.h"
+#include "jugabilidad.h"
 
 #define CANTIDAD_FILAS 20
 #define CANTIDAD_COLUMNAS 30
@@ -20,6 +22,8 @@ void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COL
 
 void renderizar_bordes_mapa();
 
-void renderizar_estadisticas(double tiempo_actual, char ultimo_movimiento);
+void renderizar_estadisticas(double tiempo_actual, char *ultimo_movimiento);
+
+void mostrar_direccion_ultimo_movimiento(char *ultimo_movimiento);
 
 #endif

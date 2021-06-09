@@ -13,7 +13,7 @@ personaje_t inicializar_personaje(char tipo_personaje)
 	personaje.cantidad_elementos = generar_mochila(personaje.mochila, tipo_personaje);
 	personaje.elemento_en_uso = -1;
 	personaje.tiempo_perdido = 0;
-	personaje.ultimo_movimiento = ' ';
+	personaje.ultimo_movimiento = SIMBOLO_SIN_MOVIMIENTOS;
 
 	return personaje;
 }
