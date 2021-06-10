@@ -9,7 +9,7 @@ personaje_t inicializar_personaje(juego_t juego, char tipo_personaje)
 	personaje_t personaje;
 
 	personaje.tipo = tipo_personaje;
-	personaje.posicion = generar_coordenada_safe(juego);
+	personaje.posicion = generar_coordenada_personaje(juego);
 	personaje.cantidad_elementos = generar_mochila(personaje.mochila, tipo_personaje);
 	personaje.elemento_en_uso = -1;
 	personaje.tiempo_perdido = 0;
@@ -71,55 +71,53 @@ void agregar_herramienta_del_tipo(char tipo_herramienta, int cantidad_herramient
 
 coordenada_t inicializar_amiga_chloe(juego_t juego)
 {
-	return generar_coordenada_safe(juego);
+	return generar_coordenada_amiga_chloe(juego);
 }
 
 /* ==== OBSTACULOS && HERRAMIENTAS ===== */
 
-void inicializar_obstaculos(elemento_del_mapa_t obstaculos[MAX_OBSTACULOS], int *cantidad_obstaculos)
+void inicializar_obstaculos(juego_t *juego)
 {
-	(*cantidad_obstaculos) = 0;
+	juego->cantidad_obstaculos = 0;
 	for (int i = 0; i < CANTIDAD_ARBOLES; i++)
 	{
-		obstaculos[(*cantidad_obstaculos)] = agregar_elemento_del_tipo(ARBOL);
-		(*cantidad_obstaculos)++;
+		juego->obstaculos[juego->cantidad_obstaculos] = agregar_elemento_del_tipo(*juego, ARBOL);
+		juego->cantidad_obstaculos++;
 	}
 
 	for (int i = 0; i < CANTIDAD_PIEDRAS; i++)
 	{
-		obstaculos[(*cantidad_obstaculos)] = agregar_elemento_del_tipo(PIEDRA);
-		(*cantidad_obstaculos)++;
+		juego->obstaculos[juego->cantidad_obstaculos] = agregar_elemento_del_tipo(*juego, PIEDRA);
+		juego->cantidad_obstaculos++;
 	}
 }
 
-void inicializar_herramientas(elemento_del_mapa_t herramientas[MAX_HERRAMIENTAS], int *cantidad_herramientas)
+void inicializar_herramientas(juego_t *juego)
 {
-	(*cantidad_herramientas) = 0;
+	juego->cantidad_herramientas = 0;
 	for (int i = 0; i < CANTIDAD_PILAS_MAPA; i++)
 	{
-		herramientas[(*cantidad_herramientas)] = agregar_elemento_del_tipo(PILA);
-		(*cantidad_herramientas)++;
+		juego->herramientas[juego->cantidad_herramientas] = agregar_elemento_del_tipo(*juego, PILA);
 	}
 
 	for (int i = 0; i < CANTIDAD_VELAS_MAPA; i++)
 	{
-		herramientas[(*cantidad_herramientas)] = agregar_elemento_del_tipo(VELA);
-		(*cantidad_herramientas)++;
+		juego->herramientas[juego->cantidad_herramientas] = agregar_elemento_del_tipo(*juego, VELA);
 	}
 
 	for (int i = 0; i < CANTIDAD_BENGALAS_MAPA; i++)
 	{
-		herramientas[(*cantidad_herramientas)] = agregar_elemento_del_tipo(BENGALA);
-		(*cantidad_herramientas)++;
+		juego->herramientas[juego->cantidad_herramientas] = agregar_elemento_del_tipo(*juego, BENGALA);
 	}
 }
 
-elemento_del_mapa_t agregar_elemento_del_tipo(char tipo_elemento)
+elemento_del_mapa_t agregar_elemento_del_tipo(juego_t juego, char tipo_elemento)
 {
 	elemento_del_mapa_t elemento_generado = {
-			.posicion = generar_coordenada(),
+			.posicion = generar_coordenada_elemento(juego),
 			.tipo = tipo_elemento,
 			.visible = false};
+
 	return elemento_generado;
 }
 
@@ -127,5 +125,24 @@ elemento_del_mapa_t agregar_elemento_del_tipo(char tipo_elemento)
 
 coordenada_t generar_coordenada_personaje(juego_t juego)
 {
-	return generar_coordenada_safe(juego);
+	bool validar_coordenada_personaje = false;
+	bool validar_coordenada_amiga_chloe = false;
+
+	return generar_coordenada_safe(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
+}
+
+coordenada_t generar_coordenada_amiga_chloe(juego_t juego)
+{
+	bool validar_coordenada_personaje = true;
+	bool validar_coordenada_amiga_chloe = false;
+
+	return generar_coordenada_safe(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
+}
+
+coordenada_t generar_coordenada_elemento(juego_t juego)
+{
+	bool validar_coordenada_personaje = true;
+	bool validar_coordenada_amiga_chloe = true;
+
+	return generar_coordenada_safe(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
 }

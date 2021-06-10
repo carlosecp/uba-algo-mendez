@@ -12,11 +12,11 @@
 
 coordenada_t generar_coordenada();
 
-coordenada_t generar_coordenada_safe(juego_t juego);
+coordenada_t generar_coordenada_safe(juego_t juego, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe);
 
-bool coordenada_esta_ocupada(coordenada_t coordenada_buscada, juego_t juego);
+bool es_coordenada_valida(juego_t juego, coordenada_t coordenada_buscada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe);
 
-bool coordenadas_coinciden(coordenada_t coordenada_a, coordenada_t coordenada_b);
+bool son_misma_coordenada(coordenada_t coordenada_a, coordenada_t coordenada_b);
 
 void inicializar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS]);
 

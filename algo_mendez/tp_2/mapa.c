@@ -24,23 +24,25 @@ coordenada_t generar_coordenada_safe(juego_t juego, bool validar_coordenada_pers
 			.col = columna_aleatoria};
 
 	if (!es_coordenada_valida(juego, coordenada_aleatoria, validar_coordenada_personaje, validar_coordenada_amiga_chloe))
-		generar_coordenada_safe(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
+	{
+		return generar_coordenada_safe(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
+	}
 
 	return coordenada_aleatoria;
 }
 
 bool es_coordenada_valida(juego_t juego, coordenada_t coordenada_buscada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe)
 {
-	bool validez_coordenada = true;
+	bool coordenada_valida = true;
+	if (validar_coordenada_personaje && son_misma_coordenada(coordenada_buscada, juego.personaje.posicion))
+	{
+		coordenada_valida = false;
+	}
 
-	if (validar_coordenada_personaje)
-		validez_coordenada = coordenadas_coinciden(coordenada_buscada, juego.personaje.posicion);
-
-	if (validar_coordenada_amiga_chloe)
-		validez_coordenada = coordenadas_coinciden(coordenada_buscada, juego.amiga_chloe);
+	return coordenada_valida;
 }
 
-bool coordenadas_coinciden(coordenada_t coordenada_a, coordenada_t coordenada_b)
+bool son_misma_coordenada(coordenada_t coordenada_a, coordenada_t coordenada_b)
 {
 	return ((coordenada_a.fil == coordenada_b.fil) &&
 					(coordenada_a.col == coordenada_b.col));

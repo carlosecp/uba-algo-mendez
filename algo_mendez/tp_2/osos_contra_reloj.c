@@ -8,8 +8,8 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 {
 	juego->personaje = inicializar_personaje(*juego, tipo_personaje);
 	juego->amiga_chloe = inicializar_amiga_chloe(*juego);
-	inicializar_obstaculos(juego->obstaculos, &(juego->cantidad_obstaculos));
-	inicializar_herramientas(juego->herramientas, &(juego->cantidad_herramientas));
+	inicializar_obstaculos(juego);
+	inicializar_herramientas(juego);
 
 	iniciar_cronometro();
 
@@ -27,7 +27,7 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 
 int estado_juego(juego_t juego)
 {
-	return coordenadas_coinciden(juego.personaje.posicion, juego.amiga_chloe) ? -1 : 0;
+	return son_misma_coordenada(juego.personaje.posicion, juego.amiga_chloe) ? -1 : 0;
 }
 
 void realizar_jugada(juego_t *juego, char jugada)
