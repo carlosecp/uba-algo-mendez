@@ -5,12 +5,16 @@
 #include "inicializar_elementos.h"
 #include "jugabilidad.h"
 
-#define CANTIDAD_FILAS 20
-#define CANTIDAD_COLUMNAS 30
+#define CANTIDAD_FILAS 2
+#define CANTIDAD_COLUMNAS 2
 
 #define ESPACIO_VACIO_MAPA '.'
 
 coordenada_t generar_coordenada();
+
+coordenada_t generar_coordenada_safe(juego_t juego);
+
+bool coordenada_esta_ocupada(coordenada_t coordenada_buscada, juego_t juego);
 
 bool coordenadas_coinciden(coordenada_t coordenada_a, coordenada_t coordenada_b);
 

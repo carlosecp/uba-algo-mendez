@@ -10,5 +10,6 @@ int main()
 	juego_t juego;
 	char tipo_personaje = 'I';
 	inicializar_juego(&juego, tipo_personaje);
+
 	return 0;
 }

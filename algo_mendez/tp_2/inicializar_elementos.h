@@ -33,7 +33,15 @@
 #define CANTIDAD_VELAS_MAPA 30
 #define CANTIDAD_BENGALAS_MAPA 10
 
-personaje_t inicializar_personaje(char tipo_personaje);
+typedef struct coordenadas_a_validar
+{
+	bool personaje;
+	bool chloe;
+	bool obstaculos;
+	bool herramientas;
+} coordenadas_a_validar_t;
+
+personaje_t inicializar_personaje(juego_t juego, char tipo_personaje);
 
 int generar_mochila(elemento_mochila_t mochila[MAX_HERRAMIENTAS], char tipo_personaje);
 
@@ -41,7 +49,7 @@ elemento_mochila_t generar_herramienta(char tipo_herramienta, char tipo_personaj
 
 void agregar_herramienta_del_tipo(char tipo_herramienta, int cantidad_herramientas_del_tipo, elemento_mochila_t mochila[MAX_HERRAMIENTAS], int *tope_mochila, char tipo_personaje);
 
-coordenada_t inicializar_amiga_chloe();
+coordenada_t inicializar_amiga_chloe(juego_t juego);
 
 void inicializar_obstaculos(elemento_del_mapa_t obstaculos[MAX_OBSTACULOS], int *cantidad_obstaculos);
 
