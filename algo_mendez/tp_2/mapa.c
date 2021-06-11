@@ -39,6 +39,11 @@ bool es_coordenada_valida(juego_t juego, coordenada_t coordenada_buscada, bool v
 		coordenada_valida = false;
 	}
 
+	if (validar_coordenada_amiga_chloe && son_misma_coordenada(coordenada_buscada, juego.amiga_chloe))
+	{
+		coordenada_valida = false;
+	}
+
 	return coordenada_valida;
 }
 
@@ -64,22 +69,42 @@ void inicializar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
 void posicionar_elementos_del_juego_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], juego_t juego)
 {
 	inicializar_mapa(mapa);
-	posicionar_elemento_del_tipo_en_mapa(mapa, juego.personaje.posicion, juego.personaje.tipo);
-	posicionar_elemento_del_tipo_en_mapa(mapa, juego.amiga_chloe, CHLOE);
-	// for (int i = 0; i < juego.cantidad_obstaculos; i++) {
+	posicionar_personaje_en_mapa(mapa, juego.personaje);
+	posicionar_amiga_chloe_en_mapa(mapa, juego.amiga_chloe);
+
+	// for (int i = 0; i < juego.cantidad_obstaculos; i++)
+	// {
 	// elemento_del_mapa_t obstaculo_a_posicionar = juego.obstaculos[i];
-	// posicionar_elemento_del_tipo_en_mapa(mapa, obstaculo_a_posicionar.posicion, obstaculo_a_posicionar.tipo);
+	// posicionar_elemento_del_tipo_en_mapa(mapa, obstaculo_a_posicionar);
 	// }
-	// for (int i = 0; i < juego.cantidad_herramientas; i++) {
+
+	// for (int i = 0; i < juego.cantidad_herramientas; i++)
+	// {
 	// elemento_del_mapa_t herramienta_a_posicionar = juego.herramientas[i];
-	// posicionar_elemento_del_tipo_en_mapa(mapa, herramienta_a_posicionar.posicion, herramienta_a_posicionar.tipo);
+	// posicionar_elemento_del_tipo_en_mapa(mapa, herramienta_a_posicionar);
 	// }
 }
 
-void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t coordenada_elemento, char tipo_elemento)
+/* ==== AUXILIARES POSICIONAMIENTO DE ELEMENTOS ===== */
+
+void posicionar_personaje_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], personaje_t personaje)
 {
-	mapa[coordenada_elemento.fil][coordenada_elemento.col] = tipo_elemento;
+	mapa[personaje.posicion.fil][personaje.posicion.col] = personaje.tipo;
 }
+
+void posicionar_amiga_chloe_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t amiga_chloe)
+{
+}
+
+void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], elemento_del_mapa_t elemento_a_posicionar)
+{
+	if (elemento_a_posicionar.visible)
+	{
+		mapa[elemento_a_posicionar.posicion.fil][elemento_a_posicionar.posicion.col] = elemento_a_posicionar.tipo;
+	}
+}
+
+/* ==== EXTRA (DECORACIONES) ===== */
 
 void renderizar_bordes_mapa()
 {
@@ -94,7 +119,14 @@ void renderizar_estadisticas(double tiempo_actual, char *ultimo_movimiento)
 {
 	// Ultimo movimiento, tiempo faltante
 	// Cantidad herramientas, etc...
-	printf(" » Segundos transcurrido: %.0fs\n", tiempo_actual);
+	if (true)
+	{
+		printf(" » Segundos transcurrido: (PRESIONAR \"T\" PARA MOSTRAR)\n");
+	}
+	else
+	{
+		printf(" » Segundos transcurrido: %.0fs\n", tiempo_actual);
+	}
 
 	if ((*ultimo_movimiento) == SIMBOLO_SIN_MOVIMIENTOS)
 	{

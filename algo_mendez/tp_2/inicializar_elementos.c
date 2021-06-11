@@ -1,6 +1,4 @@
 #include "inicializar_elementos.h"
-#include "osos_contra_reloj.h"
-#include "mapa.h"
 
 /* ==== PERSONAJE ===== */
 
@@ -103,11 +101,13 @@ void inicializar_herramientas(juego_t *juego)
 	for (int i = 0; i < CANTIDAD_VELAS_MAPA; i++)
 	{
 		juego->herramientas[juego->cantidad_herramientas] = agregar_elemento_del_tipo(*juego, VELA);
+		juego->cantidad_herramientas++;
 	}
 
 	for (int i = 0; i < CANTIDAD_BENGALAS_MAPA; i++)
 	{
 		juego->herramientas[juego->cantidad_herramientas] = agregar_elemento_del_tipo(*juego, BENGALA);
+		juego->cantidad_herramientas++;
 	}
 }
 

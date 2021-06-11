@@ -2,6 +2,7 @@
 #define __MECANICAS_H__
 
 #include "osos_contra_reloj.h"
+#include "mapa.h"
 
 #define TECLA_MOVER_ARRIBA 'w'
 #define TECLA_MOVER_ABAJO 's'

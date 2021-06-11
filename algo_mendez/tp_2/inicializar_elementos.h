@@ -2,6 +2,7 @@
 #define __INICIALIZAR_ELEMENTOS_H__
 
 #include "osos_contra_reloj.h"
+#include "mapa.h"
 
 #define POLAR 'I'
 #define PARDO 'G'

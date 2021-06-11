@@ -13,10 +13,9 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 
 	iniciar_cronometro();
 
-	// while(estado_juego(*juego) == 0) {
-	while (true)
+	while (estado_juego(*juego) == 0)
 	{
-		// system("clear");
+		system("clear");
 		mostrar_juego(*juego);
 		char jugada;
 		printf(" » Registrar jugada: ");
