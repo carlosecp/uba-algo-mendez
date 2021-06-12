@@ -102,7 +102,7 @@ void iluminar_renglon_izquierda_aux(juego_t *juego)
 	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{
 		coordenada_t coordenada_obstaculo = juego->obstaculos[i].posicion;
-		if ((coordenada_obstaculo.fil == juego->personaje.posicion.fil) && (coordenada_obstaculo.col < juego->personaje.posicion.col))
+		if ((coordenada_obstaculo.fil == juego->personaje.posicion.fil) && (coordenada_obstaculo.col > juego->personaje.posicion.col))
 		{
 			juego->obstaculos[i].visible = true;
 		}
