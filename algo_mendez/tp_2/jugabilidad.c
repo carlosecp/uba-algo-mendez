@@ -38,3 +38,73 @@ void jugada_movimiento(juego_t *juego, char jugada)
 		break;
 	}
 }
+
+void jugada_encender_linterna(juego_t *juego)
+{
+	// printf("\nCoordenada actual: {%i, %i}\n", juego->personaje.posicion.fil, juego->personaje.posicion.col);
+	switch (juego->personaje.ultimo_movimiento)
+	{
+	case TECLA_MOVER_ARRIBA:
+		iluminar_renglon_arriba_aux(juego);
+		break;
+	case TECLA_MOVER_ABAJO:
+		iluminar_renglon_abajo_aux(juego);
+		break;
+	case TECLA_MOVER_DERECHA:
+		iluminar_renglon_derecha_aux(juego);
+		break;
+	case TECLA_MOVER_IZQUIERDA:
+		iluminar_renglon_izquierda_aux(juego);
+		break;
+	}
+}
+
+/* ==== AUXILIARES ILUMINACION RENGLONES ===== */
+
+void iluminar_renglon_arriba_aux(juego_t *juego)
+{
+	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	{
+		coordenada_t coordenada_obstaculo = juego->obstaculos[i].posicion;
+		if ((coordenada_obstaculo.fil < juego->personaje.posicion.fil) && (coordenada_obstaculo.col == juego->personaje.posicion.col))
+		{
+			juego->obstaculos[i].visible = true;
+		}
+	}
+}
+
+void iluminar_renglon_abajo_aux(juego_t *juego)
+{
+	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	{
+		coordenada_t coordenada_obstaculo = juego->obstaculos[i].posicion;
+		if ((coordenada_obstaculo.fil > juego->personaje.posicion.fil) && (coordenada_obstaculo.col == juego->personaje.posicion.col))
+		{
+			juego->obstaculos[i].visible = true;
+		}
+	}
+}
+
+void iluminar_renglon_derecha_aux(juego_t *juego)
+{
+	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	{
+		coordenada_t coordenada_obstaculo = juego->obstaculos[i].posicion;
+		if ((coordenada_obstaculo.fil == juego->personaje.posicion.fil) && (coordenada_obstaculo.col > juego->personaje.posicion.col))
+		{
+			juego->obstaculos[i].visible = true;
+		}
+	}
+}
+
+void iluminar_renglon_izquierda_aux(juego_t *juego)
+{
+	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	{
+		coordenada_t coordenada_obstaculo = juego->obstaculos[i].posicion;
+		if ((coordenada_obstaculo.fil == juego->personaje.posicion.fil) && (coordenada_obstaculo.col < juego->personaje.posicion.col))
+		{
+			juego->obstaculos[i].visible = true;
+		}
+	}
+}

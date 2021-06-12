@@ -66,7 +66,7 @@ void inicializar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
 	}
 }
 
-void posicionar_elementos_del_juego_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], juego_t juego)
+void posicionar_todos_elementos_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], juego_t juego)
 {
 	inicializar_mapa(mapa);
 	posicionar_personaje_en_mapa(mapa, juego.personaje);
@@ -114,52 +114,4 @@ void renderizar_bordes_mapa()
 		printf("■");
 	}
 	printf("\n");
-}
-
-void renderizar_estadisticas(double tiempo_actual, char *ultimo_movimiento)
-{
-	if (true)
-	{
-		printf(" » Segundos transcurrido: (PRESIONAR \"T\" PARA MOSTRAR)\n");
-	}
-	else
-	{
-		printf(" » Segundos transcurrido: %.0fs\n", tiempo_actual);
-	}
-
-	if ((*ultimo_movimiento) == SIMBOLO_SIN_MOVIMIENTOS)
-	{
-		printf(" » Ultimo movimiento: NO HAY MOVIMIENTOS\n");
-	}
-	else if ((*ultimo_movimiento) == SIMBOLO_MOVIMIENTO_INVALIDO)
-	{
-		printf(" » Ultimo movimiento: MOVIMIENTO INVALIDO\n");
-	}
-	else
-	{
-		mostrar_direccion_ultimo_movimiento(ultimo_movimiento);
-	}
-}
-
-void mostrar_direccion_ultimo_movimiento(char *ultimo_movimiento)
-{
-	char direccion_ultimo_movimiento[MAX_DESCRIPCION_MOVIMIENTO];
-
-	switch (*ultimo_movimiento)
-	{
-	case TECLA_MOVER_ARRIBA:
-		strcpy(direccion_ultimo_movimiento, DESCRIPCION_MOVIMIENTO_ARRIBA);
-		break;
-	case TECLA_MOVER_ABAJO:
-		strcpy(direccion_ultimo_movimiento, DESCRIPCION_MOVIMIENTO_ABAJO);
-		break;
-	case TECLA_MOVER_DERECHA:
-		strcpy(direccion_ultimo_movimiento, DESCRIPCION_MOVIMIENTO_DERECHA);
-		break;
-	case TECLA_MOVER_IZQUIERDA:
-		strcpy(direccion_ultimo_movimiento, DESCRIPCION_MOVIMIENTO_IZQUIERDA);
-		break;
-	}
-
-	printf(" » Ultimo movimiento: %s\n", direccion_ultimo_movimiento);
 }

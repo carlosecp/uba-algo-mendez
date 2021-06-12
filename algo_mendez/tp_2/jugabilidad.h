@@ -10,16 +10,10 @@
 #define TECLA_MOVER_IZQUIERDA 'a'
 #define TECLA_ENCENDER_LINTERNA 'l'
 #define TECLA_ENCENDER_VELA 'v'
-#define TECLA_VER_TIEMPO_RESTANTE
+#define TECLA_VER_TIEMPO_RESTANTE 't'
 
 #define SIMBOLO_SIN_MOVIMIENTOS ' '
 #define SIMBOLO_MOVIMIENTO_INVALIDO 'x'
-
-#define MAX_DESCRIPCION_MOVIMIENTO 10
-#define DESCRIPCION_MOVIMIENTO_ARRIBA "Arriba"
-#define DESCRIPCION_MOVIMIENTO_ABAJO "Abajo"
-#define DESCRIPCION_MOVIMIENTO_DERECHA "Derecha"
-#define DESCRIPCION_MOVIMIENTO_IZQUIERDA "Izquierda"
 
 static const coordenada_t MOVER_ELEMENTO_ARRIBA = {.fil = -1, .col = 0};
 static const coordenada_t MOVER_ELEMENTO_ABAJO = {.fil = 1, .col = 0};
@@ -31,5 +25,15 @@ void mover_elemento(coordenada_t *coordenada_actual, coordenada_t direccion_movi
 bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada);
 
 void jugada_movimiento(juego_t *juego, char jugada);
+
+void jugada_encender_linterna(juego_t *juego);
+
+void iluminar_renglon_arriba_aux(juego_t *juego);
+
+void iluminar_renglon_abajo_aux(juego_t *juego);
+
+void iluminar_renglon_derecha_aux(juego_t *juego);
+
+void iluminar_renglon_izquierda_aux(juego_t *juego);
 
 #endif

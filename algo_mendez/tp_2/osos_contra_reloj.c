@@ -41,7 +41,10 @@ void realizar_jugada(juego_t *juego, char jugada)
 		case TECLA_MOVER_IZQUIERDA:
 			jugada_movimiento(juego, jugada);
 			break;
+		case TECLA_ENCENDER_LINTERNA:
+			jugada_encender_linterna(juego);
 		}
+
 		juego->personaje.ultimo_movimiento = jugada;
 	}
 	else
@@ -53,10 +56,10 @@ void realizar_jugada(juego_t *juego, char jugada)
 void mostrar_juego(juego_t juego)
 {
 	char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS];
-	posicionar_elementos_del_juego_en_mapa(mapa, juego);
+	posicionar_todos_elementos_en_mapa(mapa, juego);
 
 	renderizar_bordes_mapa();
-	renderizar_estadisticas(tiempo_actual(), &(juego.personaje.ultimo_movimiento));
+	// renderizar_estadisticas(tiempo_actual(), &(juego.personaje.ultimo_movimiento));
 	renderizar_bordes_mapa();
 	for (int i = 0; i < CANTIDAD_FILAS; i++)
 	{
@@ -74,5 +77,6 @@ bool es_jugada_valida(char jugada)
 	return ((jugada == TECLA_MOVER_ARRIBA) ||
 					(jugada == TECLA_MOVER_ABAJO) ||
 					(jugada == TECLA_MOVER_DERECHA) ||
-					(jugada == TECLA_MOVER_IZQUIERDA));
+					(jugada == TECLA_MOVER_IZQUIERDA) ||
+					(jugada == TECLA_ENCENDER_LINTERNA));
 }
