@@ -59,7 +59,6 @@ void mostrar_juego(juego_t juego)
 	posicionar_todos_elementos_en_mapa(mapa, juego);
 
 	renderizar_bordes_mapa();
-	// renderizar_estadisticas(tiempo_actual(), &(juego.personaje.ultimo_movimiento));
 	renderizar_bordes_mapa();
 	for (int i = 0; i < CANTIDAD_FILAS; i++)
 	{
