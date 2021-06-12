@@ -28,12 +28,12 @@ void jugada_movimiento(juego_t *juego, char jugada);
 
 void jugada_encender_linterna(juego_t *juego);
 
-void iluminar_renglon_arriba_aux(juego_t *juego);
+void iluminar_fila(juego_t *juego, bool revertir_direccion);
 
-void iluminar_renglon_abajo_aux(juego_t *juego);
+void iluminar_columna(juego_t *juego, bool revertir_direccion);
 
-void iluminar_renglon_derecha_aux(juego_t *juego);
+bool fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion);
 
-void iluminar_renglon_izquierda_aux(juego_t *juego);
+bool columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion);
 
 #endif

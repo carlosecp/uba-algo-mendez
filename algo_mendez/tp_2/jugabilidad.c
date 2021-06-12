@@ -41,33 +41,30 @@ void jugada_movimiento(juego_t *juego, char jugada)
 
 void jugada_encender_linterna(juego_t *juego)
 {
-	// printf("\nCoordenada actual: {%i, %i}\n", juego->personaje.posicion.fil, juego->personaje.posicion.col);
 	switch (juego->personaje.ultimo_movimiento)
 	{
 	case TECLA_MOVER_ARRIBA:
-		iluminar_renglon_arriba_aux(juego);
+		iluminar_columna(juego, false);
 		break;
 	case TECLA_MOVER_ABAJO:
-		iluminar_renglon_abajo_aux(juego);
+		iluminar_columna(juego, true);
 		break;
 	case TECLA_MOVER_DERECHA:
-		iluminar_renglon_derecha_aux(juego);
+		iluminar_fila(juego, false);
 		break;
 	case TECLA_MOVER_IZQUIERDA:
-		iluminar_renglon_izquierda_aux(juego);
+		iluminar_fila(juego, true);
 		break;
 	}
 }
 
 /* ==== AUXILIARES ILUMINACION RENGLONES ===== */
 
-void iluminar_renglon_arriba_aux(juego_t *juego)
+void iluminar_fila(juego_t *juego, bool revertir_direccion)
 {
 	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{
-		coordenada_t coordenada_obstaculo = juego->obstaculos[i].posicion;
-
-		if ((coordenada_obstaculo.fil < juego->personaje.posicion.fil) && (coordenada_obstaculo.col == juego->personaje.posicion.col))
+		if (fila_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
 		{
 			juego->obstaculos[i].visible = true;
 		}
@@ -75,21 +72,18 @@ void iluminar_renglon_arriba_aux(juego_t *juego)
 
 	for (int i = 0; i < juego->cantidad_herramientas; i++)
 	{
-		coordenada_t coordenada_herramienta = juego->herramientas[i].posicion;
-
-		if ((coordenada_herramienta.fil < juego->personaje.posicion.fil) && (coordenada_herramienta.col == juego->personaje.posicion.col))
+		if (fila_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion, revertir_direccion))
 		{
 			juego->herramientas[i].visible = true;
 		}
 	}
 }
 
-void iluminar_renglon_abajo_aux(juego_t *juego)
+void iluminar_columna(juego_t *juego, bool revertir_direccion)
 {
 	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{
-		coordenada_t coordenada_obstaculo = juego->obstaculos[i].posicion;
-		if ((coordenada_obstaculo.fil > juego->personaje.posicion.fil) && (coordenada_obstaculo.col == juego->personaje.posicion.col))
+		if (columna_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
 		{
 			juego->obstaculos[i].visible = true;
 		}
@@ -97,53 +91,29 @@ void iluminar_renglon_abajo_aux(juego_t *juego)
 
 	for (int i = 0; i < juego->cantidad_herramientas; i++)
 	{
-		coordenada_t coordenada_herramienta = juego->herramientas[i].posicion;
-
-		if ((coordenada_herramienta.fil > juego->personaje.posicion.fil) && (coordenada_herramienta.col == juego->personaje.posicion.col))
+		if (columna_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion, revertir_direccion))
 		{
 			juego->herramientas[i].visible = true;
 		}
 	}
 }
 
-void iluminar_renglon_derecha_aux(juego_t *juego)
+bool fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion)
 {
-	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	if (!revertir_direccion)
 	{
-		coordenada_t coordenada_obstaculo = juego->obstaculos[i].posicion;
-		if ((coordenada_obstaculo.fil == juego->personaje.posicion.fil) && (coordenada_obstaculo.col > juego->personaje.posicion.col))
-		{
-			juego->obstaculos[i].visible = true;
-		}
+		return ((posicion_elemento.col > posicion_personaje.col) && (posicion_elemento.fil == posicion_personaje.fil));
 	}
 
-	for (int i = 0; i < juego->cantidad_herramientas; i++)
-	{
-		coordenada_t coordenada_herramienta = juego->obstaculos[i].posicion;
-		if ((coordenada_herramienta.fil == juego->personaje.posicion.fil) && (coordenada_herramienta.col > juego->personaje.posicion.col))
-		{
-			juego->herramientas[i].visible = true;
-		}
-	}
+	return ((posicion_elemento.col < posicion_personaje.col) && (posicion_elemento.fil == posicion_personaje.fil));
 }
 
-void iluminar_renglon_izquierda_aux(juego_t *juego)
+bool columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion)
 {
-	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	if (!revertir_direccion)
 	{
-		coordenada_t coordenada_obstaculo = juego->obstaculos[i].posicion;
-		if ((coordenada_obstaculo.fil == juego->personaje.posicion.fil) && (coordenada_obstaculo.col < juego->personaje.posicion.col))
-		{
-			juego->obstaculos[i].visible = true;
-		}
+		return ((posicion_elemento.fil < posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
 	}
 
-	for (int i = 0; i < juego->cantidad_herramientas; i++)
-	{
-		coordenada_t coordenada_herramienta = juego->obstaculos[i].posicion;
-		if ((coordenada_herramienta.fil == juego->personaje.posicion.fil) && (coordenada_herramienta.col > juego->personaje.posicion.col))
-		{
-			juego->herramientas[i].visible = true;
-		}
-	}
+	return ((posicion_elemento.fil > posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
 }
