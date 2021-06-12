@@ -72,17 +72,17 @@ void posicionar_elementos_del_juego_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_C
 	posicionar_personaje_en_mapa(mapa, juego.personaje);
 	posicionar_amiga_chloe_en_mapa(mapa, juego.amiga_chloe);
 
-	// for (int i = 0; i < juego.cantidad_obstaculos; i++)
-	// {
-	// elemento_del_mapa_t obstaculo_a_posicionar = juego.obstaculos[i];
-	// posicionar_elemento_del_tipo_en_mapa(mapa, obstaculo_a_posicionar);
-	// }
+	for (int i = 0; i < juego.cantidad_obstaculos; i++)
+	{
+		elemento_del_mapa_t obstaculo_a_posicionar = juego.obstaculos[i];
+		posicionar_elemento_del_tipo_en_mapa(mapa, obstaculo_a_posicionar);
+	}
 
-	// for (int i = 0; i < juego.cantidad_herramientas; i++)
-	// {
-	// elemento_del_mapa_t herramienta_a_posicionar = juego.herramientas[i];
-	// posicionar_elemento_del_tipo_en_mapa(mapa, herramienta_a_posicionar);
-	// }
+	for (int i = 0; i < juego.cantidad_herramientas; i++)
+	{
+		elemento_del_mapa_t herramienta_a_posicionar = juego.herramientas[i];
+		posicionar_elemento_del_tipo_en_mapa(mapa, herramienta_a_posicionar);
+	}
 }
 
 /* ==== AUXILIARES POSICIONAMIENTO DE ELEMENTOS ===== */
@@ -94,6 +94,7 @@ void posicionar_personaje_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], 
 
 void posicionar_amiga_chloe_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t amiga_chloe)
 {
+	mapa[amiga_chloe.fil][amiga_chloe.col] = CHLOE;
 }
 
 void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], elemento_del_mapa_t elemento_a_posicionar)
@@ -117,8 +118,6 @@ void renderizar_bordes_mapa()
 
 void renderizar_estadisticas(double tiempo_actual, char *ultimo_movimiento)
 {
-	// Ultimo movimiento, tiempo faltante
-	// Cantidad herramientas, etc...
 	if (true)
 	{
 		printf(" » Segundos transcurrido: (PRESIONAR \"T\" PARA MOSTRAR)\n");

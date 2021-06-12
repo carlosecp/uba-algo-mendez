@@ -33,26 +33,16 @@ void realizar_jugada(juego_t *juego, char jugada)
 {
 	if (es_jugada_valida(jugada))
 	{
-		coordenada_t direccion_movimiento = {
-				.fil = 0,
-				.col = 0};
 		switch (jugada)
 		{
 		case TECLA_MOVER_ARRIBA:
-			direccion_movimiento = MOVER_ELEMENTO_ARRIBA;
-			break;
 		case TECLA_MOVER_ABAJO:
-			direccion_movimiento = MOVER_ELEMENTO_ABAJO;
-			break;
 		case TECLA_MOVER_DERECHA:
-			direccion_movimiento = MOVER_ELEMENTO_DERECHA;
-			break;
 		case TECLA_MOVER_IZQUIERDA:
-			direccion_movimiento = MOVER_ELEMENTO_IZQUIERDA;
+			jugada_movimiento(juego, jugada);
 			break;
 		}
 		juego->personaje.ultimo_movimiento = jugada;
-		mover_elemento(&(juego->personaje.posicion), direccion_movimiento);
 	}
 	else
 	{

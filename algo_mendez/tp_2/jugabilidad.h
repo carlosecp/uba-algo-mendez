@@ -8,6 +8,10 @@
 #define TECLA_MOVER_ABAJO 's'
 #define TECLA_MOVER_DERECHA 'd'
 #define TECLA_MOVER_IZQUIERDA 'a'
+#define TECLA_ENCENDER_LINTERNA 'l'
+#define TECLA_ENCENDER_VELA 'v'
+#define TECLA_VER_TIEMPO_RESTANTE
+
 #define SIMBOLO_SIN_MOVIMIENTOS ' '
 #define SIMBOLO_MOVIMIENTO_INVALIDO 'x'
 
@@ -25,5 +29,7 @@ static const coordenada_t MOVER_ELEMENTO_IZQUIERDA = {.fil = 0, .col = -1};
 void mover_elemento(coordenada_t *coordenada_actual, coordenada_t direccion_movimiento);
 
 bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada);
+
+void jugada_movimiento(juego_t *juego, char jugada);
 
 #endif
