@@ -46,7 +46,7 @@ int generar_mochila(elemento_mochila_t mochila[MAX_HERRAMIENTAS], char tipo_pers
 
 elemento_mochila_t generar_herramienta_mochila(char tipo_herramienta, char tipo_personaje);
 
-void agregar_herramienta_del_tipo(char tipo_herramienta, int cantidad_herramientas_del_tipo, elemento_mochila_t mochila[MAX_HERRAMIENTAS], int *tope_mochila, char tipo_personaje);
+void agregar_herramienta_del_tipo_a_mochila(char tipo_herramienta, int cantidad_herramientas_del_tipo, elemento_mochila_t mochila[MAX_HERRAMIENTAS], int *tope_mochila, char tipo_personaje);
 
 coordenada_t inicializar_amiga_chloe(juego_t juego);
 

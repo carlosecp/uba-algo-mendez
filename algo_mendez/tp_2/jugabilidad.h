@@ -24,6 +24,8 @@ bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada);
 
 void jugada_movimiento(juego_t *juego, char jugada);
 
+void manejar_colision(juego_t *juego);
+
 void jugada_encender_linterna(juego_t *juego);
 
 void iluminar_fila(juego_t *juego, bool revertir_direccion);

@@ -37,6 +37,42 @@ void jugada_movimiento(juego_t *juego, char jugada)
 		mover_personaje(&(juego->personaje.posicion), mover_personaje_IZQUIERDA);
 		break;
 	}
+
+	manejar_colision(juego);
+}
+
+void manejar_colision(juego_t *juego)
+{
+	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	{
+		if (son_misma_coordenada(juego->personaje.posicion, juego->obstaculos[i].posicion))
+		{
+			tipo_elemento_colision = juego->obstaculos[i].tipo;
+		}
+	}
+
+	for (int i = 0; i < juego->cantidad_herramientas; i++)
+	{
+		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[i].posicion))
+		{
+			tipo_elemento_colision = juego->herramientas[i].tipo;
+		}
+	}
+}
+
+bool es_elemento_recolectable(char tipo_elemento)
+{
+	return ((tipo_elemento == VELA) ||
+					(tipo_elemento == BENGALA) ||
+					(tipo_elemento == PILA));
+}
+
+void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectable)
+{
+	if (cantidad_herramientas < MAX_HERRAMIENTAS)
+	{
+		agregar_herramienta_del_tipo_a_mochila(tipo_recolectable, 1, personaje->mochila, &(personaje->cantidad_elementos), personaje->tipo);
+	}
 }
 
 void jugada_encender_linterna(juego_t *juego)

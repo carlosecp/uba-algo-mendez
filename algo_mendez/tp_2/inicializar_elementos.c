@@ -25,11 +25,20 @@ int generar_mochila(elemento_mochila_t mochila[MAX_HERRAMIENTAS], char tipo_pers
 	int cantidad_bengalas = tipo_personaje == PANDA ? CANTIDAD_BENGALAS_PANDA : CANTIDAD_BENGALAS_MOCHILA;
 
 	int tope_mochila = 0;
-	agregar_herramienta_del_tipo(LINTERNA, cantidad_linternas, mochila, &tope_mochila, tipo_personaje);
-	agregar_herramienta_del_tipo(VELA, cantidad_velas, mochila, &tope_mochila, tipo_personaje);
-	agregar_herramienta_del_tipo(BENGALA, cantidad_bengalas, mochila, &tope_mochila, tipo_personaje);
+	agregar_herramienta_del_tipo_a_mochila(LINTERNA, cantidad_linternas, mochila, &tope_mochila, tipo_personaje);
+	agregar_herramienta_del_tipo_a_mochila(VELA, cantidad_velas, mochila, &tope_mochila, tipo_personaje);
+	agregar_herramienta_del_tipo_a_mochila(BENGALA, cantidad_bengalas, mochila, &tope_mochila, tipo_personaje);
 
 	return tope_mochila;
+}
+
+void agregar_herramienta_del_tipo_a_mochila(char tipo_herramienta, int cantidad_herramientas_del_tipo, elemento_mochila_t mochila[MAX_HERRAMIENTAS], int *tope_mochila, char tipo_personaje)
+{
+	for (int i = 0; i < cantidad_herramientas_del_tipo; i++)
+	{
+		mochila[(*tope_mochila)] = generar_herramienta_mochila(BENGALA, tipo_personaje);
+		(*tope_mochila)++;
+	}
 }
 
 elemento_mochila_t generar_herramienta_mochila(char tipo_herramienta, char tipo_personaje)
@@ -54,15 +63,6 @@ elemento_mochila_t generar_herramienta_mochila(char tipo_herramienta, char tipo_
 			.movimientos_restantes = movimientos_restantes};
 
 	return herramienta;
-}
-
-void agregar_herramienta_del_tipo(char tipo_herramienta, int cantidad_herramientas_del_tipo, elemento_mochila_t mochila[MAX_HERRAMIENTAS], int *tope_mochila, char tipo_personaje)
-{
-	for (int i = 0; i < cantidad_herramientas_del_tipo; i++)
-	{
-		mochila[(*tope_mochila)] = generar_herramienta_mochila(BENGALA, tipo_personaje);
-		(*tope_mochila)++;
-	}
 }
 
 /* ==== AMIGA CHLOE ===== */

@@ -14,6 +14,8 @@ coordenada_t generar_coordenada(juego_t juego, bool validar_coordenada_personaje
 
 bool es_coordenada_ocupada(juego_t juego, coordenada_t coordenada_buscada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe);
 
+bool coordenada_coincide_con_elemento(juego_t juego, coordenada_t coordenada_buscada);
+
 bool son_misma_coordenada(coordenada_t coordenada_a, coordenada_t coordenada_b);
 
 void inicializar_mapa_vacio(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS]);

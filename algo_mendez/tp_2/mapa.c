@@ -41,12 +41,6 @@ bool es_coordenada_ocupada(juego_t juego, coordenada_t coordenada_buscada, bool 
 			coordenada_ocupada = true;
 	}
 
-	if (coordenada_ocupada)
-	{
-		printf("Coordenada ocupada: {%i, %i}\t", coordenada_buscada.fil, coordenada_buscada.col);
-		printf("%i\n", juego.cantidad_obstaculos);
-	}
-
 	return coordenada_ocupada;
 }
 
