@@ -30,8 +30,6 @@ void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COL
 
 void renderizar_bordes_mapa();
 
-void renderizar_estadisticas(double tiempo_actual, char *ultimo_movimiento);
-
 void mostrar_direccion_ultimo_movimiento(char *ultimo_movimiento);
 
 #endif

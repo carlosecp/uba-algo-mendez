@@ -47,7 +47,7 @@ void manejar_colision(juego_t *juego)
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->obstaculos[i].posicion))
 		{
-			tipo_elemento_colision = juego->obstaculos[i].tipo;
+			// tipo_elemento_colision = juego->obstaculos[i].tipo;
 		}
 	}
 
@@ -55,7 +55,7 @@ void manejar_colision(juego_t *juego)
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[i].posicion))
 		{
-			tipo_elemento_colision = juego->herramientas[i].tipo;
+			// tipo_elemento_colision = juego->herramientas[i].tipo;
 		}
 	}
 }
@@ -69,10 +69,10 @@ bool es_elemento_recolectable(char tipo_elemento)
 
 void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectable)
 {
-	if (cantidad_herramientas < MAX_HERRAMIENTAS)
-	{
-		agregar_herramienta_del_tipo_a_mochila(tipo_recolectable, 1, personaje->mochila, &(personaje->cantidad_elementos), personaje->tipo);
-	}
+	// if (cantidad_herramientas < MAX_HERRAMIENTAS)
+	// {
+	// 	agregar_herramienta_del_tipo_a_mochila(tipo_recolectable, 1, personaje->mochila, &(personaje->cantidad_elementos), personaje->tipo);
+	// }
 }
 
 void jugada_encender_linterna(juego_t *juego)

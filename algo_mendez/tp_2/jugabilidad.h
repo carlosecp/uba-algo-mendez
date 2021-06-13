@@ -1,17 +1,20 @@
 #ifndef __MECANICAS_H__
 #define __MECANICAS_H__
 
+#include <string.h>
 #include "osos_contra_reloj.h"
+#include "inicializar_elementos.h"
 #include "mapa.h"
 
-#define MOVIMIENTO_INVALIDO 'x'
-#define TECLA_MOVER_ARRIBA 'w'
-#define TECLA_MOVER_ABAJO 's'
-#define TECLA_MOVER_DERECHA 'd'
-#define TECLA_MOVER_IZQUIERDA 'a'
-#define TECLA_ENCENDER_LINTERNA 'l'
-#define TECLA_ENCENDER_VELA 'v'
-#define TECLA_VER_TIEMPO_RESTANTE 't'
+#define MOVIMIENTO_INVALIDO 'X'
+#define TECLA_MOVER_ARRIBA 'W'
+#define TECLA_MOVER_ABAJO 'S'
+#define TECLA_MOVER_DERECHA 'D'
+#define TECLA_MOVER_IZQUIERDA 'A'
+#define TECLA_ENCENDER_LINTERNA LINTERNA
+#define TECLA_ENCENDER_VELA VELA
+#define TECLA_ENCENDER_BENGALA BENGALA
+#define TECLA_VER_TIEMPO_RESTANTE 'T'
 
 static const coordenada_t mover_personaje_ARRIBA = {.fil = -1, .col = 0};
 static const coordenada_t mover_personaje_ABAJO = {.fil = 1, .col = 0};

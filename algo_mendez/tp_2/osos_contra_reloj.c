@@ -3,6 +3,7 @@
 #include "mapa.h"
 #include "jugabilidad.h"
 #include "utiles.h"
+#include "estadisticas.h"
 
 void inicializar_juego(juego_t *juego, char tipo_personaje)
 {
@@ -15,7 +16,7 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 
 	while (estado_juego(*juego) == 0)
 	{
-		// system("clear");
+		system("clear");
 		mostrar_juego(*juego);
 		char jugada;
 		printf(" » Registrar jugada: ");
@@ -59,7 +60,9 @@ void mostrar_juego(juego_t juego)
 	posicionar_todos_elementos_en_mapa(mapa, juego);
 
 	renderizar_bordes_mapa();
+	renderizar_estadisticas(juego.personaje);
 	renderizar_bordes_mapa();
+
 	for (int i = 0; i < CANTIDAD_FILAS; i++)
 	{
 		for (int j = 0; j < CANTIDAD_COLUMNAS; j++)
