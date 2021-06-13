@@ -3,19 +3,7 @@
 
 /* ==== COORDENADAS ===== */
 
-coordenada_t generar_coordenada()
-{
-	int fila_aleatoria = rand() % CANTIDAD_FILAS;
-	int columna_aleatoria = rand() % CANTIDAD_COLUMNAS;
-
-	coordenada_t coordenada_aleatoria = {
-			.fil = fila_aleatoria,
-			.col = columna_aleatoria};
-
-	return coordenada_aleatoria;
-}
-
-coordenada_t generar_coordenada_safe(juego_t juego, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe)
+coordenada_t generar_coordenada(juego_t juego, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe)
 {
 	int fila_aleatoria = rand() % CANTIDAD_FILAS;
 	int columna_aleatoria = rand() % CANTIDAD_COLUMNAS;
@@ -25,7 +13,7 @@ coordenada_t generar_coordenada_safe(juego_t juego, bool validar_coordenada_pers
 
 	if (!es_coordenada_valida(juego, coordenada_aleatoria, validar_coordenada_personaje, validar_coordenada_amiga_chloe))
 	{
-		return generar_coordenada_safe(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
+		return generar_coordenada(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
 	}
 
 	return coordenada_aleatoria;

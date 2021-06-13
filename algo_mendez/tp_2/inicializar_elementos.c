@@ -128,7 +128,7 @@ coordenada_t generar_coordenada_personaje(juego_t juego)
 	bool validar_coordenada_personaje = false;
 	bool validar_coordenada_amiga_chloe = false;
 
-	return generar_coordenada_safe(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
+	return generar_coordenada(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
 }
 
 coordenada_t generar_coordenada_amiga_chloe(juego_t juego)
@@ -136,7 +136,7 @@ coordenada_t generar_coordenada_amiga_chloe(juego_t juego)
 	bool validar_coordenada_personaje = true;
 	bool validar_coordenada_amiga_chloe = false;
 
-	return generar_coordenada_safe(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
+	return generar_coordenada(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
 }
 
 coordenada_t generar_coordenada_elemento(juego_t juego)
@@ -144,5 +144,5 @@ coordenada_t generar_coordenada_elemento(juego_t juego)
 	bool validar_coordenada_personaje = true;
 	bool validar_coordenada_amiga_chloe = true;
 
-	return generar_coordenada_safe(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
+	return generar_coordenada(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
 }
