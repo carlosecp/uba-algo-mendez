@@ -4,6 +4,7 @@
 #include "osos_contra_reloj.h"
 #include "mapa.h"
 
+#define MOVIMIENTO_INVALIDO 'x'
 #define TECLA_MOVER_ARRIBA 'w'
 #define TECLA_MOVER_ABAJO 's'
 #define TECLA_MOVER_DERECHA 'd'
@@ -11,9 +12,6 @@
 #define TECLA_ENCENDER_LINTERNA 'l'
 #define TECLA_ENCENDER_VELA 'v'
 #define TECLA_VER_TIEMPO_RESTANTE 't'
-
-#define SIMBOLO_SIN_MOVIMIENTOS ' '
-#define SIMBOLO_MOVIMIENTO_INVALIDO 'x'
 
 static const coordenada_t MOVER_ELEMENTO_ARRIBA = {.fil = -1, .col = 0};
 static const coordenada_t MOVER_ELEMENTO_ABAJO = {.fil = 1, .col = 0};

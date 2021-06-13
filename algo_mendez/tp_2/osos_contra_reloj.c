@@ -49,7 +49,7 @@ void realizar_jugada(juego_t *juego, char jugada)
 	}
 	else
 	{
-		juego->personaje.ultimo_movimiento = SIMBOLO_MOVIMIENTO_INVALIDO;
+		juego->personaje.ultimo_movimiento = MOVIMIENTO_INVALIDO;
 	}
 }
 
