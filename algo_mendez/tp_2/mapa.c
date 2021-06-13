@@ -12,7 +12,9 @@ coordenada_t generar_coordenada(juego_t juego, bool validar_coordenada_personaje
 			.col = columna_aleatoria};
 
 	if (es_coordenada_ocupada(juego, coordenada_aleatoria, validar_coordenada_personaje, validar_coordenada_amiga_chloe))
+	{
 		return generar_coordenada(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
+	}
 
 	return coordenada_aleatoria;
 }
@@ -21,17 +23,29 @@ bool es_coordenada_ocupada(juego_t juego, coordenada_t coordenada_buscada, bool 
 {
 	bool coordenada_ocupada = false;
 
-	if (validar_coordenada_personaje)
-		coordenada_ocupada = son_misma_coordenada(coordenada_buscada, juego.personaje.posicion);
+	if (validar_coordenada_personaje && son_misma_coordenada(coordenada_buscada, juego.personaje.posicion))
+		coordenada_ocupada = true;
 
-	if (validar_coordenada_amiga_chloe)
-		coordenada_ocupada = son_misma_coordenada(coordenada_buscada, juego.amiga_chloe);
+	if (validar_coordenada_amiga_chloe && son_misma_coordenada(coordenada_buscada, juego.amiga_chloe))
+		coordenada_ocupada = true;
 
 	for (int i = 0; i < juego.cantidad_obstaculos; i++)
-		coordenada_ocupada = son_misma_coordenada(coordenada_buscada, juego.obstaculos[i].posicion);
+	{
+		if (son_misma_coordenada(coordenada_buscada, juego.obstaculos[i].posicion))
+			coordenada_ocupada = true;
+	}
 
 	for (int i = 0; i < juego.cantidad_herramientas; i++)
-		coordenada_ocupada = son_misma_coordenada(coordenada_buscada, juego.herramientas[i].posicion);
+	{
+		if (son_misma_coordenada(coordenada_buscada, juego.herramientas[i].posicion))
+			coordenada_ocupada = true;
+	}
+
+	if (coordenada_ocupada)
+	{
+		printf("Coordenada ocupada: {%i, %i}\t", coordenada_buscada.fil, coordenada_buscada.col);
+		printf("%i\n", juego.cantidad_obstaculos);
+	}
 
 	return coordenada_ocupada;
 }

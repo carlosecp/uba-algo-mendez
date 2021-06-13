@@ -56,6 +56,8 @@ void jugada_encender_linterna(juego_t *juego)
 		iluminar_fila(juego, true);
 		break;
 	}
+
+	agregar_koala_nom_nom(juego);
 }
 
 /* ==== INTERACCION DEL PERSONAJE CON ELEMENTOS DEL MAPA ==== */

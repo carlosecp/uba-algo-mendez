@@ -90,6 +90,12 @@ void inicializar_obstaculos(juego_t *juego)
 	}
 }
 
+void agregar_koala_nom_nom(juego_t *juego)
+{
+	juego->obstaculos[juego->cantidad_obstaculos] = agregar_elemento_del_tipo(*juego, KOALA);
+	juego->cantidad_obstaculos++;
+}
+
 void inicializar_herramientas(juego_t *juego)
 {
 	juego->cantidad_herramientas = 0;
@@ -118,11 +124,12 @@ elemento_del_mapa_t agregar_elemento_del_tipo(juego_t juego, char tipo_elemento)
 			.posicion = generar_coordenada_elemento_aux(juego),
 			.tipo = tipo_elemento,
 			.visible = true};
+	printf("Elemento generado (%c) at {%i, %i}\n", tipo_elemento, elemento_generado.posicion.fil, elemento_generado.posicion.col);
 
 	return elemento_generado;
 }
 
-/* ==== AUXILIARES INICIALIZACION DE COORDENADAS ===== */
+/* ==== AUXILIARES INICIALIZACION ELEMENTOS ===== */
 
 coordenada_t generar_coordenada_personaje_aux(juego_t juego)
 {

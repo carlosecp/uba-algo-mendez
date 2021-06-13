@@ -5,8 +5,8 @@
 #include "inicializar_elementos.h"
 #include "jugabilidad.h"
 
-#define CANTIDAD_FILAS 20
-#define CANTIDAD_COLUMNAS 30
+#define CANTIDAD_FILAS 5
+#define CANTIDAD_COLUMNAS 5
 
 #define ESPACIO_VACIO_MAPA '.'
 
