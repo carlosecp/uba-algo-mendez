@@ -13,12 +13,12 @@
 #define TECLA_ENCENDER_VELA 'v'
 #define TECLA_VER_TIEMPO_RESTANTE 't'
 
-static const coordenada_t MOVER_ELEMENTO_ARRIBA = {.fil = -1, .col = 0};
-static const coordenada_t MOVER_ELEMENTO_ABAJO = {.fil = 1, .col = 0};
-static const coordenada_t MOVER_ELEMENTO_DERECHA = {.fil = 0, .col = 1};
-static const coordenada_t MOVER_ELEMENTO_IZQUIERDA = {.fil = 0, .col = -1};
+static const coordenada_t mover_personaje_ARRIBA = {.fil = -1, .col = 0};
+static const coordenada_t mover_personaje_ABAJO = {.fil = 1, .col = 0};
+static const coordenada_t mover_personaje_DERECHA = {.fil = 0, .col = 1};
+static const coordenada_t mover_personaje_IZQUIERDA = {.fil = 0, .col = -1};
 
-void mover_elemento(coordenada_t *coordenada_actual, coordenada_t direccion_movimiento);
+void mover_personaje(coordenada_t *coordenada_actual, coordenada_t direccion_movimiento);
 
 bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada);
 

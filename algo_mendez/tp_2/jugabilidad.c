@@ -1,6 +1,6 @@
 #include "jugabilidad.h"
 
-void mover_elemento(coordenada_t *coordenada_actual, coordenada_t direccion_movimiento)
+void mover_personaje(coordenada_t *coordenada_actual, coordenada_t direccion_movimiento)
 {
 	coordenada_t coordenada_objetivo = {
 			.fil = coordenada_actual->fil + direccion_movimiento.fil,
@@ -25,16 +25,16 @@ void jugada_movimiento(juego_t *juego, char jugada)
 	switch (jugada)
 	{
 	case TECLA_MOVER_ARRIBA:
-		mover_elemento(&(juego->personaje.posicion), MOVER_ELEMENTO_ARRIBA);
+		mover_personaje(&(juego->personaje.posicion), mover_personaje_ARRIBA);
 		break;
 	case TECLA_MOVER_ABAJO:
-		mover_elemento(&(juego->personaje.posicion), MOVER_ELEMENTO_ABAJO);
+		mover_personaje(&(juego->personaje.posicion), mover_personaje_ABAJO);
 		break;
 	case TECLA_MOVER_DERECHA:
-		mover_elemento(&(juego->personaje.posicion), MOVER_ELEMENTO_DERECHA);
+		mover_personaje(&(juego->personaje.posicion), mover_personaje_DERECHA);
 		break;
 	case TECLA_MOVER_IZQUIERDA:
-		mover_elemento(&(juego->personaje.posicion), MOVER_ELEMENTO_IZQUIERDA);
+		mover_personaje(&(juego->personaje.posicion), mover_personaje_IZQUIERDA);
 		break;
 	}
 }
@@ -57,6 +57,8 @@ void jugada_encender_linterna(juego_t *juego)
 		break;
 	}
 }
+
+/* ==== INTERACCION DEL PERSONAJE CON ELEMENTOS DEL MAPA ==== */
 
 /* ==== AUXILIARES ILUMINACION RENGLONES ===== */
 

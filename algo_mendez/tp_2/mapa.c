@@ -11,28 +11,29 @@ coordenada_t generar_coordenada(juego_t juego, bool validar_coordenada_personaje
 			.fil = fila_aleatoria,
 			.col = columna_aleatoria};
 
-	if (!es_coordenada_valida(juego, coordenada_aleatoria, validar_coordenada_personaje, validar_coordenada_amiga_chloe))
-	{
+	if (es_coordenada_ocupada(juego, coordenada_aleatoria, validar_coordenada_personaje, validar_coordenada_amiga_chloe))
 		return generar_coordenada(juego, validar_coordenada_personaje, validar_coordenada_amiga_chloe);
-	}
 
 	return coordenada_aleatoria;
 }
 
-bool es_coordenada_valida(juego_t juego, coordenada_t coordenada_buscada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe)
+bool es_coordenada_ocupada(juego_t juego, coordenada_t coordenada_buscada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe)
 {
-	bool coordenada_valida = true;
-	if (validar_coordenada_personaje && son_misma_coordenada(coordenada_buscada, juego.personaje.posicion))
-	{
-		coordenada_valida = false;
-	}
+	bool coordenada_ocupada = false;
 
-	if (validar_coordenada_amiga_chloe && son_misma_coordenada(coordenada_buscada, juego.amiga_chloe))
-	{
-		coordenada_valida = false;
-	}
+	if (validar_coordenada_personaje)
+		coordenada_ocupada = son_misma_coordenada(coordenada_buscada, juego.personaje.posicion);
 
-	return coordenada_valida;
+	if (validar_coordenada_amiga_chloe)
+		coordenada_ocupada = son_misma_coordenada(coordenada_buscada, juego.amiga_chloe);
+
+	for (int i = 0; i < juego.cantidad_obstaculos; i++)
+		coordenada_ocupada = son_misma_coordenada(coordenada_buscada, juego.obstaculos[i].posicion);
+
+	for (int i = 0; i < juego.cantidad_herramientas; i++)
+		coordenada_ocupada = son_misma_coordenada(coordenada_buscada, juego.herramientas[i].posicion);
+
+	return coordenada_ocupada;
 }
 
 bool son_misma_coordenada(coordenada_t coordenada_a, coordenada_t coordenada_b)
@@ -41,9 +42,9 @@ bool son_misma_coordenada(coordenada_t coordenada_a, coordenada_t coordenada_b)
 					(coordenada_a.col == coordenada_b.col));
 }
 
-/* ==== MAPA (TABLERO) ===== */
+/* ==== MAPA (BOSQUE) ===== */
 
-void inicializar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
+void inicializar_mapa_vacio(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
 {
 	for (int i = 0; i < CANTIDAD_FILAS; i++)
 	{
@@ -56,7 +57,7 @@ void inicializar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
 
 void posicionar_todos_elementos_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], juego_t juego)
 {
-	inicializar_mapa(mapa);
+	inicializar_mapa_vacio(mapa);
 	posicionar_personaje_en_mapa(mapa, juego.personaje);
 	posicionar_amiga_chloe_en_mapa(mapa, juego.amiga_chloe);
 

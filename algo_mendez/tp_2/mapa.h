@@ -12,11 +12,11 @@
 
 coordenada_t generar_coordenada(juego_t juego, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe);
 
-bool es_coordenada_valida(juego_t juego, coordenada_t coordenada_buscada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe);
+bool es_coordenada_ocupada(juego_t juego, coordenada_t coordenada_buscada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe);
 
 bool son_misma_coordenada(coordenada_t coordenada_a, coordenada_t coordenada_b);
 
-void inicializar_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS]);
+void inicializar_mapa_vacio(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS]);
 
 void posicionar_todos_elementos_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], juego_t juego);
 

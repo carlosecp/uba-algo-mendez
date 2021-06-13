@@ -38,7 +38,7 @@ personaje_t inicializar_personaje(juego_t juego, char tipo_personaje);
 
 int generar_mochila(elemento_mochila_t mochila[MAX_HERRAMIENTAS], char tipo_personaje);
 
-elemento_mochila_t generar_herramienta(char tipo_herramienta, char tipo_personaje);
+elemento_mochila_t generar_herramienta_mochila(char tipo_herramienta, char tipo_personaje);
 
 void agregar_herramienta_del_tipo(char tipo_herramienta, int cantidad_herramientas_del_tipo, elemento_mochila_t mochila[MAX_HERRAMIENTAS], int *tope_mochila, char tipo_personaje);
 
@@ -50,10 +50,10 @@ void inicializar_herramientas(juego_t *juego);
 
 elemento_del_mapa_t agregar_elemento_del_tipo(juego_t juego, char tipo_elemento);
 
-coordenada_t generar_coordenada_personaje(juego_t juego);
+coordenada_t generar_coordenada_personaje_aux(juego_t juego);
 
-coordenada_t generar_coordenada_amiga_chloe(juego_t juego);
+coordenada_t generar_coordenada_amiga_chloe_aux(juego_t juego);
 
-coordenada_t generar_coordenada_elemento(juego_t juego);
+coordenada_t generar_coordenada_elemento_aux(juego_t juego);
 
 #endif
