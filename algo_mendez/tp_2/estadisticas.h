@@ -11,4 +11,6 @@ void renderizar_tiempo_elapsado();
 
 void renderizar_ultimo_movimiento(char ultimo_movimiento);
 
+void renderizar_mochila(personaje_t personaje);
+
 #endif

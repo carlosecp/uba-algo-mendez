@@ -29,6 +29,10 @@ void jugada_movimiento(juego_t *juego, char jugada);
 
 void manejar_colision(juego_t *juego);
 
+bool es_elemento_recolectable(char tipo_elemento);
+
+void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectable);
+
 void jugada_encender_linterna(juego_t *juego);
 
 void iluminar_fila(juego_t *juego, bool revertir_direccion);

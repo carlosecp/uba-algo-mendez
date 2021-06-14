@@ -25,8 +25,13 @@ int generar_mochila(elemento_mochila_t mochila[MAX_HERRAMIENTAS], char tipo_pers
 	int cantidad_bengalas = tipo_personaje == PANDA ? CANTIDAD_BENGALAS_PANDA : CANTIDAD_BENGALAS_MOCHILA;
 
 	int tope_mochila = 0;
+
 	agregar_herramienta_del_tipo_a_mochila(LINTERNA, cantidad_linternas, mochila, &tope_mochila, tipo_personaje);
+	printf("Tope mochila linterna: %i\n", tope_mochila);
+
 	agregar_herramienta_del_tipo_a_mochila(VELA, cantidad_velas, mochila, &tope_mochila, tipo_personaje);
+	printf("Tope mochila velas: %i\n", tope_mochila);
+
 	agregar_herramienta_del_tipo_a_mochila(BENGALA, cantidad_bengalas, mochila, &tope_mochila, tipo_personaje);
 
 	return tope_mochila;
@@ -36,7 +41,7 @@ void agregar_herramienta_del_tipo_a_mochila(char tipo_herramienta, int cantidad_
 {
 	for (int i = 0; i < cantidad_herramientas_del_tipo; i++)
 	{
-		mochila[(*tope_mochila)] = generar_herramienta_mochila(BENGALA, tipo_personaje);
+		mochila[(*tope_mochila)] = generar_herramienta_mochila(tipo_herramienta, tipo_personaje);
 		(*tope_mochila)++;
 	}
 }
@@ -124,7 +129,6 @@ elemento_del_mapa_t agregar_elemento_del_tipo(juego_t juego, char tipo_elemento)
 			.posicion = generar_coordenada_elemento_aux(juego),
 			.tipo = tipo_elemento,
 			.visible = true};
-	printf("Elemento generado (%c) at {%i, %i}\n", tipo_elemento, elemento_generado.posicion.fil, elemento_generado.posicion.col);
 
 	return elemento_generado;
 }

@@ -4,11 +4,12 @@ void renderizar_estadisticas(personaje_t personaje)
 {
 	renderizar_tiempo_elapsado();
 	renderizar_ultimo_movimiento(personaje.ultimo_movimiento);
+	renderizar_mochila(personaje);
 }
 
 void renderizar_tiempo_elapsado()
 {
-	printf(" » %.0fs\n", tiempo_actual());
+	printf(" » Tiempo Elapsado: %.0fs\n", tiempo_actual());
 }
 
 void renderizar_ultimo_movimiento(char ultimo_movimiento)
@@ -42,4 +43,18 @@ void renderizar_ultimo_movimiento(char ultimo_movimiento)
 		break;
 	}
 	printf("\n");
+}
+
+void renderizar_mochila(personaje_t personaje)
+{
+	printf(" » Mochila: [");
+	for (int i = 0; i < personaje.cantidad_elementos; i++)
+	{
+		if (i == (personaje.cantidad_elementos - 1))
+			printf("%c", personaje.mochila[i].tipo);
+		else
+			printf("%c, ", personaje.mochila[i].tipo);
+	}
+
+	printf("]\n");
 }

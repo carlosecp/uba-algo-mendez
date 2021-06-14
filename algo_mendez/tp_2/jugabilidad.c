@@ -47,7 +47,7 @@ void manejar_colision(juego_t *juego)
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->obstaculos[i].posicion))
 		{
-			// tipo_elemento_colision = juego->obstaculos[i].tipo;
+			printf("\nEs obstaculo.\nColision con %c\n\n", juego->obstaculos[i].tipo);
 		}
 	}
 
@@ -55,7 +55,7 @@ void manejar_colision(juego_t *juego)
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[i].posicion))
 		{
-			// tipo_elemento_colision = juego->herramientas[i].tipo;
+			printf("\nEs recolectable.\nColision con %c\n\n", juego->herramientas[i].tipo);
 		}
 	}
 }
@@ -105,17 +105,13 @@ void iluminar_fila(juego_t *juego, bool revertir_direccion)
 	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{
 		if (fila_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
-		{
 			juego->obstaculos[i].visible = true;
-		}
 	}
 
 	for (int i = 0; i < juego->cantidad_herramientas; i++)
 	{
 		if (fila_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion, revertir_direccion))
-		{
 			juego->herramientas[i].visible = true;
-		}
 	}
 }
 
@@ -124,26 +120,20 @@ void iluminar_columna(juego_t *juego, bool revertir_direccion)
 	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{
 		if (columna_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
-		{
 			juego->obstaculos[i].visible = true;
-		}
 	}
 
 	for (int i = 0; i < juego->cantidad_herramientas; i++)
 	{
 		if (columna_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion, revertir_direccion))
-		{
 			juego->herramientas[i].visible = true;
-		}
 	}
 }
 
 bool fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion)
 {
 	if (!revertir_direccion)
-	{
 		return ((posicion_elemento.col > posicion_personaje.col) && (posicion_elemento.fil == posicion_personaje.fil));
-	}
 
 	return ((posicion_elemento.col < posicion_personaje.col) && (posicion_elemento.fil == posicion_personaje.fil));
 }
@@ -151,9 +141,7 @@ bool fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_e
 bool columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion)
 {
 	if (!revertir_direccion)
-	{
 		return ((posicion_elemento.fil < posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
-	}
 
 	return ((posicion_elemento.fil > posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
 }
