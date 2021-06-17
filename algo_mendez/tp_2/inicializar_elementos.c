@@ -20,17 +20,15 @@ personaje_t inicializar_personaje(juego_t juego, char tipo_personaje)
 
 int generar_mochila(elemento_mochila_t mochila[MAX_HERRAMIENTAS], char tipo_personaje)
 {
-	int cantidad_linternas = CANTIDAD_LINTERNAS_MOCHILA;
+	int cantidad_linternas = tipo_personaje == PARDO ? CANTIDAD_USOS_LINTERNA_PARDO : CANTIDAD_USOS_LINTERNA;
 	int cantidad_velas = tipo_personaje == POLAR ? CANTIDAD_VELAS_POLAR : CANTIDAD_VELAS_MOCHILA;
 	int cantidad_bengalas = tipo_personaje == PANDA ? CANTIDAD_BENGALAS_PANDA : CANTIDAD_BENGALAS_MOCHILA;
 
 	int tope_mochila = 0;
 
 	agregar_herramienta_del_tipo_a_mochila(LINTERNA, cantidad_linternas, mochila, &tope_mochila, tipo_personaje);
-	printf("Tope mochila linterna: %i\n", tope_mochila);
 
 	agregar_herramienta_del_tipo_a_mochila(VELA, cantidad_velas, mochila, &tope_mochila, tipo_personaje);
-	printf("Tope mochila velas: %i\n", tope_mochila);
 
 	agregar_herramienta_del_tipo_a_mochila(BENGALA, cantidad_bengalas, mochila, &tope_mochila, tipo_personaje);
 

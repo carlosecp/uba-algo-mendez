@@ -47,14 +47,28 @@ void renderizar_ultimo_movimiento(char ultimo_movimiento)
 
 void renderizar_mochila(personaje_t personaje)
 {
-	printf(" » Mochila: [");
+	int cantidad_usos_linterna_disponibles = 0;
+	int cantidad_velas_disponibles = 0;
+	int cantidad_bengalas_disponibles = 0;
+
 	for (int i = 0; i < personaje.cantidad_elementos; i++)
 	{
-		if (i == (personaje.cantidad_elementos - 1))
-			printf("%c", personaje.mochila[i].tipo);
-		else
-			printf("%c, ", personaje.mochila[i].tipo);
+		switch (personaje.mochila[i].tipo)
+		{
+		case LINTERNA:
+			cantidad_usos_linterna_disponibles++;
+			break;
+		case VELA:
+			cantidad_velas_disponibles++;
+			break;
+		case BENGALA:
+			cantidad_bengalas_disponibles++;
+			break;
+		}
 	}
 
-	printf("]\n");
+	printf("\n » Herramientas Disponibles:\n");
+	printf(" • Linternas: %i\n", cantidad_usos_linterna_disponibles);
+	printf(" • Velas: %i\n", cantidad_velas_disponibles);
+	printf(" • Bengalas: %i\n", cantidad_bengalas_disponibles);
 }

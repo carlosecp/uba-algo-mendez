@@ -8,7 +8,7 @@ int main()
 {
 	srand((unsigned)time(NULL));
 	juego_t juego;
-	char tipo_personaje = 'I';
+	char tipo_personaje = 'P';
 	inicializar_juego(&juego, tipo_personaje);
 
 	return 0;
