@@ -37,17 +37,17 @@ void jugada_utilizar_herramienta(juego_t *juego, char tipo_herramienta);
 
 int ubicar_herramienta_en_mochila(personaje_t *personaje, char tipo_herramienta);
 
-bool hay_elemento_en_uso(personaje_t personaje);
+bool hay_herramienta_en_uso(personaje_t personaje);
 
 void cantidad_herramientas_disponibles(personaje_t personaje, int *cantidad_linternas, int *cantidad_velas, int *cantidad_bengalas);
 
 /* ==== HERRAMIENTAS: LINTERNA ===== */
 
-void utilizar_linterna(juego_t *juego);
+void utilizar_linterna(juego_t *juego, bool iluminar);
 
-void iluminar_fila(juego_t *juego, bool revertir_direccion);
+void iluminar_fila(juego_t *juego, bool revertir_direccion, bool iluminar);
 
-void iluminar_columna(juego_t *juego, bool revertir_direccion);
+void iluminar_columna(juego_t *juego, bool revertir_direccion, bool iluminar);
 
 bool fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion);
 
