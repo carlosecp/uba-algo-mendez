@@ -41,6 +41,8 @@ void renderizar_ultimo_movimiento(char ultimo_movimiento)
 	case MOVIMIENTO_INVALIDO:
 		printf("Movimiento Invalido");
 		break;
+	case SIN_MOVIMIENTOS:
+		printf("Sin Movimientos Aún");
 	}
 	printf("\n");
 }

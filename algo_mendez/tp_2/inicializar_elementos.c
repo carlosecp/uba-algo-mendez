@@ -11,7 +11,7 @@ personaje_t inicializar_personaje(juego_t juego, char tipo_personaje)
 	personaje.cantidad_elementos = generar_mochila(personaje.mochila, tipo_personaje);
 	personaje.elemento_en_uso = -1;
 	personaje.tiempo_perdido = 0;
-	personaje.ultimo_movimiento = ' ';
+	personaje.ultimo_movimiento = SIN_MOVIMIENTOS;
 
 	return personaje;
 }
@@ -126,7 +126,7 @@ elemento_del_mapa_t agregar_elemento_del_tipo(juego_t juego, char tipo_elemento)
 	elemento_del_mapa_t elemento_generado = {
 			.posicion = generar_coordenada_elemento_aux(juego),
 			.tipo = tipo_elemento,
-			.visible = true};
+			.visible = false};
 
 	return elemento_generado;
 }

@@ -6,6 +6,7 @@
 #include "inicializar_elementos.h"
 #include "mapa.h"
 
+#define SIN_MOVIMIENTOS ' '
 #define MOVIMIENTO_INVALIDO 'X'
 #define TECLA_MOVER_ARRIBA 'W'
 #define TECLA_MOVER_ABAJO 'S'
@@ -33,7 +34,7 @@ bool es_elemento_recolectable(char tipo_elemento);
 
 void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectable);
 
-void remover_elemento_del_mapa(int indice_elemento, juego_t *juego);
+void remover_recolectable_del_mapa(int indice_elemento, juego_t *juego);
 
 void jugada_encender_linterna(juego_t *juego);
 

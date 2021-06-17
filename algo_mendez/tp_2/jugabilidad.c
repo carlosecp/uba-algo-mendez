@@ -41,43 +41,6 @@ void jugada_movimiento(juego_t *juego, char jugada)
 	manejar_colision(juego);
 }
 
-void manejar_colision(juego_t *juego)
-{
-	for (int i = 0; i < juego->cantidad_obstaculos; i++)
-	{
-		if (son_misma_coordenada(juego->personaje.posicion, juego->obstaculos[i].posicion))
-		{
-			printf("\nEs obstaculo.\nColision con %c\n\n", juego->obstaculos[i].tipo);
-		}
-	}
-
-	for (int i = 0; i < juego->cantidad_herramientas; i++)
-	{
-		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[i].posicion))
-		{
-			agregar_recolectable_a_mochila(&(juego->personaje), juego->herramientas[i].tipo);
-			remover_elemento_del_mapa(i, juego);
-		}
-	}
-}
-
-void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectable)
-{
-	if (personaje->cantidad_elementos < MAX_HERRAMIENTAS)
-	{
-		agregar_herramienta_del_tipo_a_mochila(tipo_recolectable, 1, personaje->mochila, &(personaje->cantidad_elementos), personaje->tipo);
-	}
-}
-
-void remover_elemento_del_mapa(int indice_elemento, juego_t *juego)
-{
-	for (int i = indice_elemento; i < juego->cantidad_herramientas; i++)
-	{
-		juego->herramientas[i] = juego->herramientas[i + 1];
-	}
-	juego->cantidad_herramientas--;
-}
-
 void jugada_encender_linterna(juego_t *juego)
 {
 	switch (juego->personaje.ultimo_movimiento)
@@ -101,7 +64,46 @@ void jugada_encender_linterna(juego_t *juego)
 
 /* ==== INTERACCION DEL PERSONAJE CON ELEMENTOS DEL MAPA ==== */
 
-/* ==== AUXILIARES ILUMINACION RENGLONES ===== */
+/* ==== AUXILIARES RECOLECCION DE HERRAMIENTAS ===== */
+
+void manejar_colision(juego_t *juego)
+{
+	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	{
+		if (son_misma_coordenada(juego->personaje.posicion, juego->obstaculos[i].posicion))
+		{
+			printf("\nEs obstaculo.\nColision con %c\n\n", juego->obstaculos[i].tipo);
+		}
+	}
+
+	for (int i = 0; i < juego->cantidad_herramientas; i++)
+	{
+		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[i].posicion))
+		{
+			agregar_recolectable_a_mochila(&(juego->personaje), juego->herramientas[i].tipo);
+			remover_recolectable_del_mapa(i, juego);
+		}
+	}
+}
+
+void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectable)
+{
+	if (personaje->cantidad_elementos < MAX_HERRAMIENTAS)
+	{
+		agregar_herramienta_del_tipo_a_mochila(tipo_recolectable, 1, personaje->mochila, &(personaje->cantidad_elementos), personaje->tipo);
+	}
+}
+
+void remover_recolectable_del_mapa(int indice_elemento, juego_t *juego)
+{
+	for (int i = indice_elemento; i < juego->cantidad_herramientas; i++)
+	{
+		juego->herramientas[i] = juego->herramientas[i + 1];
+	}
+	juego->cantidad_herramientas--;
+}
+
+/* ==== AUXILIARES UTILIZACION LINTERNA ===== */
 
 void iluminar_fila(juego_t *juego, bool revertir_direccion)
 {
@@ -148,3 +150,5 @@ bool columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicio
 
 	return ((posicion_elemento.fil > posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
 }
+
+/* ==== AUXILIARES UTILIZACION BENGALA ===== */
