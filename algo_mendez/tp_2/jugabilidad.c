@@ -23,8 +23,10 @@ void jugada_movimiento(juego_t *juego, char jugada)
 
 	manejar_colision(juego);
 
-	bool iluminar = hay_herramienta_en_uso(juego->personaje);
-	utilizar_linterna(juego, iluminar);
+	if (hay_herramienta_en_uso(juego->personaje))
+	{
+		utilizar_linterna(juego, true);
+	}
 }
 
 void mover_personaje(coordenada_t *coordenada_actual, coordenada_t direccion_movimiento)
@@ -47,31 +49,22 @@ bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada)
 
 /* ==== HERRAMIENTAS ===== */
 
-void jugada_utilizar_herramienta(juego_t *juego, char jugada)
+void jugada_utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 {
-	char tipo_herramienta;
-	switch (jugada)
-	{
-	case TECLA_ENCENDER_LINTERNA:
-		utilizar_linterna(juego, true);
-		tipo_herramienta = LINTERNA;
-		break;
-	}
+	juego->personaje.elemento_en_uso = hay_herramienta_en_uso(juego->personaje) ? NINGUN_ELEMENTO_EN_USO : buscar_herramienta_en_mochila(&(juego->personaje), tipo_herramienta);
 
-	if (juego->personaje.elemento_en_uso == NINGUN_ELEMENTO_EN_USO)
+	bool iluminar = hay_herramienta_en_uso(juego->personaje);
+	switch (tipo_herramienta)
 	{
-		juego->personaje.elemento_en_uso = ubicar_herramienta_en_mochila(&(juego->personaje), tipo_herramienta);
-	}
-	else
-	{
-		juego->personaje.elemento_en_uso = NINGUN_ELEMENTO_EN_USO;
+	case LINTERNA:
+		utilizar_linterna(juego, iluminar);
 	}
 }
 
-int ubicar_herramienta_en_mochila(personaje_t *personaje, char tipo_herramienta)
+int buscar_herramienta_en_mochila(personaje_t *personaje, char tipo_herramienta)
 {
 	bool herramienta_disponible = false;
-	int ubicacion_herramienta = CANTIDAD_LINTERNAS_MOCHILA;
+	int ubicacion_herramienta = NINGUN_ELEMENTO_EN_USO;
 
 	int i = 0;
 	while ((i < personaje->cantidad_elementos) && !herramienta_disponible)
@@ -93,12 +86,12 @@ bool hay_herramienta_en_uso(personaje_t personaje)
 
 void cantidad_herramientas_disponibles(personaje_t personaje, int *cantidad_linternas, int *cantidad_velas, int *cantidad_bengalas)
 {
-	for (int i = 0; i < personaje.cantidad_elementos; i++)
-	{
-		printf("%c, ", personaje.mochila[i].tipo);
-	}
-	printf("%i", personaje.mochila[0].movimientos_restantes);
-	printf("\n");
+	// for (int i = 0; i < personaje.cantidad_elementos; i++)
+	// {
+	// 	printf("%c, ", personaje.mochila[i].tipo);
+	// }
+	// printf("%i", personaje.mochila[0].movimientos_restantes);
+	// printf("\n");
 
 	for (int i = 0; i < personaje.cantidad_elementos; i++)
 	{
@@ -121,6 +114,11 @@ void cantidad_herramientas_disponibles(personaje_t personaje, int *cantidad_lint
 
 void utilizar_linterna(juego_t *juego, bool iluminar)
 {
+	if (juego->personaje.elemento_en_uso == NINGUN_ELEMENTO_EN_USO)
+	{
+		printf("NINGUN ELEMENTO EN USO");
+	}
+
 	switch (juego->personaje.ultimo_movimiento)
 	{
 	case TECLA_MOVER_ARRIBA:
