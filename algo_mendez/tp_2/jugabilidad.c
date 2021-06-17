@@ -1,5 +1,34 @@
 #include "jugabilidad.h"
 
+/* ==== MOVIMIENTO ===== */
+
+void jugada_movimiento(juego_t *juego, char jugada)
+{
+	juego->personaje.ultimo_movimiento = jugada;
+	switch (jugada)
+	{
+	case TECLA_MOVER_ARRIBA:
+		mover_personaje(&(juego->personaje.posicion), MOVER_PERSONAJE_ARRIBA);
+		break;
+	case TECLA_MOVER_ABAJO:
+		mover_personaje(&(juego->personaje.posicion), MOVER_PERSONAJE_ABAJO);
+		break;
+	case TECLA_MOVER_DERECHA:
+		mover_personaje(&(juego->personaje.posicion), MOVER_PERSONAJE_DERECHA);
+		break;
+	case TECLA_MOVER_IZQUIERDA:
+		mover_personaje(&(juego->personaje.posicion), MOVER_PERSONAJE_IZQUIERDA);
+		break;
+	}
+
+	manejar_colision(juego);
+
+	if (hay_elemento_en_uso(juego->personaje))
+	{
+		utilizar_linterna(juego);
+	}
+}
+
 void mover_personaje(coordenada_t *coordenada_actual, coordenada_t direccion_movimiento)
 {
 	coordenada_t coordenada_objetivo = {
@@ -18,58 +47,54 @@ bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada)
 	return ((coordenada_buscada.fil >= 0) && (coordenada_buscada.fil < CANTIDAD_FILAS)) && ((coordenada_buscada.col >= 0) && (coordenada_buscada.col < CANTIDAD_COLUMNAS));
 }
 
-/* ==== JUGADAS ===== */
+/* ==== HERRAMIENTAS ===== */
 
-void jugada_movimiento(juego_t *juego, char jugada)
+void jugada_utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 {
-	switch (jugada)
+	switch (tipo_herramienta)
 	{
-	case TECLA_MOVER_ARRIBA:
-		mover_personaje(&(juego->personaje.posicion), mover_personaje_ARRIBA);
-		break;
-	case TECLA_MOVER_ABAJO:
-		mover_personaje(&(juego->personaje.posicion), mover_personaje_ABAJO);
-		break;
-	case TECLA_MOVER_DERECHA:
-		mover_personaje(&(juego->personaje.posicion), mover_personaje_DERECHA);
-		break;
-	case TECLA_MOVER_IZQUIERDA:
-		mover_personaje(&(juego->personaje.posicion), mover_personaje_IZQUIERDA);
+	case TECLA_ENCENDER_LINTERNA:
+		utilizar_linterna(juego);
 		break;
 	}
 
-	manejar_colision(juego);
+	juego->personaje.elemento_en_uso = 1;
 }
 
-void jugada_utilizar_herramienta(personaje_t *personaje, char tipo_herramienta)
+bool hay_elemento_en_uso(personaje_t personaje)
 {
-	int cantidad_usos_linterna_disponibles = 0;
-	int cantidad_velas_disponibles = 0;
-	int cantidad_bengalas_disponibles = 0;
-
-	cantidad_herramientas_disponibles(*personaje, &cantidad_usos_linterna_disponibles, &cantidad_velas_disponibles, &cantidad_bengalas_disponibles);
+	return (personaje.elemento_en_uso > NINGUN_ELEMENTO_EN_USO);
 }
 
 void cantidad_herramientas_disponibles(personaje_t personaje, int *cantidad_linternas, int *cantidad_velas, int *cantidad_bengalas)
 {
 	for (int i = 0; i < personaje.cantidad_elementos; i++)
 	{
+		printf("%c, ", personaje.mochila[i].tipo);
+	}
+	printf("%i", personaje.mochila[0].movimientos_restantes);
+	printf("\n");
+
+	for (int i = 0; i < personaje.cantidad_elementos; i++)
+	{
 		switch (personaje.mochila[i].tipo)
 		{
 		case LINTERNA:
-			cantidad_linternas++;
+			*(cantidad_linternas) += 1;
 			break;
 		case VELA:
-			cantidad_velas++;
+			*(cantidad_velas) += 1;
 			break;
 		case BENGALA:
-			cantidad_bengalas++;
+			*(cantidad_bengalas) += 1;
 			break;
 		}
 	}
 }
 
-void jugada_encender_linterna(juego_t *juego)
+/* ==== HERRAMIENTAS: LINTERNA ===== */
+
+void utilizar_linterna(juego_t *juego)
 {
 	switch (juego->personaje.ultimo_movimiento)
 	{
@@ -90,9 +115,61 @@ void jugada_encender_linterna(juego_t *juego)
 	agregar_koala_nom_nom(juego);
 }
 
-/* ==== INTERACCION DEL PERSONAJE CON ELEMENTOS DEL MAPA ==== */
+void iluminar_fila(juego_t *juego, bool revertir_direccion)
+{
+	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	{
+		if (fila_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
+			juego->obstaculos[i].visible = true;
+		else
+			juego->obstaculos[i].visible = false;
+	}
 
-/* ==== AUXILIARES RECOLECCION DE HERRAMIENTAS ===== */
+	for (int i = 0; i < juego->cantidad_herramientas; i++)
+	{
+		if (fila_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion, revertir_direccion))
+			juego->herramientas[i].visible = true;
+		else
+			juego->herramientas[i].visible = false;
+	}
+}
+
+void iluminar_columna(juego_t *juego, bool revertir_direccion)
+{
+	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	{
+		if (columna_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
+			juego->obstaculos[i].visible = true;
+		else
+			juego->obstaculos[i].visible = false;
+	}
+
+	for (int i = 0; i < juego->cantidad_herramientas; i++)
+	{
+		if (columna_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion, revertir_direccion))
+			juego->herramientas[i].visible = true;
+		else
+			juego->herramientas[i].visible = false;
+	}
+}
+
+bool fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion)
+{
+	if (!revertir_direccion)
+		return ((posicion_elemento.col > posicion_personaje.col) && (posicion_elemento.fil == posicion_personaje.fil));
+
+	return ((posicion_elemento.col < posicion_personaje.col) && (posicion_elemento.fil == posicion_personaje.fil));
+}
+
+bool columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion)
+{
+	if (!revertir_direccion)
+		return ((posicion_elemento.fil < posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
+
+	return ((posicion_elemento.fil > posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
+}
+
+/* ==== ELEMENTOS DEL MAPA ===== */
 
 void manejar_colision(juego_t *juego)
 {
@@ -100,7 +177,6 @@ void manejar_colision(juego_t *juego)
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->obstaculos[i].posicion))
 		{
-			printf("\nEs obstaculo.\nColision con %c\n\n", juego->obstaculos[i].tipo);
 		}
 	}
 
@@ -132,51 +208,5 @@ void remover_recolectable_del_mapa(int indice_elemento, juego_t *juego)
 }
 
 /* ==== AUXILIARES UTILIZACION LINTERNA ===== */
-
-void iluminar_fila(juego_t *juego, bool revertir_direccion)
-{
-	for (int i = 0; i < juego->cantidad_obstaculos; i++)
-	{
-		if (fila_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
-			juego->obstaculos[i].visible = true;
-	}
-
-	for (int i = 0; i < juego->cantidad_herramientas; i++)
-	{
-		if (fila_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion, revertir_direccion))
-			juego->herramientas[i].visible = true;
-	}
-}
-
-void iluminar_columna(juego_t *juego, bool revertir_direccion)
-{
-	for (int i = 0; i < juego->cantidad_obstaculos; i++)
-	{
-		if (columna_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
-			juego->obstaculos[i].visible = true;
-	}
-
-	for (int i = 0; i < juego->cantidad_herramientas; i++)
-	{
-		if (columna_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion, revertir_direccion))
-			juego->herramientas[i].visible = true;
-	}
-}
-
-bool fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion)
-{
-	if (!revertir_direccion)
-		return ((posicion_elemento.col > posicion_personaje.col) && (posicion_elemento.fil == posicion_personaje.fil));
-
-	return ((posicion_elemento.col < posicion_personaje.col) && (posicion_elemento.fil == posicion_personaje.fil));
-}
-
-bool columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion)
-{
-	if (!revertir_direccion)
-		return ((posicion_elemento.fil < posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
-
-	return ((posicion_elemento.fil > posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
-}
 
 /* ==== AUXILIARES UTILIZACION BENGALA ===== */

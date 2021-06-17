@@ -18,7 +18,7 @@ void renderizar_ultimo_movimiento(char ultimo_movimiento)
 	switch (ultimo_movimiento)
 	{
 	case TECLA_MOVER_ARRIBA:
-		printf("Derecha");
+		printf("Arriba");
 		break;
 	case TECLA_MOVER_ABAJO:
 		printf("Abajo");
@@ -52,6 +52,8 @@ void renderizar_mochila(personaje_t personaje)
 	int cantidad_usos_linterna_disponibles = 0;
 	int cantidad_velas_disponibles = 0;
 	int cantidad_bengalas_disponibles = 0;
+
+	printf("Herramienta utilizada: % i\n", personaje.elemento_en_uso);
 
 	cantidad_herramientas_disponibles(personaje, &cantidad_usos_linterna_disponibles, &cantidad_velas_disponibles, &cantidad_bengalas_disponibles);
 

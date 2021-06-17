@@ -32,25 +32,23 @@ int estado_juego(juego_t juego)
 
 void realizar_jugada(juego_t *juego, char jugada)
 {
-	if (es_jugada_valida(jugada))
-	{
-		switch (jugada)
-		{
-		case TECLA_MOVER_ARRIBA:
-		case TECLA_MOVER_ABAJO:
-		case TECLA_MOVER_DERECHA:
-		case TECLA_MOVER_IZQUIERDA:
-			jugada_movimiento(juego, jugada);
-			break;
-		case TECLA_ENCENDER_LINTERNA:
-			jugada_utilizar_herramienta(juego, LINTERNA);
-		}
-
-		juego->personaje.ultimo_movimiento = jugada;
-	}
-	else
+	if (!es_jugada_valida(jugada))
 	{
 		juego->personaje.ultimo_movimiento = MOVIMIENTO_INVALIDO;
+		return;
+	}
+
+	switch (jugada)
+	{
+	case TECLA_MOVER_ARRIBA:
+	case TECLA_MOVER_ABAJO:
+	case TECLA_MOVER_DERECHA:
+	case TECLA_MOVER_IZQUIERDA:
+		jugada_movimiento(juego, jugada);
+		break;
+	case TECLA_ENCENDER_LINTERNA:
+		jugada_utilizar_herramienta(juego, jugada);
+		break;
 	}
 }
 

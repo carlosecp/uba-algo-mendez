@@ -22,6 +22,7 @@
 #define DURACION_VELA 5
 #define DURACION_BENGALA 3
 
+#define CANTIDAD_LINTERNAS_MOCHILA 1
 #define CANTIDAD_USOS_LINTERNA 10
 #define CANTIDAD_USOS_LINTERNA_PARDO 10
 #define CANTIDAD_VELAS_MOCHILA 4
@@ -35,11 +36,11 @@
 #define CANTIDAD_VELAS_MAPA 30
 #define CANTIDAD_BENGALAS_MAPA 10
 
-// #define CANTIDAD_ARBOLES 3
-// #define CANTIDAD_PIEDRAS 3
-// #define CANTIDAD_PILAS_MAPA 3
-// #define CANTIDAD_VELAS_MAPA 3
-// #define CANTIDAD_BENGALAS_MAPA 3
+// #define CANTIDAD_ARBOLES 10
+// #define CANTIDAD_PIEDRAS 10
+// #define CANTIDAD_PILAS_MAPA 10
+// #define CANTIDAD_VELAS_MAPA 10
+// #define CANTIDAD_BENGALAS_MAPA 10
 
 personaje_t inicializar_personaje(juego_t juego, char tipo_personaje);
 

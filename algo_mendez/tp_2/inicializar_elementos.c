@@ -9,7 +9,7 @@ personaje_t inicializar_personaje(juego_t juego, char tipo_personaje)
 	personaje.tipo = tipo_personaje;
 	personaje.posicion = generar_coordenada_personaje_aux(juego);
 	personaje.cantidad_elementos = generar_mochila(personaje.mochila, tipo_personaje);
-	personaje.elemento_en_uso = -1;
+	personaje.elemento_en_uso = NINGUN_ELEMENTO_EN_USO;
 	personaje.tiempo_perdido = 0;
 	personaje.ultimo_movimiento = SIN_MOVIMIENTOS;
 
@@ -20,7 +20,7 @@ personaje_t inicializar_personaje(juego_t juego, char tipo_personaje)
 
 int generar_mochila(elemento_mochila_t mochila[MAX_HERRAMIENTAS], char tipo_personaje)
 {
-	int cantidad_linternas = tipo_personaje == PARDO ? CANTIDAD_USOS_LINTERNA_PARDO : CANTIDAD_USOS_LINTERNA;
+	int cantidad_linternas = CANTIDAD_LINTERNAS_MOCHILA;
 	int cantidad_velas = tipo_personaje == POLAR ? CANTIDAD_VELAS_POLAR : CANTIDAD_VELAS_MOCHILA;
 	int cantidad_bengalas = tipo_personaje == PANDA ? CANTIDAD_BENGALAS_PANDA : CANTIDAD_BENGALAS_MOCHILA;
 
