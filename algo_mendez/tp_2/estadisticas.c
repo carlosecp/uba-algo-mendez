@@ -53,21 +53,7 @@ void renderizar_mochila(personaje_t personaje)
 	int cantidad_velas_disponibles = 0;
 	int cantidad_bengalas_disponibles = 0;
 
-	for (int i = 0; i < personaje.cantidad_elementos; i++)
-	{
-		switch (personaje.mochila[i].tipo)
-		{
-		case LINTERNA:
-			cantidad_usos_linterna_disponibles++;
-			break;
-		case VELA:
-			cantidad_velas_disponibles++;
-			break;
-		case BENGALA:
-			cantidad_bengalas_disponibles++;
-			break;
-		}
-	}
+	cantidad_herramientas_disponibles(personaje, &cantidad_usos_linterna_disponibles, &cantidad_velas_disponibles, &cantidad_bengalas_disponibles);
 
 	printf("\n » Herramientas Disponibles:\n");
 	printf(" • Linternas: %i\n", cantidad_usos_linterna_disponibles);

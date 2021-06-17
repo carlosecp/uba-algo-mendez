@@ -28,6 +28,12 @@ bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada);
 
 void jugada_movimiento(juego_t *juego, char jugada);
 
+void jugada_utilizar_herramienta(personaje_t *personaje, char tipo_herramienta);
+
+void cantidad_herramientas_disponibles(personaje_t personaje, int *cantidad_linternas, int *cantidad_velas, int *cantidad_bengalas);
+
+void jugada_encender_linterna(juego_t *juego);
+
 void manejar_colision(juego_t *juego);
 
 bool es_elemento_recolectable(char tipo_elemento);
@@ -35,8 +41,6 @@ bool es_elemento_recolectable(char tipo_elemento);
 void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectable);
 
 void remover_recolectable_del_mapa(int indice_elemento, juego_t *juego);
-
-void jugada_encender_linterna(juego_t *juego);
 
 void iluminar_fila(juego_t *juego, bool revertir_direccion);
 

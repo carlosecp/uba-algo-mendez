@@ -41,6 +41,34 @@ void jugada_movimiento(juego_t *juego, char jugada)
 	manejar_colision(juego);
 }
 
+void jugada_utilizar_herramienta(personaje_t *personaje, char tipo_herramienta)
+{
+	int cantidad_usos_linterna_disponibles = 0;
+	int cantidad_velas_disponibles = 0;
+	int cantidad_bengalas_disponibles = 0;
+
+	cantidad_herramientas_disponibles(*personaje, &cantidad_usos_linterna_disponibles, &cantidad_velas_disponibles, &cantidad_bengalas_disponibles);
+}
+
+void cantidad_herramientas_disponibles(personaje_t personaje, int *cantidad_linternas, int *cantidad_velas, int *cantidad_bengalas)
+{
+	for (int i = 0; i < personaje.cantidad_elementos; i++)
+	{
+		switch (personaje.mochila[i].tipo)
+		{
+		case LINTERNA:
+			cantidad_linternas++;
+			break;
+		case VELA:
+			cantidad_velas++;
+			break;
+		case BENGALA:
+			cantidad_bengalas++;
+			break;
+		}
+	}
+}
+
 void jugada_encender_linterna(juego_t *juego)
 {
 	switch (juego->personaje.ultimo_movimiento)

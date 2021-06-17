@@ -43,7 +43,7 @@ void realizar_jugada(juego_t *juego, char jugada)
 			jugada_movimiento(juego, jugada);
 			break;
 		case TECLA_ENCENDER_LINTERNA:
-			jugada_encender_linterna(juego);
+			jugada_utilizar_herramienta(juego, LINTERNA);
 		}
 
 		juego->personaje.ultimo_movimiento = jugada;
