@@ -58,7 +58,7 @@ void renderizar_mochila(personaje_t personaje)
 	cantidad_herramientas_disponibles(personaje, &cantidad_usos_linterna_disponibles, &cantidad_velas_disponibles, &cantidad_bengalas_disponibles);
 
 	printf("\n » Herramientas Disponibles:\n");
-	printf(" • Linternas: %i\n", cantidad_usos_linterna_disponibles);
+	printf(" • Usos Linterna: %i\n", cantidad_usos_linterna_disponibles);
 	printf(" • Velas: %i\n", cantidad_velas_disponibles);
 	printf(" • Bengalas: %i\n", cantidad_bengalas_disponibles);
 }

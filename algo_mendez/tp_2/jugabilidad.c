@@ -58,7 +58,14 @@ void jugada_utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 		break;
 	}
 
-	juego->personaje.elemento_en_uso = ubicar_herramienta_en_mochila(&(juego->personaje), tipo_herramienta);
+	if (juego->personaje.elemento_en_uso == NINGUN_ELEMENTO_EN_USO)
+	{
+		juego->personaje.elemento_en_uso = ubicar_herramienta_en_mochila(&(juego->personaje), tipo_herramienta);
+	}
+	else
+	{
+		juego->personaje.elemento_en_uso = NINGUN_ELEMENTO_EN_USO;
+	}
 }
 
 int ubicar_herramienta_en_mochila(personaje_t *personaje, char tipo_herramienta)
@@ -131,6 +138,14 @@ void utilizar_linterna(juego_t *juego)
 	}
 
 	agregar_koala_nom_nom(juego);
+}
+
+void esconder_todos_elementos_del_mapa(juego_t *juego)
+{
+	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	{
+		juego->obstaculos[i].visible = false;
+	}
 }
 
 void iluminar_fila(juego_t *juego, bool revertir_direccion)

@@ -49,6 +49,8 @@ void realizar_jugada(juego_t *juego, char jugada)
 	case TECLA_ENCENDER_LINTERNA:
 		jugada_utilizar_herramienta(juego, jugada);
 		break;
+	case TECLA_ENCENDER_VELA:
+		jugada_utilizar_herramienta(juego, jugada);
 	}
 }
 
