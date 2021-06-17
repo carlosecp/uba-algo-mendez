@@ -58,7 +58,25 @@ void jugada_utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 		break;
 	}
 
-	juego->personaje.elemento_en_uso = 1;
+	juego->personaje.elemento_en_uso = ubicar_herramienta_en_mochila(&(juego->personaje), tipo_herramienta);
+}
+
+int ubicar_herramienta_en_mochila(personaje_t *personaje, char tipo_herramienta)
+{
+	bool herramienta_disponible = false;
+	int ubicacion_herramienta = CANTIDAD_LINTERNAS_MOCHILA;
+
+	int i = 0;
+	while ((i < personaje->cantidad_elementos) && !herramienta_disponible)
+	{
+		if ((personaje->mochila[i].tipo == tipo_herramienta) && (personaje->mochila[i].movimientos_restantes > 0))
+		{
+			ubicacion_herramienta = i;
+		}
+		i++;
+	}
+
+	return ubicacion_herramienta;
 }
 
 bool hay_elemento_en_uso(personaje_t personaje)
