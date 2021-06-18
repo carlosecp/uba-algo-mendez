@@ -51,6 +51,11 @@ bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada)
 
 void jugada_utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 {
+	if (juego->personaje.ultimo_movimiento == SIN_MOVIMIENTOS)
+	{
+		return;
+	}
+
 	juego->personaje.elemento_en_uso = hay_herramienta_en_uso(juego->personaje) ? NINGUN_ELEMENTO_EN_USO : buscar_herramienta_en_mochila(&(juego->personaje), tipo_herramienta);
 
 	bool iluminar = hay_herramienta_en_uso(juego->personaje);
@@ -99,12 +104,7 @@ bool hay_herramienta_en_uso(personaje_t personaje)
 
 void cantidad_herramientas_disponibles(personaje_t personaje, int *cantidad_linternas, int *cantidad_velas, int *cantidad_bengalas)
 {
-	// for (int i = 0; i < personaje.cantidad_elementos; i++)
-	// {
-	// 	printf("%c, ", personaje.mochila[i].tipo);
-	// }
 	printf("%i", personaje.mochila[0].movimientos_restantes);
-	// printf("\n");
 
 	for (int i = 0; i < personaje.cantidad_elementos; i++)
 	{
