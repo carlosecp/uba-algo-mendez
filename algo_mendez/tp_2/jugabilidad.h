@@ -41,6 +41,8 @@ bool hay_herramienta_en_uso(personaje_t personaje);
 
 void cantidad_herramientas_disponibles(personaje_t personaje, int *cantidad_linternas, int *cantidad_velas, int *cantidad_bengalas);
 
+void seguir_utilizando_misma_herramienta(juego_t *juego);
+
 /* ==== HERRAMIENTAS: LINTERNA ===== */
 
 void utilizar_linterna(juego_t *juego, bool iluminar);
