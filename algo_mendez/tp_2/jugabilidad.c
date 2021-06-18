@@ -82,10 +82,12 @@ int buscar_herramienta_en_mochila(personaje_t *personaje, char tipo_herramienta)
 
 void seguir_utilizando_misma_herramienta(juego_t *juego)
 {
-	switch (juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo)
+	elemento_mochila_t elemento_en_uso = juego->personaje.mochila[juego->personaje.elemento_en_uso];
+
+	switch (elemento_en_uso.tipo)
 	{
 	case LINTERNA:
-		utilizar_linterna(juego, juego->personaje.mochila[juego->personaje.elemento_en_uso].movimientos_restantes > 0);
+		utilizar_linterna(juego, elemento_en_uso.movimientos_restantes > 0);
 		break;
 	}
 }
@@ -123,9 +125,23 @@ void cantidad_herramientas_disponibles(personaje_t personaje, int *cantidad_lint
 
 /* ==== HERRAMIENTAS: LINTERNA ===== */
 
+void consumir_uso_herramienta(juego_t *juego)
+{
+	int *movimientos_restantes = &(juego->personaje.mochila[juego->personaje.elemento_en_uso].movimientos_restantes);
+
+	if (*(movimientos_restantes) > 0)
+	{
+		*(movimientos_restantes) -= 1;
+	}
+	else
+	{
+		juego->personaje.elemento_en_uso = NINGUN_ELEMENTO_EN_USO;
+	}
+}
+
 void utilizar_linterna(juego_t *juego, bool iluminar)
 {
-	juego->personaje.mochila[juego->personaje.elemento_en_uso].movimientos_restantes--;
+	consumir_uso_herramienta(juego);
 
 	switch (juego->personaje.ultimo_movimiento)
 	{
@@ -224,6 +240,11 @@ void manejar_colision(juego_t *juego)
 		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[i].posicion))
 		{
 			agregar_recolectable_a_mochila(&(juego->personaje), juego->herramientas[i].tipo);
+			if (juego->herramientas[i].tipo == PILA)
+			{
+				printf("PILA PILA\n\n");
+				juego->personaje.mochila[0].movimientos_restantes++;
+			}
 			remover_recolectable_del_mapa(i, juego);
 		}
 	}
@@ -245,7 +266,3 @@ void remover_recolectable_del_mapa(int indice_elemento, juego_t *juego)
 	}
 	juego->cantidad_herramientas--;
 }
-
-/* ==== AUXILIARES UTILIZACION LINTERNA ===== */
-
-/* ==== AUXILIARES UTILIZACION BENGALA ===== */
