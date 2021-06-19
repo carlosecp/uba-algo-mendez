@@ -39,7 +39,7 @@ void utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 		utilizar_vela(juego, iluminar);
 		break;
 	case BENGALA:
-		utilizar_bengala(juego, DURACION_BENGALA);
+		utilizar_bengala(juego);
 		break;
 	}
 }
@@ -213,11 +213,13 @@ bool vela_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t po
 
 /* ==== BENGALA ==== */
 
-void utilizar_bengala(juego_t *juego, int movimientos_restantes)
+void utilizar_bengala(juego_t *juego)
 {
+	coordenada_t coordenada_aleatoria = generar_coordenada(*juego, false, false, false);
+
 	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{
-		if (vela_area_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion))
+		if (vela_area_es_iluminable(coordenada_aleatoria, juego->obstaculos[i].posicion))
 			juego->obstaculos[i].visible = true;
 		else
 			juego->obstaculos[i].visible = false;
@@ -225,7 +227,7 @@ void utilizar_bengala(juego_t *juego, int movimientos_restantes)
 
 	for (int i = 0; i < juego->cantidad_herramientas; i++)
 	{
-		if (vela_area_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion))
+		if (vela_area_es_iluminable(coordenada_aleatoria, juego->herramientas[i].posicion))
 			juego->herramientas[i].visible = true;
 		else
 			juego->herramientas[i].visible = false;

@@ -50,6 +50,6 @@ bool vela_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t po
 
 /* ==== BENGALA ==== */
 
-void utilizar_bengala(juego_t *juego, int movimientos_restantes);
+void utilizar_bengala(juego_t *juego);
 
 #endif
