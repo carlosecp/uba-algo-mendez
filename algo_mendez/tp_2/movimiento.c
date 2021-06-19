@@ -22,11 +22,7 @@ void jugada_movimiento(juego_t *juego, char jugada)
 	}
 
 	manejar_colision(juego);
-
-	if (juego->personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO)
-	{
-		utilizar_linterna(juego);
-	}
+	utilizar_misma_herramienta(juego);
 }
 
 void mover_personaje(coordenada_t *coordenada_actual, coordenada_t direccion_movimiento)

@@ -10,17 +10,21 @@
 
 void jugada_utilizar_herramienta(juego_t *juego, char jugada);
 
+void utilizar_herramienta(juego_t *juego, char tipo_herramienta);
+
 int buscar_herramienta_en_mochila(personaje_t personaje, char tipo_herramienta);
 
 void desactivar_herramienta(personaje_t *personaje, char tipo_herramienta);
 
-bool herramienta_tiene_movimientos(elemento_mochila_t herramienta);
+bool herramienta_tiene_movimientos(personaje_t personaje);
 
 void consumir_uso_herramienta(personaje_t *personaje);
 
+void utilizar_misma_herramienta(juego_t *juego);
+
 /* ==== LINTERNA ==== */
 
-void utilizar_linterna(juego_t *juego);
+void utilizar_linterna(juego_t *juego, bool iluminar);
 
 void iluminar_fila(juego_t *juego, bool revertir_direccion, bool iluminar);
 

@@ -17,7 +17,7 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 
 	while (estado_juego(*juego) == 0)
 	{
-		// system("clear");
+		system("clear");
 		mostrar_juego(*juego);
 		char jugada;
 		printf(" » Registrar jugada: ");

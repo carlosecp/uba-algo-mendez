@@ -9,15 +9,26 @@ void jugada_utilizar_herramienta(juego_t *juego, char jugada)
 
 	juego->personaje.elemento_en_uso = buscar_herramienta_en_mochila(juego->personaje, jugada);
 
-	if (juego->personaje.elemento_en_uso == NINGUNA_HERRAMIENTA_EN_USO)
+	utilizar_herramienta(juego, jugada);
+}
+
+void utilizar_herramienta(juego_t *juego, char tipo_herramienta)
+{
+	if (juego->personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO && herramienta_tiene_movimientos(juego->personaje))
 	{
-		return;
+		juego->personaje.mochila[juego->personaje.elemento_en_uso].movimientos_restantes -= 1;
+	}
+	else
+	{
+		juego->personaje.elemento_en_uso = NINGUNA_HERRAMIENTA_EN_USO;
 	}
 
-	switch (jugada)
+	bool iluminar = !(juego->personaje.elemento_en_uso == NINGUNA_HERRAMIENTA_EN_USO);
+
+	switch (tipo_herramienta)
 	{
-	case TECLA_ENCENDER_LINTERNA:
-		utilizar_linterna(juego);
+	case LINTERNA:
+		utilizar_linterna(juego, iluminar);
 		break;
 	}
 }
@@ -33,7 +44,7 @@ int buscar_herramienta_en_mochila(personaje_t personaje, char tipo_herramienta)
 	{
 		elemento_mochila_t herramienta = personaje.mochila[i];
 
-		if ((herramienta.tipo == tipo_herramienta) && herramienta_tiene_movimientos(herramienta) && (herramienta_en_uso.tipo != tipo_herramienta))
+		if ((herramienta.tipo == tipo_herramienta) && herramienta_tiene_movimientos(personaje) && (herramienta_en_uso.tipo != tipo_herramienta))
 		{
 			ubicacion_herramienta = i;
 		}
@@ -43,49 +54,36 @@ int buscar_herramienta_en_mochila(personaje_t personaje, char tipo_herramienta)
 	return ubicacion_herramienta;
 }
 
-bool herramienta_tiene_movimientos(elemento_mochila_t herramienta)
+bool herramienta_tiene_movimientos(personaje_t personaje)
 {
-	return herramienta.movimientos_restantes > 0;
+	return (personaje.mochila[personaje.elemento_en_uso].movimientos_restantes > 0);
 }
 
-void consumir_uso_herramienta(personaje_t *personaje)
+void utilizar_misma_herramienta(juego_t *juego)
 {
-	if (herramienta_tiene_movimientos(personaje->mochila[personaje->elemento_en_uso]))
+	if (juego->personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO)
 	{
-		personaje->mochila[personaje->elemento_en_uso].movimientos_restantes -= 1;
-	}
-	else
-	{
-		personaje->elemento_en_uso = NINGUNA_HERRAMIENTA_EN_USO;
+		utilizar_herramienta(juego, juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo);
 	}
 }
 
 /* ==== LINTERNA ==== */
 
-void utilizar_linterna(juego_t *juego)
+void utilizar_linterna(juego_t *juego, bool iluminar)
 {
-	consumir_uso_herramienta(&(juego->personaje));
-
-	bool herramienta_disponible = herramienta_tiene_movimientos(juego->personaje.mochila[juego->personaje.elemento_en_uso]);
-
-	if (!herramienta_disponible)
-	{
-		juego->personaje.elemento_en_uso = -1;
-	}
-
 	switch (juego->personaje.ultimo_movimiento)
 	{
 	case TECLA_MOVER_ARRIBA:
-		iluminar_columna(juego, false, herramienta_disponible);
+		iluminar_columna(juego, false, iluminar);
 		break;
 	case TECLA_MOVER_ABAJO:
-		iluminar_columna(juego, true, herramienta_disponible);
+		iluminar_columna(juego, true, iluminar);
 		break;
 	case TECLA_MOVER_DERECHA:
-		iluminar_fila(juego, false, herramienta_disponible);
+		iluminar_fila(juego, false, iluminar);
 		break;
 	case TECLA_MOVER_IZQUIERDA:
-		iluminar_fila(juego, true, herramienta_disponible);
+		iluminar_fila(juego, true, iluminar);
 		break;
 	}
 
