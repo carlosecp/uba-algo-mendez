@@ -32,12 +32,6 @@ int estado_juego(juego_t juego)
 
 void realizar_jugada(juego_t *juego, char jugada)
 {
-	if (!es_jugada_valida(jugada))
-	{
-		juego->personaje.ultimo_movimiento = MOVIMIENTO_INVALIDO;
-		return;
-	}
-
 	switch (jugada)
 	{
 	case TECLA_MOVER_ARRIBA:

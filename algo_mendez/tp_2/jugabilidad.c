@@ -22,11 +22,6 @@ void jugada_movimiento(juego_t *juego, char jugada)
 	}
 
 	manejar_colision(juego);
-
-	if (hay_herramienta_en_uso(juego->personaje))
-	{
-		seguir_utilizando_misma_herramienta(juego);
-	}
 }
 
 void mover_personaje(coordenada_t *coordenada_actual, coordenada_t direccion_movimiento)
@@ -51,31 +46,24 @@ bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada)
 
 void jugada_utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 {
-	if (juego->personaje.ultimo_movimiento == SIN_MOVIMIENTOS)
-	{
-		return;
-	}
-
-	juego->personaje.elemento_en_uso = hay_herramienta_en_uso(juego->personaje) ? NINGUN_ELEMENTO_EN_USO : buscar_herramienta_en_mochila(&(juego->personaje), tipo_herramienta);
-
-	bool iluminar = hay_herramienta_en_uso(juego->personaje);
+	juego->personaje.elemento_en_uso = buscar_herramienta_en_mochila(juego->personaje, tipo_herramienta);
 
 	switch (tipo_herramienta)
 	{
 	case LINTERNA:
-		utilizar_linterna(juego, iluminar);
+		utilizar_linterna(juego, true);
 	}
 }
 
-int buscar_herramienta_en_mochila(personaje_t *personaje, char tipo_herramienta)
+int buscar_herramienta_en_mochila(personaje_t personaje, char tipo_herramienta)
 {
 	bool herramienta_disponible = false;
 	int ubicacion_herramienta = NINGUN_ELEMENTO_EN_USO;
 
 	int i = 0;
-	while ((i < personaje->cantidad_elementos) && !herramienta_disponible)
+	while ((i < personaje.cantidad_elementos) && !herramienta_disponible)
 	{
-		if ((personaje->mochila[i].tipo == tipo_herramienta) && (personaje->mochila[i].movimientos_restantes > 0))
+		if ((personaje.mochila[i].tipo == tipo_herramienta) && (personaje.mochila[i].movimientos_restantes > 0))
 		{
 			ubicacion_herramienta = i;
 		}
@@ -83,18 +71,6 @@ int buscar_herramienta_en_mochila(personaje_t *personaje, char tipo_herramienta)
 	}
 
 	return ubicacion_herramienta;
-}
-
-void seguir_utilizando_misma_herramienta(juego_t *juego)
-{
-	elemento_mochila_t elemento_en_uso = juego->personaje.mochila[juego->personaje.elemento_en_uso];
-
-	switch (elemento_en_uso.tipo)
-	{
-	case LINTERNA:
-		utilizar_linterna(juego, elemento_en_uso.movimientos_restantes > 0);
-		break;
-	}
 }
 
 bool hay_herramienta_en_uso(personaje_t personaje)
@@ -125,23 +101,9 @@ void cantidad_herramientas_disponibles(personaje_t personaje, int *cantidad_lint
 
 /* ==== HERRAMIENTAS: LINTERNA ===== */
 
-void consumir_uso_herramienta(juego_t *juego)
-{
-	int *movimientos_restantes = &(juego->personaje.mochila[juego->personaje.elemento_en_uso].movimientos_restantes);
-
-	if (*(movimientos_restantes) > 0)
-	{
-		*(movimientos_restantes) -= 1;
-	}
-	else
-	{
-		juego->personaje.elemento_en_uso = NINGUN_ELEMENTO_EN_USO;
-	}
-}
-
 void utilizar_linterna(juego_t *juego, bool iluminar)
 {
-	consumir_uso_herramienta(juego);
+	juego->personaje.mochila[juego->personaje.elemento_en_uso].movimientos_restantes -= 1;
 
 	switch (juego->personaje.ultimo_movimiento)
 	{
@@ -155,19 +117,10 @@ void utilizar_linterna(juego_t *juego, bool iluminar)
 		iluminar_fila(juego, false, iluminar);
 		break;
 	case TECLA_MOVER_IZQUIERDA:
-		iluminar_fila(juego, true, iluminar);
 		break;
 	}
 
 	agregar_koala_nom_nom(juego);
-}
-
-void esconder_todos_elementos_del_mapa(juego_t *juego)
-{
-	for (int i = 0; i < juego->cantidad_obstaculos; i++)
-	{
-		juego->obstaculos[i].visible = false;
-	}
 }
 
 void iluminar_fila(juego_t *juego, bool revertir_direccion, bool iluminar)
@@ -242,7 +195,6 @@ void manejar_colision(juego_t *juego)
 			agregar_recolectable_a_mochila(&(juego->personaje), juego->herramientas[i].tipo);
 			if (juego->herramientas[i].tipo == PILA)
 			{
-				printf("PILA PILA\n\n");
 				juego->personaje.mochila[0].movimientos_restantes++;
 			}
 			remover_recolectable_del_mapa(i, juego);

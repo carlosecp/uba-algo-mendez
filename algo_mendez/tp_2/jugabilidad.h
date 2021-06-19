@@ -35,7 +35,7 @@ bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada);
 
 void jugada_utilizar_herramienta(juego_t *juego, char jugada);
 
-int buscar_herramienta_en_mochila(personaje_t *personaje, char tipo_herramienta);
+int buscar_herramienta_en_mochila(personaje_t personaje, char tipo_herramienta);
 
 bool hay_herramienta_en_uso(personaje_t personaje);
 
