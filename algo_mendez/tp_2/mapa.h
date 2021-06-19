@@ -10,7 +10,7 @@
 
 #define ESPACIO_VACIO_MAPA '.'
 
-coordenada_t generar_coordenada(juego_t juego, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe);
+coordenada_t generar_coordenada(juego_t juego, bool validar_coordenada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe);
 
 bool es_coordenada_ocupada(juego_t juego, coordenada_t coordenada_buscada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe);
 

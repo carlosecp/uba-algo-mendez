@@ -135,15 +135,15 @@ elemento_del_mapa_t agregar_elemento_del_tipo(juego_t juego, char tipo_elemento)
 
 coordenada_t generar_coordenada_personaje_aux(juego_t juego)
 {
-	return generar_coordenada(juego, false, false);
+	return generar_coordenada(juego, false, false, false);
 }
 
 coordenada_t generar_coordenada_amiga_chloe_aux(juego_t juego)
 {
-	return generar_coordenada(juego, true, false);
+	return generar_coordenada(juego, true, true, false);
 }
 
 coordenada_t generar_coordenada_elemento_aux(juego_t juego)
 {
-	return generar_coordenada(juego, true, true);
+	return generar_coordenada(juego, true, true, true);
 }

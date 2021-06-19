@@ -26,12 +26,22 @@ void utilizar_misma_herramienta(juego_t *juego);
 
 void utilizar_linterna(juego_t *juego, bool iluminar);
 
-void iluminar_fila(juego_t *juego, bool revertir_direccion, bool iluminar);
+void linterna_iluminar_fila(juego_t *juego, bool revertir_direccion, bool iluminar);
 
-void iluminar_columna(juego_t *juego, bool revertir_direccion, bool iluminar);
+void linterna_iluminar_columna(juego_t *juego, bool revertir_direccion, bool iluminar);
 
-bool fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion);
+bool linterna_fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion);
 
-bool columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion);
+bool linterna_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion);
+
+/* ==== VELA ==== */
+
+void utilizar_vela(juego_t *juego, bool iluminar);
+
+bool vela_area_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento);
+
+bool vela_fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento);
+
+bool vela_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento);
 
 #endif
