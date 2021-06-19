@@ -1,8 +1,9 @@
 #include "osos_contra_reloj.h"
 #include "inicializar_elementos.h"
 #include "mapa.h"
-#include "jugabilidad.h"
 #include "utiles.h"
+#include "movimiento.h"
+#include "herramientas.h"
 #include "estadisticas.h"
 
 void inicializar_juego(juego_t *juego, char tipo_personaje)
@@ -43,6 +44,7 @@ void realizar_jugada(juego_t *juego, char jugada)
 	case TECLA_ENCENDER_LINTERNA:
 	case TECLA_ENCENDER_VELA:
 		jugada_utilizar_herramienta(juego, jugada);
+		break;
 	}
 }
 

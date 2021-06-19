@@ -3,7 +3,7 @@
 
 #include "osos_contra_reloj.h"
 #include "inicializar_elementos.h"
-#include "jugabilidad.h"
+#include "movimiento.h"
 
 #define CANTIDAD_FILAS 20
 #define CANTIDAD_COLUMNAS 30

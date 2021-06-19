@@ -3,6 +3,7 @@
 
 #include "osos_contra_reloj.h"
 #include "mapa.h"
+#include "herramientas.h"
 
 #define POLAR 'I'
 #define PARDO 'G'

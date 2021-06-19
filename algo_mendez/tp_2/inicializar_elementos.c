@@ -9,7 +9,7 @@ personaje_t inicializar_personaje(juego_t juego, char tipo_personaje)
 	personaje.tipo = tipo_personaje;
 	personaje.posicion = generar_coordenada_personaje_aux(juego);
 	personaje.cantidad_elementos = generar_mochila(personaje.mochila, tipo_personaje);
-	personaje.elemento_en_uso = NINGUN_ELEMENTO_EN_USO;
+	personaje.elemento_en_uso = NINGUNA_HERRAMIENTA_EN_USO;
 	personaje.tiempo_perdido = 0;
 	personaje.ultimo_movimiento = SIN_MOVIMIENTOS;
 

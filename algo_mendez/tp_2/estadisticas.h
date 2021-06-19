@@ -3,7 +3,7 @@
 
 #include "osos_contra_reloj.h"
 #include "utiles.h"
-#include "jugabilidad.h"
+#include "herramientas.h"
 
 void renderizar_estadisticas(personaje_t personaje);
 
