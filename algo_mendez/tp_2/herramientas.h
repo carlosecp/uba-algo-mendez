@@ -12,9 +12,13 @@ void jugada_utilizar_herramienta(juego_t *juego, char jugada);
 
 void utilizar_herramienta(juego_t *juego, char tipo_herramienta);
 
+bool herramienta_se_puede_usar(personaje_t personaje);
+
+void eliminar_herramienta_de_mochila(personaje_t *personaje);
+
 int buscar_herramienta_en_mochila(personaje_t personaje, char tipo_herramienta);
 
-void desactivar_herramienta(personaje_t *personaje, char tipo_herramienta);
+bool herramienta_se_puede_eliminar(personaje_t personaje);
 
 bool herramienta_tiene_movimientos(personaje_t personaje);
 
@@ -43,5 +47,9 @@ bool vela_area_es_iluminable(coordenada_t posicion_personaje, coordenada_t posic
 bool vela_fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento);
 
 bool vela_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento);
+
+/* ==== BENGALA ==== */
+
+void utilizar_bengala(juego_t *juego, int movimientos_restantes);
 
 #endif

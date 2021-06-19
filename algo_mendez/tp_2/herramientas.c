@@ -14,9 +14,14 @@ void jugada_utilizar_herramienta(juego_t *juego, char jugada)
 
 void utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 {
-	if (juego->personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO && herramienta_tiene_movimientos(juego->personaje))
+	if (herramienta_se_puede_usar(juego->personaje))
 	{
 		juego->personaje.mochila[juego->personaje.elemento_en_uso].movimientos_restantes -= 1;
+	}
+	else if (herramienta_se_puede_eliminar(juego->personaje))
+	{
+		eliminar_herramienta_de_mochila(&(juego->personaje));
+		juego->personaje.elemento_en_uso = NINGUNA_HERRAMIENTA_EN_USO;
 	}
 	else
 	{
@@ -33,7 +38,19 @@ void utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 	case VELA:
 		utilizar_vela(juego, iluminar);
 		break;
+	case BENGALA:
+		utilizar_bengala(juego, DURACION_BENGALA);
+		break;
 	}
+}
+
+void eliminar_herramienta_de_mochila(personaje_t *personaje)
+{
+	for (int i = personaje->elemento_en_uso; i < personaje->cantidad_elementos; i++)
+	{
+		personaje->mochila[i] = personaje->mochila[i + 1];
+	}
+	personaje->cantidad_elementos--;
 }
 
 int buscar_herramienta_en_mochila(personaje_t personaje, char tipo_herramienta)
@@ -47,14 +64,25 @@ int buscar_herramienta_en_mochila(personaje_t personaje, char tipo_herramienta)
 	{
 		elemento_mochila_t herramienta = personaje.mochila[i];
 
-		if ((herramienta.tipo == tipo_herramienta) && herramienta_tiene_movimientos(personaje) && (herramienta_en_uso.tipo != tipo_herramienta))
+		if ((herramienta.movimientos_restantes > 0) && (herramienta.tipo == tipo_herramienta) && herramienta_tiene_movimientos(personaje) && (herramienta_en_uso.tipo != tipo_herramienta))
 		{
 			ubicacion_herramienta = i;
+			herramienta_disponible = true;
 		}
 		i++;
 	}
 
 	return ubicacion_herramienta;
+}
+
+bool herramienta_se_puede_usar(personaje_t personaje)
+{
+	return (personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO && herramienta_tiene_movimientos(personaje));
+}
+
+bool herramienta_se_puede_eliminar(personaje_t personaje)
+{
+	return ((personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO) && (personaje.mochila[personaje.elemento_en_uso].tipo != LINTERNA) && (!herramienta_tiene_movimientos(personaje)));
 }
 
 bool herramienta_tiene_movimientos(personaje_t personaje)
@@ -182,3 +210,26 @@ bool vela_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t po
 {
 	return ((posicion_personaje.col == posicion_elemento.col) || (posicion_elemento.col) == (posicion_personaje.col + 1) || (posicion_elemento.col) == (posicion_personaje.col - 1));
 }
+
+/* ==== BENGALA ==== */
+
+void utilizar_bengala(juego_t *juego, int movimientos_restantes)
+{
+	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	{
+		if (vela_area_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion))
+			juego->obstaculos[i].visible = true;
+		else
+			juego->obstaculos[i].visible = false;
+	}
+
+	for (int i = 0; i < juego->cantidad_herramientas; i++)
+	{
+		if (vela_area_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion))
+			juego->herramientas[i].visible = true;
+		else
+			juego->herramientas[i].visible = false;
+	}
+}
+
+// bool esta_a_distancia_manhattan()

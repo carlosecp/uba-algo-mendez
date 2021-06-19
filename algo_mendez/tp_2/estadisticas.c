@@ -53,8 +53,35 @@ void renderizar_mochila(personaje_t personaje)
 	int cantidad_velas_disponibles = 0;
 	int cantidad_bengalas_disponibles = 0;
 
-	printf("Herramienta utilizada: % i\n", personaje.elemento_en_uso);
-	printf("Linternas Restantes: %i\n\n", personaje.mochila[0].movimientos_restantes);
+	printf("\n » Mochila: [");
+	for (int i = 0; i < personaje.cantidad_elementos; i++)
+	{
+		if (i == personaje.cantidad_elementos - 1)
+		{
+			printf("%c", personaje.mochila[i].tipo);
+		}
+		else
+		{
+			printf("%c,", personaje.mochila[i].tipo);
+		}
+	}
+	printf("]\n");
+
+	printf(" » Usos Herramientas: [");
+	for (int i = 0; i < personaje.cantidad_elementos; i++)
+	{
+		if (i == personaje.cantidad_elementos - 1)
+		{
+			printf("%i", personaje.mochila[i].movimientos_restantes);
+		}
+		else
+		{
+			printf("%i,", personaje.mochila[i].movimientos_restantes);
+		}
+	}
+	printf("]\n\n");
+
+	printf(" » Herramienta Utilizada: %i\n", personaje.elemento_en_uso);
 
 	printf(" » Herramientas Disponibles:\n");
 	printf(" • Usos Linterna: %i\n", cantidad_usos_linterna_disponibles);

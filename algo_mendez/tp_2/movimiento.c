@@ -56,10 +56,13 @@ void manejar_colision(juego_t *juego)
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[i].posicion))
 		{
-			agregar_recolectable_a_mochila(&(juego->personaje), juego->herramientas[i].tipo);
 			if (juego->herramientas[i].tipo == PILA)
 			{
 				juego->personaje.mochila[0].movimientos_restantes++;
+			}
+			else
+			{
+				agregar_recolectable_a_mochila(&(juego->personaje), juego->herramientas[i].tipo);
 			}
 			remover_recolectable_del_mapa(i, juego);
 		}
