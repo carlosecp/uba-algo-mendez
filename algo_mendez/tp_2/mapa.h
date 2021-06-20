@@ -28,8 +28,6 @@ void posicionar_amiga_chloe_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS]
 
 void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], elemento_del_mapa_t elemento_a_posicionar);
 
-void renderizar_bordes_mapa();
-
 coordenada_t generar_coordenada_impacto_koala();
 
 #endif

@@ -24,6 +24,8 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 		scanf(" %c", &jugada);
 		realizar_jugada(juego, jugada);
 	}
+
+	finalizar_juego(*juego);
 }
 
 int estado_juego(juego_t juego)
@@ -63,19 +65,20 @@ void mostrar_juego(juego_t juego)
 	char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS];
 	posicionar_todos_elementos_en_mapa(mapa, juego);
 
-	renderizar_bordes_mapa();
 	renderizar_estadisticas(juego);
-	renderizar_bordes_mapa();
 
+	renderizar_bordes_mapa(true);
 	for (int i = 0; i < CANTIDAD_FILAS; i++)
 	{
+		printf("║ ");
 		for (int j = 0; j < CANTIDAD_COLUMNAS; j++)
 		{
 			printf(" %c ", mapa[i][j]);
 		}
+		printf(" ║");
 		printf("\n");
 	}
-	renderizar_bordes_mapa();
+	renderizar_bordes_mapa(false);
 }
 
 bool es_jugada_valida(char jugada)

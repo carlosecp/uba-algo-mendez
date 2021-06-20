@@ -112,14 +112,3 @@ coordenada_t generar_coordenada_impacto_koala()
 
 	return coordenada_aleatoria;
 }
-
-/* ===== EXTRA (DECORACIONES) ===== */
-
-void renderizar_bordes_mapa()
-{
-	for (int i = 0; i < (CANTIDAD_COLUMNAS * 3); i++)
-	{
-		printf("■");
-	}
-	printf("\n");
-}

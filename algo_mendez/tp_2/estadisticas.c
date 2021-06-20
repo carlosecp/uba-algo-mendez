@@ -1,13 +1,42 @@
 #include "estadisticas.h"
 
+void renderizar_introduccion()
+{
+	printf("═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n\n");
+	printf(" ██████╗ ███████╗ ██████╗ ███████╗     ██████╗ ██████╗ ███╗   ██╗████████╗██████╗  █████╗     ██████╗ ███████╗██╗      ██████╗      ██╗\n");
+	printf("██╔═══██╗██╔════╝██╔═══██╗██╔════╝    ██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔══██╗██╔══██╗    ██╔══██╗██╔════╝██║     ██╔═══██╗     ██║\n");
+	printf("██║   ██║███████╗██║   ██║███████╗    ██║     ██║   ██║██╔██╗ ██║   ██║   ██████╔╝███████║    ██████╔╝█████╗  ██║     ██║   ██║     ██║\n");
+	printf("██║   ██║╚════██║██║   ██║╚════██║    ██║     ██║   ██║██║╚██╗██║   ██║   ██╔══██╗██╔══██║    ██╔══██╗██╔══╝  ██║     ██║   ██║██   ██║\n");
+	printf("╚██████╔╝███████║╚██████╔╝███████║    ╚██████╗╚██████╔╝██║ ╚████║   ██║   ██║  ██║██║  ██║    ██║  ██║███████╗███████╗╚██████╔╝╚█████╔╝\n");
+	printf(" ╚═════╝ ╚══════╝ ╚═════╝ ╚══════╝     ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝    ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝  ╚════╝ \n\n");
+	printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+	printf("║                                                Creador: Carlos Eduardo Castillo                                                     ║\n");
+	printf("║                                                        Legajo: 108535                                                               ║\n");
+	printf("║                                   Cátedra: Algoritmos y Programación I - 75.40 y 95.14 - Méndez                                     ║\n");
+	printf("╠═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+	printf("║ Un día, aburridos de estar encerrados, los Osos y Chloe decidieron salir al bosque y jugar a las escondidas. Sin embargo, se olvi-  ║\n");
+	printf("║ daron del toque de queda que rige debido a los aumentos de casos de Covid en la ciudad y ya está oscureciendo. Además tienen otro   ║\n");
+	printf("║ problema: Chloe sigue escondida y no sabe que ya tienen que volver a casa.                                                          ║\n");
+	printf("║                                                                                                                                     ║\n");
+	printf("║ Ayudá a tu oso a encontrar a su amiga antes de que comience el confinamiento obligatorio.                                           ║\n");
+	printf("║                                                                                                                                     ║\n");
+	printf("║ ¡Pero hay un problema más! Ya se hizo de noche en el bosque y el personaje no podrá ver nada de lo que hay a su alrededor, y debe-  ║\n");
+	printf("║ rá ayudarse de su linterna, velas y bengalas para poder llegar a encontrarse con su amiga.                                          ║\n");
+	printf("╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
+	printf(" » Presiona Cualquier Tecla para Continuar...");
+	getchar();
+}
+
 void renderizar_estadisticas(juego_t juego)
 {
+	renderizar_bordes_estadisticas();
 	renderizar_tiempo_elapsado(juego.personaje);
 	if (juego.personaje.tipo == PARDO)
 	{
 		renderizar_gps(juego);
 	}
 	renderizar_ultimo_movimiento(juego.personaje.ultimo_movimiento);
+	renderizar_bordes_estadisticas();
 	renderizar_mochila(juego.personaje);
 }
 
@@ -59,7 +88,7 @@ void renderizar_ultimo_movimiento(char ultimo_movimiento)
 
 void renderizar_mochila(personaje_t personaje)
 {
-	printf("\n » Mochila: [");
+	printf(" » Mochila: [");
 	for (int i = 0; i < personaje.cantidad_elementos; i++)
 	{
 		if (i == personaje.cantidad_elementos - 1)
@@ -105,4 +134,59 @@ void renderizar_gps(juego_t juego)
 	{
 		printf(" » Posicion Amiga Chloe: { fil: %i, col: %i }\n", juego.amiga_chloe.fil, juego.amiga_chloe.col);
 	}
+}
+
+void finalizar_juego(juego_t juego)
+{
+	double tiempo_total = tiempo_actual() + juego.personaje.tiempo_perdido;
+	printf("\n");
+	if (tiempo_total < TIEMPO_LIMITE)
+	{
+		printf("██╗   ██╗██╗ ██████╗████████╗ ██████╗ ██████╗ ██╗ █████╗ ██╗██╗██╗\n");
+		printf("██║   ██║██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██║██╔══██╗██║██║██║\n");
+		printf("██║   ██║██║██║        ██║   ██║   ██║██████╔╝██║███████║██║██║██║\n");
+		printf("╚██╗ ██╔╝██║██║        ██║   ██║   ██║██╔══██╗██║██╔══██║╚═╝╚═╝╚═╝\n");
+		printf(" ╚████╔╝ ██║╚██████╗   ██║   ╚██████╔╝██║  ██║██║██║  ██║██╗██╗██╗\n");
+		printf("  ╚═══╝  ╚═╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝╚═╝\n");
+	}
+	else
+	{
+		printf("██████╗ ███████╗██████╗ ██████╗  ██████╗ ████████╗ █████╗ ██╗██╗██╗\n");
+		printf("██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔══██╗██║██║██║\n");
+		printf("██║  ██║█████╗  ██████╔╝██████╔╝██║   ██║   ██║   ███████║██║██║██║\n");
+		printf("██║  ██║██╔══╝  ██╔══██╗██╔══██╗██║   ██║   ██║   ██╔══██║╚═╝╚═╝╚═╝\n");
+		printf("██████╔╝███████╗██║  ██║██║  ██║╚██████╔╝   ██║   ██║  ██║██╗██╗██╗\n");
+		printf("╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝╚═╝\n");
+	}
+}
+
+void renderizar_bordes_estadisticas()
+{
+	int espacios_extra = 4;
+	for (int i = 0; i < (CANTIDAD_COLUMNAS * 3) + espacios_extra; i++)
+	{
+		printf("═");
+	}
+	printf("\n");
+}
+
+void renderizar_bordes_mapa(bool border_superior)
+{
+	int espacios_extra = 4;
+	for (int i = 0; i < (CANTIDAD_COLUMNAS * 3) + espacios_extra; i++)
+	{
+		if (i == 0)
+		{
+			printf("%s", border_superior ? "╔" : "╚");
+		}
+		else if (i == ((CANTIDAD_COLUMNAS * 3) + (espacios_extra - 1)))
+		{
+			printf("%s", border_superior ? "╗" : "╝");
+		}
+		else
+		{
+			printf("═");
+		}
+	}
+	printf("\n");
 }
