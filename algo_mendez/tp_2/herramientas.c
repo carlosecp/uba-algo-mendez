@@ -2,7 +2,7 @@
 
 void jugada_utilizar_herramienta(juego_t *juego, char jugada)
 {
-	if (juego->personaje.ultimo_movimiento == SIN_MOVIMIENTOS)
+	if (juego->personaje.ultimo_movimiento == SIN_MOVIMIENTOS || (juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo == BENGALA))
 	{
 		return;
 	}
