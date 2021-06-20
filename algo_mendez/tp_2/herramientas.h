@@ -50,6 +50,14 @@ bool vela_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t po
 
 /* ==== BENGALA ==== */
 
-void utilizar_bengala(juego_t *juego);
+void utilizar_bengala(juego_t *juego, bool ilumnar);
+
+bool esta_a_distancia_manhattan(coordenada_t posicion_centro, coordenada_t posicion_elemento);
+
+bool fila_esta_a_distancia_manhattan(coordenada_t posicion_centro, coordenada_t posicion_elemento);
+
+bool columna_esta_a_distancia_manhattan(coordenada_t posicion_centro, coordenada_t posicion_elemento);
+
+bool esta_en_esquina_de_distancia_manhattan(coordenada_t posicion_centro, coordenada_t posicion_elemento);
 
 #endif

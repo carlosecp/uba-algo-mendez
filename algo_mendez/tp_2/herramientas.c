@@ -39,7 +39,7 @@ void utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 		utilizar_vela(juego, iluminar);
 		break;
 	case BENGALA:
-		utilizar_bengala(juego);
+		utilizar_bengala(juego, iluminar);
 		break;
 	}
 }
@@ -213,13 +213,13 @@ bool vela_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t po
 
 /* ==== BENGALA ==== */
 
-void utilizar_bengala(juego_t *juego)
+void utilizar_bengala(juego_t *juego, bool iluminar)
 {
 	coordenada_t coordenada_aleatoria = generar_coordenada(*juego, false, false, false);
 
 	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{
-		if (vela_area_es_iluminable(coordenada_aleatoria, juego->obstaculos[i].posicion))
+		if (iluminar && esta_a_distancia_manhattan(coordenada_aleatoria, juego->obstaculos[i].posicion))
 			juego->obstaculos[i].visible = true;
 		else
 			juego->obstaculos[i].visible = false;
@@ -227,11 +227,17 @@ void utilizar_bengala(juego_t *juego)
 
 	for (int i = 0; i < juego->cantidad_herramientas; i++)
 	{
-		if (vela_area_es_iluminable(coordenada_aleatoria, juego->herramientas[i].posicion))
+		if (iluminar && esta_a_distancia_manhattan(coordenada_aleatoria, juego->herramientas[i].posicion))
 			juego->herramientas[i].visible = true;
 		else
 			juego->herramientas[i].visible = false;
 	}
 }
 
-// bool esta_a_distancia_manhattan()
+bool esta_a_distancia_manhattan(coordenada_t posicion_centro, coordenada_t posicion_elemento)
+{
+	int diferencia_filas = abs(posicion_centro.fil - posicion_elemento.fil);
+	int diferencia_columnas = abs(posicion_centro.col - posicion_elemento.col);
+
+	return (diferencia_filas + diferencia_columnas) <= 2;
+}
