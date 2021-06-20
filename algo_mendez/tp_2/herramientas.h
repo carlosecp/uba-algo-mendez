@@ -58,4 +58,6 @@ bool esta_a_distancia_manhattan(coordenada_t posicion_centro, coordenada_t posic
 
 bool se_pueden_agregar_pilas_a_linterna(personaje_t personaje);
 
+bool es_herramienta_valida(char jugada);
+
 #endif

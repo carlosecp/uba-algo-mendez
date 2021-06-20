@@ -2,12 +2,12 @@
 
 void jugada_utilizar_herramienta(juego_t *juego, char jugada)
 {
-	if (!es_movimiento_valido_para_linterna(juego->personaje.ultimo_movimiento) || juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo == BENGALA)
+	if ((jugada == LINTERNA && !es_movimiento_valido_para_linterna(juego->personaje.ultimo_movimiento)) || juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo == BENGALA)
 	{
 		return;
 	}
 
-	if (juego->personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO)
+	if (juego->personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO && !es_herramienta_valida(jugada))
 	{
 		juego->personaje.elemento_en_uso = NINGUNA_HERRAMIENTA_EN_USO;
 	}
@@ -17,6 +17,19 @@ void jugada_utilizar_herramienta(juego_t *juego, char jugada)
 	}
 
 	utilizar_herramienta(juego, jugada);
+}
+
+bool es_herramienta_valida(char jugada)
+{
+	bool herramienta_valida = false;
+	switch (jugada)
+	{
+	case TECLA_ENCENDER_LINTERNA:
+	case TECLA_ENCENDER_VELA:
+	case TECLA_ENCENDER_BENGALA:
+		herramienta_valida = true;
+	}
+	return herramienta_valida;
 }
 
 void utilizar_herramienta(juego_t *juego, char tipo_herramienta)
