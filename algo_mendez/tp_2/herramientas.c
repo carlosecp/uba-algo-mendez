@@ -175,6 +175,12 @@ bool linterna_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_
 	return ((posicion_elemento.fil > posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
 }
 
+void agregar_pilas_a_linterna(personaje_t *personaje)
+{
+	int indice_linterna = buscar_herramienta_en_mochila(*personaje, LINTERNA);
+	personaje->mochila[indice_linterna].movimientos_restantes++;
+}
+
 /* ==== VELA ==== */
 
 void utilizar_vela(juego_t *juego, bool iluminar)

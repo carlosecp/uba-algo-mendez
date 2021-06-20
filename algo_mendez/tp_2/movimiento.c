@@ -49,6 +49,7 @@ void manejar_colision(juego_t *juego)
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->obstaculos[i].posicion))
 		{
+			accion_colision_con_obstaculo(&(juego->personaje), juego->obstaculos[i].tipo);
 		}
 	}
 
@@ -56,16 +57,36 @@ void manejar_colision(juego_t *juego)
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[i].posicion))
 		{
-			if (juego->herramientas[i].tipo == PILA)
-			{
-				juego->personaje.mochila[0].movimientos_restantes++;
-			}
-			else
-			{
-				agregar_recolectable_a_mochila(&(juego->personaje), juego->herramientas[i].tipo);
-			}
+			accion_colision_con_herramienta(&(juego->personaje), juego->herramientas[i].tipo);
 			remover_recolectable_del_mapa(i, juego);
 		}
+	}
+}
+
+void accion_colision_con_obstaculo(personaje_t *personaje, char tipo_obstaculo)
+{
+	float tiempo_perdido_arbol = personaje->tipo == PARDO ? TIEMPO_PERDIDO_ARBOL_PARDO : TIEMPO_PERDIDO_ARBOL;
+	float tiempo_perdido_piedra = personaje->tipo == POLAR ? TIEMPO_PERDIDO_PIEDRA_POLAR : TIEMPO_PERDIDO_PIEDRA;
+
+	switch (tipo_obstaculo)
+	{
+	case ARBOL:
+		personaje->tiempo_perdido += tiempo_perdido_arbol;
+		break;
+	case PIEDRA:
+		personaje->tiempo_perdido += tiempo_perdido_piedra;
+	}
+}
+
+void accion_colision_con_herramienta(personaje_t *personaje, char tipo_herramienta)
+{
+	switch (tipo_herramienta)
+	{
+	case PILA:
+		agregar_pilas_a_linterna(personaje);
+		break;
+	default:
+		agregar_recolectable_a_mochila(personaje, tipo_herramienta);
 	}
 }
 

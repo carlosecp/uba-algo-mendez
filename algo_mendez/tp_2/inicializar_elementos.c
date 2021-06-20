@@ -126,7 +126,7 @@ elemento_del_mapa_t agregar_elemento_del_tipo(juego_t juego, char tipo_elemento)
 	elemento_del_mapa_t elemento_generado = {
 			.posicion = generar_coordenada_elemento_aux(juego),
 			.tipo = tipo_elemento,
-			.visible = false};
+			.visible = true};
 
 	return elemento_generado;
 }

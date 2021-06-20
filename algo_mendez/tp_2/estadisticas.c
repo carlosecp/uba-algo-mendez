@@ -3,6 +3,7 @@
 void renderizar_estadisticas(personaje_t personaje)
 {
 	renderizar_tiempo_elapsado();
+	printf(" » Tiempo Perdido: %.0fs\n", personaje.tiempo_perdido);
 	renderizar_ultimo_movimiento(personaje.ultimo_movimiento);
 	renderizar_mochila(personaje);
 }
@@ -49,10 +50,6 @@ void renderizar_ultimo_movimiento(char ultimo_movimiento)
 
 void renderizar_mochila(personaje_t personaje)
 {
-	int cantidad_usos_linterna_disponibles = 0;
-	int cantidad_velas_disponibles = 0;
-	int cantidad_bengalas_disponibles = 0;
-
 	printf("\n » Mochila: [");
 	for (int i = 0; i < personaje.cantidad_elementos; i++)
 	{
@@ -82,9 +79,4 @@ void renderizar_mochila(personaje_t personaje)
 	printf("]\n\n");
 
 	printf(" » Herramienta Utilizada: %i\n", personaje.elemento_en_uso);
-
-	printf(" » Herramientas Disponibles:\n");
-	printf(" • Usos Linterna: %i\n", cantidad_usos_linterna_disponibles);
-	printf(" • Velas: %i\n", cantidad_velas_disponibles);
-	printf(" • Bengalas: %i\n", cantidad_bengalas_disponibles);
 }

@@ -38,6 +38,8 @@ bool linterna_fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t p
 
 bool linterna_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion);
 
+void agregar_pilas_a_linterna(personaje_t *personaje);
+
 /* ==== VELA ==== */
 
 void utilizar_vela(juego_t *juego, bool iluminar);
