@@ -81,17 +81,17 @@ void accion_colision_con_obstaculo(personaje_t *personaje, char tipo_obstaculo)
 	}
 }
 
-void accion_colision_con_herramienta(juego_t *juego, int indice_herramienta)
+void accion_colision_con_herramienta(juego_t *juego, int indice_recolectable)
 {
-	char tipo_herramienta = juego->herramientas[indice_herramienta].tipo;
-	switch (tipo_herramienta)
+	char tipo_recolectable = juego->herramientas[indice_recolectable].tipo;
+	switch (tipo_recolectable)
 	{
 	case PILA:
-		agregar_pilas_a_linterna(juego, indice_herramienta);
+		agregar_pilas_a_linterna(juego, indice_recolectable);
 		break;
 	default:
-		agregar_recolectable_a_mochila(&(juego->personaje), tipo_herramienta);
-		remover_recolectable_del_mapa(juego, indice_herramienta);
+		agregar_recolectable_a_mochila(&(juego->personaje), tipo_recolectable);
+		remover_recolectable_del_mapa(juego, indice_recolectable);
 	}
 }
 

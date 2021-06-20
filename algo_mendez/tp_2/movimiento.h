@@ -33,7 +33,7 @@ void manejar_colision(juego_t *juego);
 
 void accion_colision_con_obstaculo(personaje_t *personaje, char tipo_obstaculo);
 
-void accion_colision_con_herramienta(juego_t *juego, int indicie_herramienta);
+void accion_colision_con_herramienta(juego_t *juego, int indice_recolectable);
 
 void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectable);
 
