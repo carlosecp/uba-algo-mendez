@@ -9,7 +9,7 @@ int main()
 {
 	srand((unsigned)time(NULL));
 	juego_t juego;
-	char tipo_personaje = PANDA;
+	char tipo_personaje = PARDO;
 	inicializar_juego(&juego, tipo_personaje);
 
 	return 0;

@@ -17,7 +17,7 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 
 	while (estado_juego(*juego) == 0)
 	{
-		// system("clear");
+		system("clear");
 		mostrar_juego(*juego);
 		char jugada;
 		printf(" » Registrar jugada: ");
@@ -33,6 +33,12 @@ int estado_juego(juego_t juego)
 
 void realizar_jugada(juego_t *juego, char jugada)
 {
+	if (!es_jugada_valida(jugada))
+	{
+		juego->personaje.ultimo_movimiento = MOVIMIENTO_INVALIDO;
+		return;
+	}
+
 	switch (jugada)
 	{
 	case TECLA_MOVER_ARRIBA:
@@ -46,6 +52,9 @@ void realizar_jugada(juego_t *juego, char jugada)
 	case TECLA_ENCENDER_BENGALA:
 		jugada_utilizar_herramienta(juego, jugada);
 		break;
+	case TECLA_VER_TIEMPO_RESTANTE:
+		juego->personaje.ultimo_movimiento = TECLA_VER_TIEMPO_RESTANTE;
+		break;
 	}
 }
 
@@ -55,7 +64,7 @@ void mostrar_juego(juego_t juego)
 	posicionar_todos_elementos_en_mapa(mapa, juego);
 
 	renderizar_bordes_mapa();
-	renderizar_estadisticas(juego.personaje);
+	renderizar_estadisticas(juego);
 	renderizar_bordes_mapa();
 
 	for (int i = 0; i < CANTIDAD_FILAS; i++)
@@ -71,9 +80,19 @@ void mostrar_juego(juego_t juego)
 
 bool es_jugada_valida(char jugada)
 {
-	return ((jugada == TECLA_MOVER_ARRIBA) ||
-					(jugada == TECLA_MOVER_ABAJO) ||
-					(jugada == TECLA_MOVER_DERECHA) ||
-					(jugada == TECLA_MOVER_IZQUIERDA) ||
-					(jugada == TECLA_ENCENDER_LINTERNA));
+	bool jugada_valida = false;
+	switch (jugada)
+	{
+	case TECLA_MOVER_ARRIBA:
+	case TECLA_MOVER_ABAJO:
+	case TECLA_MOVER_DERECHA:
+	case TECLA_MOVER_IZQUIERDA:
+	case TECLA_ENCENDER_LINTERNA:
+	case TECLA_ENCENDER_VELA:
+	case TECLA_ENCENDER_BENGALA:
+	case TECLA_VER_TIEMPO_RESTANTE:
+		jugada_valida = true;
+	}
+
+	return jugada_valida;
 }

@@ -2,7 +2,7 @@
 
 void jugada_utilizar_herramienta(juego_t *juego, char jugada)
 {
-	if (juego->personaje.ultimo_movimiento == SIN_MOVIMIENTOS || (juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo == BENGALA))
+	if (!es_movimiento_valido_para_linterna(juego->personaje.ultimo_movimiento) || juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo == BENGALA)
 	{
 		return;
 	}
@@ -132,7 +132,7 @@ void linterna_iluminar_fila(juego_t *juego, bool revertir_direccion, bool ilumin
 		if (iluminar && linterna_fila_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
 			juego->obstaculos[i].visible = true;
 		else
-			juego->obstaculos[i].visible = true;
+			juego->obstaculos[i].visible = false;
 	}
 
 	for (int i = 0; i < juego->cantidad_herramientas; i++)
@@ -140,7 +140,7 @@ void linterna_iluminar_fila(juego_t *juego, bool revertir_direccion, bool ilumin
 		if (iluminar && linterna_fila_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion, revertir_direccion))
 			juego->herramientas[i].visible = true;
 		else
-			juego->herramientas[i].visible = true;
+			juego->herramientas[i].visible = false;
 	}
 }
 
@@ -151,7 +151,7 @@ void linterna_iluminar_columna(juego_t *juego, bool revertir_direccion, bool ilu
 		if (iluminar && linterna_columna_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
 			juego->obstaculos[i].visible = true;
 		else
-			juego->obstaculos[i].visible = true;
+			juego->obstaculos[i].visible = false;
 	}
 
 	for (int i = 0; i < juego->cantidad_herramientas; i++)
@@ -159,7 +159,7 @@ void linterna_iluminar_columna(juego_t *juego, bool revertir_direccion, bool ilu
 		if (iluminar && linterna_columna_es_iluminable(juego->personaje.posicion, juego->herramientas[i].posicion, revertir_direccion))
 			juego->herramientas[i].visible = true;
 		else
-			juego->herramientas[i].visible = true;
+			juego->herramientas[i].visible = false;
 	}
 }
 
@@ -182,13 +182,11 @@ bool linterna_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_
 void agregar_pilas_a_linterna(juego_t *juego, int indice_pila)
 {
 	int indice_linterna = buscar_herramienta_en_mochila(juego->personaje, LINTERNA);
-	printf("INDICE_LINTERNA: %i", indice_linterna);
-
 	int maximas_pilas_linterna = juego->personaje.tipo == PARDO ? DURACION_LINTERNA_PARDO : DURACION_LINTERNA;
 
-	if ((juego->personaje.mochila[0].movimientos_restantes + DURACION_PILA) <= maximas_pilas_linterna)
+	if ((juego->personaje.mochila[indice_linterna].movimientos_restantes + DURACION_PILA) <= maximas_pilas_linterna)
 	{
-		juego->personaje.mochila[0].movimientos_restantes += DURACION_PILA;
+		juego->personaje.mochila[indice_linterna].movimientos_restantes += DURACION_PILA;
 		remover_recolectable_del_mapa(juego, indice_pila);
 	}
 }

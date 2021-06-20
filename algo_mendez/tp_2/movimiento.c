@@ -111,3 +111,18 @@ void remover_recolectable_del_mapa(juego_t *juego, int indice_herramienta)
 	}
 	juego->cantidad_herramientas--;
 }
+
+bool es_movimiento_valido_para_linterna(char movimiento)
+{
+	bool movimiento_valido = false;
+	switch (movimiento)
+	{
+	case TECLA_MOVER_ARRIBA:
+	case TECLA_MOVER_ABAJO:
+	case TECLA_MOVER_DERECHA:
+	case TECLA_MOVER_IZQUIERDA:
+		movimiento_valido = true;
+	}
+
+	return movimiento_valido;
+}

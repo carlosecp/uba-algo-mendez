@@ -7,6 +7,7 @@
 #include "mapa.h"
 
 #define SIN_MOVIMIENTOS ' '
+#define MOVIMIENTO_INVALIDO 'X'
 #define TECLA_MOVER_ARRIBA 'W'
 #define TECLA_MOVER_ABAJO 'S'
 #define TECLA_MOVER_DERECHA 'D'
@@ -17,6 +18,7 @@
 #define TIEMPO_PERDIDO_ARBOL_PARDO 0.5
 #define TIEMPO_PERDIDO_PIEDRA 2
 #define TIEMPO_PERDIDO_PIEDRA_POLAR 0
+#define TIEMPO_PERDIDO_ACTIVAR_GPS 30
 
 static const coordenada_t MOVER_PERSONAJE_ARRIBA = {.fil = -1, .col = 0};
 static const coordenada_t MOVER_PERSONAJE_ABAJO = {.fil = 1, .col = 0};
@@ -38,5 +40,7 @@ void accion_colision_con_herramienta(juego_t *juego, int indice_recolectable);
 void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectable);
 
 void remover_recolectable_del_mapa(juego_t *juego, int indice_herramienta);
+
+bool es_movimiento_valido_para_linterna(char movimiento);
 
 #endif
