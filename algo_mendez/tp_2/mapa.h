@@ -30,6 +30,6 @@ void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COL
 
 void renderizar_bordes_mapa();
 
-void mostrar_direccion_ultimo_movimiento(char *ultimo_movimiento);
+coordenada_t generar_coordenada_impacto_koala();
 
 #endif

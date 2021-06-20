@@ -103,6 +103,16 @@ void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COL
 	}
 }
 
+coordenada_t generar_coordenada_impacto_koala()
+{
+	int fila_aleatoria = rand() % CANTIDAD_FILAS;
+	coordenada_t coordenada_aleatoria = {
+			.fil = fila_aleatoria,
+			.col = 0};
+
+	return coordenada_aleatoria;
+}
+
 /* ===== EXTRA (DECORACIONES) ===== */
 
 void renderizar_bordes_mapa()

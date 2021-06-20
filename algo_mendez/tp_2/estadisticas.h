@@ -7,7 +7,7 @@
 
 void renderizar_estadisticas(personaje_t personaje);
 
-void renderizar_tiempo_elapsado();
+void renderizar_tiempo_elapsado(personaje_t personaje);
 
 void renderizar_ultimo_movimiento(char ultimo_movimiento);
 

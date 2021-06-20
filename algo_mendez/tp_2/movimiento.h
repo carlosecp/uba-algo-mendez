@@ -7,7 +7,6 @@
 #include "mapa.h"
 
 #define SIN_MOVIMIENTOS ' '
-#define MOVIMIENTO_INVALIDO 'X'
 #define TECLA_MOVER_ARRIBA 'W'
 #define TECLA_MOVER_ABAJO 'S'
 #define TECLA_MOVER_DERECHA 'D'

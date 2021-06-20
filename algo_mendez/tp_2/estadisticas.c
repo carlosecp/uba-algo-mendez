@@ -2,15 +2,15 @@
 
 void renderizar_estadisticas(personaje_t personaje)
 {
-	renderizar_tiempo_elapsado();
-	printf(" » Tiempo Perdido: %.0fs\n", personaje.tiempo_perdido);
+	renderizar_tiempo_elapsado(personaje);
 	renderizar_ultimo_movimiento(personaje.ultimo_movimiento);
 	renderizar_mochila(personaje);
 }
 
-void renderizar_tiempo_elapsado()
+void renderizar_tiempo_elapsado(personaje_t personaje)
 {
 	printf(" » Tiempo Elapsado: %.0fs\n", tiempo_actual());
+	printf(" » Tiempo Perdido: %.0fs\n", personaje.tiempo_perdido);
 }
 
 void renderizar_ultimo_movimiento(char ultimo_movimiento)
@@ -38,9 +38,6 @@ void renderizar_ultimo_movimiento(char ultimo_movimiento)
 		break;
 	case TECLA_VER_TIEMPO_RESTANTE:
 		printf("Ver Tiempo Restante");
-		break;
-	case MOVIMIENTO_INVALIDO:
-		printf("Movimiento Invalido");
 		break;
 	case SIN_MOVIMIENTOS:
 		printf("Sin Movimientos Aún");
@@ -76,7 +73,16 @@ void renderizar_mochila(personaje_t personaje)
 			printf("%i,", personaje.mochila[i].movimientos_restantes);
 		}
 	}
-	printf("]\n\n");
+	printf("]\n");
 
-	printf(" » Herramienta Utilizada: %i\n", personaje.elemento_en_uso);
+	printf(" » Herramienta Utilizada: ");
+
+	switch (personaje.elemento_en_uso)
+	{
+	case NINGUNA_HERRAMIENTA_EN_USO:
+		printf("Ninguna Herramienta en Uso\n");
+		break;
+	default:
+		printf("%c\n", personaje.mochila[personaje.elemento_en_uso].tipo);
+	}
 }
