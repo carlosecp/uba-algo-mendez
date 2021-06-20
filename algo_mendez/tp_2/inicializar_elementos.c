@@ -26,25 +26,25 @@ int generar_mochila(elemento_mochila_t mochila[MAX_HERRAMIENTAS], char tipo_pers
 
 	int tope_mochila = 0;
 
-	agregar_herramienta_del_tipo_a_mochila(LINTERNA, cantidad_linternas, mochila, &tope_mochila, tipo_personaje);
+	agregar_multiples_herramientas_del_tipo_a_mochila(LINTERNA, cantidad_linternas, mochila, &tope_mochila, tipo_personaje);
 
-	agregar_herramienta_del_tipo_a_mochila(VELA, cantidad_velas, mochila, &tope_mochila, tipo_personaje);
+	agregar_multiples_herramientas_del_tipo_a_mochila(VELA, cantidad_velas, mochila, &tope_mochila, tipo_personaje);
 
-	agregar_herramienta_del_tipo_a_mochila(BENGALA, cantidad_bengalas, mochila, &tope_mochila, tipo_personaje);
+	agregar_multiples_herramientas_del_tipo_a_mochila(BENGALA, cantidad_bengalas, mochila, &tope_mochila, tipo_personaje);
 
 	return tope_mochila;
 }
 
-void agregar_herramienta_del_tipo_a_mochila(char tipo_herramienta, int cantidad_herramientas_del_tipo, elemento_mochila_t mochila[MAX_HERRAMIENTAS], int *tope_mochila, char tipo_personaje)
+void agregar_multiples_herramientas_del_tipo_a_mochila(char tipo_herramienta, int cantidad_herramientas_del_tipo, elemento_mochila_t mochila[MAX_HERRAMIENTAS], int *tope_mochila, char tipo_personaje)
 {
 	for (int i = 0; i < cantidad_herramientas_del_tipo; i++)
 	{
-		mochila[(*tope_mochila)] = generar_herramienta_mochila(tipo_herramienta, tipo_personaje);
+		mochila[(*tope_mochila)] = generar_una_herramienta_mochila(tipo_herramienta, tipo_personaje);
 		(*tope_mochila)++;
 	}
 }
 
-elemento_mochila_t generar_herramienta_mochila(char tipo_herramienta, char tipo_personaje)
+elemento_mochila_t generar_una_herramienta_mochila(char tipo_herramienta, char tipo_personaje)
 {
 	int movimientos_restantes;
 
@@ -68,14 +68,14 @@ elemento_mochila_t generar_herramienta_mochila(char tipo_herramienta, char tipo_
 	return herramienta;
 }
 
-/* ==== AMIGA CHLOE ===== */
+/* ==== AMIGA CHLOE ==== */
 
 coordenada_t inicializar_amiga_chloe(juego_t juego)
 {
 	return generar_coordenada_amiga_chloe_aux(juego);
 }
 
-/* ==== OBSTACULOS && HERRAMIENTAS ===== */
+/* ==== OBSTACULOS ==== */
 
 void inicializar_obstaculos(juego_t *juego)
 {
@@ -98,6 +98,8 @@ void agregar_koala_nom_nom(juego_t *juego)
 	juego->obstaculos[juego->cantidad_obstaculos] = agregar_elemento_del_tipo(*juego, KOALA);
 	juego->cantidad_obstaculos++;
 }
+
+/* ==== HERRAMIENTAS ==== */
 
 void inicializar_herramientas(juego_t *juego)
 {
@@ -131,7 +133,7 @@ elemento_del_mapa_t agregar_elemento_del_tipo(juego_t juego, char tipo_elemento)
 	return elemento_generado;
 }
 
-/* ==== AUXILIARES INICIALIZACION ELEMENTOS ===== */
+/* ==== AUXILIARES ===== */
 
 coordenada_t generar_coordenada_personaje_aux(juego_t juego)
 {

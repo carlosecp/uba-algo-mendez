@@ -25,7 +25,7 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 		realizar_jugada(juego, jugada);
 	}
 
-	finalizar_juego(*juego);
+	renderizar_resultados_juego(*juego);
 }
 
 int estado_juego(juego_t juego)

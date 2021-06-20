@@ -99,7 +99,7 @@ void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectab
 {
 	if (personaje->cantidad_elementos < MAX_HERRAMIENTAS)
 	{
-		agregar_herramienta_del_tipo_a_mochila(tipo_recolectable, 1, personaje->mochila, &(personaje->cantidad_elementos), personaje->tipo);
+		agregar_multiples_herramientas_del_tipo_a_mochila(tipo_recolectable, 1, personaje->mochila, &(personaje->cantidad_elementos), personaje->tipo);
 	}
 }
 
