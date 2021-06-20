@@ -53,6 +53,14 @@ void renderizar_tiempo_elapsado(personaje_t personaje)
 	printf(" » Tiempo Perdido: %.1fs\n", personaje.tiempo_perdido);
 }
 
+void renderizar_gps(juego_t juego)
+{
+	if (juego.personaje.tiempo_perdido > TIEMPO_PERDIDO_ACTIVAR_GPS)
+	{
+		printf(" » Posicion Amiga Chloe: { fil: %i, col: %i }\n", juego.amiga_chloe.fil, juego.amiga_chloe.col);
+	}
+}
+
 void renderizar_ultimo_movimiento(char ultimo_movimiento)
 {
 	printf(" » Ultimo Movimiento: ");
@@ -128,15 +136,38 @@ void renderizar_mochila(personaje_t personaje)
 	}
 }
 
-void renderizar_gps(juego_t juego)
+void renderizar_bordes_estadisticas()
 {
-	if (juego.personaje.tiempo_perdido > TIEMPO_PERDIDO_ACTIVAR_GPS)
+	int espacios_extra = 4;
+	for (int i = 0; i < (CANTIDAD_COLUMNAS * 3) + espacios_extra; i++)
 	{
-		printf(" » Posicion Amiga Chloe: { fil: %i, col: %i }\n", juego.amiga_chloe.fil, juego.amiga_chloe.col);
+		printf("═");
 	}
+	printf("\n");
 }
 
-void finalizar_juego(juego_t juego)
+void renderizar_bordes_mapa(bool borde_superior)
+{
+	int espacios_extra = 4;
+	for (int i = 0; i < (CANTIDAD_COLUMNAS * 3) + espacios_extra; i++)
+	{
+		if (i == 0)
+		{
+			printf("%s", borde_superior ? "╔" : "╚");
+		}
+		else if (i == ((CANTIDAD_COLUMNAS * 3) + (espacios_extra - 1)))
+		{
+			printf("%s", borde_superior ? "╗" : "╝");
+		}
+		else
+		{
+			printf("═");
+		}
+	}
+	printf("\n");
+}
+
+void renderizar_resultados_juego(juego_t juego)
 {
 	double tiempo_total = tiempo_actual() + juego.personaje.tiempo_perdido;
 	printf("\n");
@@ -158,35 +189,4 @@ void finalizar_juego(juego_t juego)
 		printf("██████╔╝███████╗██║  ██║██║  ██║╚██████╔╝   ██║   ██║  ██║██╗██╗██╗\n");
 		printf("╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝╚═╝\n");
 	}
-}
-
-void renderizar_bordes_estadisticas()
-{
-	int espacios_extra = 4;
-	for (int i = 0; i < (CANTIDAD_COLUMNAS * 3) + espacios_extra; i++)
-	{
-		printf("═");
-	}
-	printf("\n");
-}
-
-void renderizar_bordes_mapa(bool border_superior)
-{
-	int espacios_extra = 4;
-	for (int i = 0; i < (CANTIDAD_COLUMNAS * 3) + espacios_extra; i++)
-	{
-		if (i == 0)
-		{
-			printf("%s", border_superior ? "╔" : "╚");
-		}
-		else if (i == ((CANTIDAD_COLUMNAS * 3) + (espacios_extra - 1)))
-		{
-			printf("%s", border_superior ? "╗" : "╝");
-		}
-		else
-		{
-			printf("═");
-		}
-	}
-	printf("\n");
 }
