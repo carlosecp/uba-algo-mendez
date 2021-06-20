@@ -175,10 +175,16 @@ bool linterna_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_
 	return ((posicion_elemento.fil > posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
 }
 
-void agregar_pilas_a_linterna(personaje_t *personaje)
+void agregar_pilas_a_linterna(juego_t *juego, int indice_pila)
 {
-	int indice_linterna = buscar_herramienta_en_mochila(*personaje, LINTERNA);
-	personaje->mochila[indice_linterna].movimientos_restantes++;
+	int indice_linterna = buscar_herramienta_en_mochila(juego->personaje, LINTERNA);
+	int maximo_pilas_linterna = juego->personaje.tipo == PARDO ? DURACION_LINTERNA_PARDO : DURACION_LINTERNA;
+
+	if (juego->personaje.mochila[indice_linterna].movimientos_restantes < maximo_pilas_linterna)
+	{
+		juego->personaje.mochila[indice_linterna].movimientos_restantes++;
+		remover_recolectable_del_mapa(juego, indice_pila);
+	}
 }
 
 /* ==== VELA ==== */
@@ -246,4 +252,12 @@ bool esta_a_distancia_manhattan(coordenada_t posicion_centro, coordenada_t posic
 	int diferencia_columnas = abs(posicion_centro.col - posicion_elemento.col);
 
 	return (diferencia_filas + diferencia_columnas) <= 2;
+}
+
+bool se_pueden_agregar_pilas_a_linterna(personaje_t personaje)
+{
+	int indice_linterna = buscar_herramienta_en_mochila(personaje, LINTERNA);
+	int maximo_pilas_linterna = personaje.tipo == PARDO ? DURACION_LINTERNA_PARDO : DURACION_LINTERNA;
+
+	return (personaje.mochila[indice_linterna].movimientos_restantes < maximo_pilas_linterna);
 }

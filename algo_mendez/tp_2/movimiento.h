@@ -33,10 +33,10 @@ void manejar_colision(juego_t *juego);
 
 void accion_colision_con_obstaculo(personaje_t *personaje, char tipo_obstaculo);
 
-void accion_colision_con_herramienta(personaje_t *personaje, char tipo_elemento);
+void accion_colision_con_herramienta(juego_t *juego, int indicie_herramienta);
 
 void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectable);
 
-void remover_recolectable_del_mapa(int indice_elemento, juego_t *juego);
+void remover_recolectable_del_mapa(juego_t *juego, int indice_herramienta);
 
 #endif

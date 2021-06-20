@@ -38,7 +38,7 @@ bool linterna_fila_es_iluminable(coordenada_t posicion_personaje, coordenada_t p
 
 bool linterna_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t posicion_elemento, bool revertir_direccion);
 
-void agregar_pilas_a_linterna(personaje_t *personaje);
+void agregar_pilas_a_linterna(juego_t *juego, int indice_pila);
 
 /* ==== VELA ==== */
 
@@ -55,5 +55,7 @@ bool vela_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t po
 void utilizar_bengala(juego_t *juego, bool ilumnar);
 
 bool esta_a_distancia_manhattan(coordenada_t posicion_centro, coordenada_t posicion_elemento);
+
+bool se_pueden_agregar_pilas_a_linterna(personaje_t personaje);
 
 #endif

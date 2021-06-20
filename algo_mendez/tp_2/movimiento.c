@@ -57,8 +57,7 @@ void manejar_colision(juego_t *juego)
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[i].posicion))
 		{
-			accion_colision_con_herramienta(&(juego->personaje), juego->herramientas[i].tipo);
-			remover_recolectable_del_mapa(i, juego);
+			accion_colision_con_herramienta(juego, i);
 		}
 	}
 }
@@ -82,15 +81,17 @@ void accion_colision_con_obstaculo(personaje_t *personaje, char tipo_obstaculo)
 	}
 }
 
-void accion_colision_con_herramienta(personaje_t *personaje, char tipo_herramienta)
+void accion_colision_con_herramienta(juego_t *juego, int indice_herramienta)
 {
+	char tipo_herramienta = juego->herramientas[indice_herramienta].tipo;
 	switch (tipo_herramienta)
 	{
 	case PILA:
-		agregar_pilas_a_linterna(personaje);
+		agregar_pilas_a_linterna(juego, indice_herramienta);
 		break;
 	default:
-		agregar_recolectable_a_mochila(personaje, tipo_herramienta);
+		agregar_recolectable_a_mochila(&(juego->personaje), tipo_herramienta);
+		remover_recolectable_del_mapa(juego, indice_herramienta);
 	}
 }
 
@@ -102,9 +103,9 @@ void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectab
 	}
 }
 
-void remover_recolectable_del_mapa(int indice_elemento, juego_t *juego)
+void remover_recolectable_del_mapa(juego_t *juego, int indice_herramienta)
 {
-	for (int i = indice_elemento; i < juego->cantidad_herramientas; i++)
+	for (int i = indice_herramienta; i < juego->cantidad_herramientas; i++)
 	{
 		juego->herramientas[i] = juego->herramientas[i + 1];
 	}

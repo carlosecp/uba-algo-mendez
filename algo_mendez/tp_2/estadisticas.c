@@ -9,8 +9,8 @@ void renderizar_estadisticas(personaje_t personaje)
 
 void renderizar_tiempo_elapsado(personaje_t personaje)
 {
-	printf(" » Tiempo Elapsado: %.0fs\n", tiempo_actual());
-	printf(" » Tiempo Perdido: %.0fs\n", personaje.tiempo_perdido);
+	printf(" » Tiempo Elapsado: %.1fs\n", tiempo_actual());
+	printf(" » Tiempo Perdido: %.1fs\n", personaje.tiempo_perdido);
 }
 
 void renderizar_ultimo_movimiento(char ultimo_movimiento)
