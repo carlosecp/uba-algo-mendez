@@ -20,6 +20,13 @@ void renderizar_introduccion();
 void renderizar_estadisticas(juego_t juego);
 
 /**
+ * Muestra el resultado del test de personalidad. Resultado que representa al personaje del juego.
+ * @pre Requiere que se haya completado el test de personalidad. 
+ * @param tipo_personaje Caracter que representa el resultado del test de personalidad.
+ */
+void renderizar_resultado_test_de_personalidad(char tipo_personaje);
+
+/**
  * Muestra el tiempo transcurrido desde que se inicio el juego y el tiempo perdido acumulado por el personaje. 
  * @pre Se debe haber inicializado el cronómetro al empezar el juego. 
  * @param personaje Instancia única del personaje, utilizada para determinar si este ha solicitado visualizar el tiempo actual además del tiempo perdido por este.

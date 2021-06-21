@@ -22,6 +22,8 @@ void renderizar_introduccion()
 	printf("║                                                                                                                                     ║\n");
 	printf("║ ¡Pero hay un problema más! Ya se hizo de noche en el bosque y el personaje no podrá ver nada de lo que hay a su alrededor, y debe-  ║\n");
 	printf("║ rá ayudarse de su linterna, velas y bengalas para poder llegar a encontrarse con su amiga.                                          ║\n");
+	printf("║                                                                                                                                     ║\n");
+	printf("║ Buena Suerte!!!                                                                                                                     ║\n");
 	printf("╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
 	printf(" -> Presiona Cualquier Tecla para Continuar...");
 	getchar();
@@ -30,6 +32,7 @@ void renderizar_introduccion()
 void renderizar_estadisticas(juego_t juego)
 {
 	renderizar_bordes_estadisticas();
+	renderizar_resultado_test_de_personalidad(juego.personaje.tipo);
 	renderizar_tiempo_elapsado(juego.personaje);
 	if (juego.personaje.tipo == PARDO)
 	{
@@ -38,6 +41,24 @@ void renderizar_estadisticas(juego_t juego)
 	renderizar_ultimo_movimiento(juego.personaje.ultimo_movimiento);
 	renderizar_bordes_estadisticas();
 	renderizar_mochila(juego.personaje);
+}
+
+void renderizar_resultado_test_de_personalidad(char tipo_personaje)
+{
+	printf(" -> Tipo Personaje: %c (", tipo_personaje);
+	switch (tipo_personaje)
+	{
+	case POLAR:
+		printf("Polar");
+		break;
+	case PARDO:
+		printf("Pardo");
+		break;
+	case PANDA:
+		printf("Panda");
+		break;
+	}
+	printf(")\n");
 }
 
 void renderizar_tiempo_elapsado(personaje_t personaje)
