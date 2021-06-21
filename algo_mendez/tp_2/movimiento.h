@@ -54,6 +54,7 @@ bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada);
 
 /**
  * Dictamina si el personaje está en colisión con algún elemento del mapa y asigna una acción según el tipo de elemento con el que se está colisionando.
+ * @pre Tanto obstáculos como herramientas recolectables deben estar ubicadas en el mapa.
  * @param juego Referencia a la instancia única del juego ya inicializada. Utilizada para comparar las coordenadas de todos los elementos del mapa.
  */
 void manejar_colision(juego_t *juego);
@@ -65,15 +66,43 @@ void manejar_colision(juego_t *juego);
  */
 void accion_colision_con_obstaculo(personaje_t *personaje, char tipo_obstaculo);
 
-/**
- * Dictamina si el personaje está en colisión con algún elemento del mapa y asigna una acción según el tipo de elemento con el que se está colisionando.
- * @param juego Referencia a la instancia única del juego ya inicializada. Utilizada para comparar las coordenadas de todos los elementos del mapa.
- * @return Verdadero si la coordenada buscada está dentro de los límites del mapa.
- */
-void accion_colision_con_herramienta(juego_t *juego, int indice_recolectable);
+/* ==== RECOLECCIÓN DE HERRAMIENTAS ==== */
 
+/**
+ * Evalúa la acción a realizar si se ha colisionado con una herramienta de cualquier tipo (recolectable).
+ * @param juego Referencia a la instancia única del juego ya inicializada. Utilizada para determinar el tipo de herramienta que se encuentra en la ubicación del personaje.
+ * @param indice_herramienta Ubicación en el vector de obstáculos del mapa en el que se encuentra el recolectable actual.
+ */
+void accion_colision_con_herramienta(juego_t *juego, int indice_herramienta);
+
+/**
+ * Si se puede, agrega la herramienta recolectable encontrada en el mapa a la mochila del personaje.
+ * @pre Se debe haber inicializado un personaje con mochila y tope específico.
+ * @param juego Referencia a la instancia única del juego ya inicializada. Utilizada para determinar si se pueden agregar herramientas a la mochila del personaje, y si se puede, agregarlas.
+ * @param tipo_herramienta Ubicación en el vector de obstáculos del mapa en el que se encuentra el recolectable actual.
+ */
 void agregar_herramienta_a_mochila(personaje_t *personaje, char tipo_herramienta);
 
+/**
+ * Si el personaje ha recolectado una herramienta del mapa, esta se elimina del mismo.
+ * @pre Se debe haber encontrado una herramienta recolectable y haber agregado esta herramienta a la mochila del personaje.
+ * @param juego Referencia a la instancia única del juego ya inicializada. Utilizada para eliminar la herramienta recogida del registro.
+ * @param indice_herramienta Ubicación en el vector de obstáculos del mapa en el que se encuentra el recolectable actual.
+ */
 void remover_herramienta_del_mapa(juego_t *juego, int indice_herramienta);
+
+/**
+ * Determina si el movimiento previo es válido (W, A, S, D) y el personaje se ha desplazada en alguna dirección.
+ * @param movimiento Caracter que representa la dirección del último movimiento.
+ * @return Verdadero si el último movimiento permite que se utilice la linterna.
+ */
+bool es_movimiento_valido_para_linterna(char movimiento);
+
+/**
+ * Si se puede (alcanzan nuevas pilas), agrega pilas a la linterna del personaje.
+ * @pre Se debe haber inicializado un personaje con linterna en su mochila.
+ * @param juego Referencia a la instancia única del juego ya inicializada. Utilizada remover la herramienta recolectable pila del mapa si se ha agregado a la linterna del personaje.
+ */
+void agregar_pilas_a_linterna(juego_t *juego, int indice_pila);
 
 #endif

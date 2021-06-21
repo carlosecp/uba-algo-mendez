@@ -8,6 +8,8 @@
 #define TECLA_ENCENDER_VELA VELA
 #define TECLA_ENCENDER_BENGALA BENGALA
 
+/* ==== UTILIZACIÓN DE HERRAMIENTAS ===== */
+
 void jugada_utilizar_herramienta(juego_t *juego, char jugada);
 
 void utilizar_herramienta(juego_t *juego, char tipo_herramienta);

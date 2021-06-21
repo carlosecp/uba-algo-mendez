@@ -1,5 +1,7 @@
 #include "herramientas.h"
 
+/* ==== UTILIZACIÓN DE HERRAMIENTAS ===== */
+
 void jugada_utilizar_herramienta(juego_t *juego, char jugada)
 {
 	if ((jugada == LINTERNA && !es_movimiento_valido_para_linterna(juego->personaje.ultimo_movimiento)) || juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo == BENGALA)
@@ -192,18 +194,6 @@ bool linterna_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_
 	return ((posicion_elemento.fil > posicion_personaje.fil) && (posicion_elemento.col == posicion_personaje.col));
 }
 
-void agregar_pilas_a_linterna(juego_t *juego, int indice_pila)
-{
-	int indice_linterna = buscar_herramienta_en_mochila(juego->personaje, LINTERNA);
-	int maximas_pilas_linterna = juego->personaje.tipo == PARDO ? DURACION_LINTERNA_PARDO : DURACION_LINTERNA;
-
-	if ((juego->personaje.mochila[indice_linterna].movimientos_restantes + DURACION_PILA) <= maximas_pilas_linterna)
-	{
-		juego->personaje.mochila[indice_linterna].movimientos_restantes += DURACION_PILA;
-		remover_herramienta_del_mapa(juego, indice_pila);
-	}
-}
-
 /* ==== VELA ==== */
 
 void utilizar_vela(juego_t *juego, bool iluminar)
@@ -269,19 +259,4 @@ bool esta_a_distancia_manhattan(coordenada_t posicion_centro, coordenada_t posic
 	int diferencia_columnas = abs(posicion_centro.col - posicion_elemento.col);
 
 	return (diferencia_filas + diferencia_columnas) <= 2;
-}
-
-bool es_movimiento_valido_para_linterna(char movimiento)
-{
-	bool movimiento_valido = false;
-	switch (movimiento)
-	{
-	case TECLA_MOVER_ARRIBA:
-	case TECLA_MOVER_ABAJO:
-	case TECLA_MOVER_DERECHA:
-	case TECLA_MOVER_IZQUIERDA:
-		movimiento_valido = true;
-	}
-
-	return movimiento_valido;
 }

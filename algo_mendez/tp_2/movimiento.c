@@ -47,25 +47,20 @@ bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada)
 
 void manejar_colision(juego_t *juego)
 {
-	bool hay_colision = false;
-	int i = 0, j = 0;
-
-	while (!hay_colision && (i < juego->cantidad_obstaculos))
+	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->obstaculos[i].posicion))
 		{
 			accion_colision_con_obstaculo(&(juego->personaje), juego->obstaculos[i].tipo);
 		}
-		i++;
 	}
 
-	while (!hay_colision && (j < juego->cantidad_obstaculos))
+	for (int i = 0; i < juego->cantidad_herramientas; i++)
 	{
-		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[j].posicion))
+		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[i].posicion))
 		{
-			accion_colision_con_herramienta(juego, j);
+			accion_colision_con_herramienta(juego, i);
 		}
-		j++;
 	}
 }
 
@@ -88,17 +83,19 @@ void accion_colision_con_obstaculo(personaje_t *personaje, char tipo_obstaculo)
 	}
 }
 
-void accion_colision_con_herramienta(juego_t *juego, int indice_recolectable)
+/* ==== RECOLECCIÓN DE HERRAMIENTAS ==== */
+
+void accion_colision_con_herramienta(juego_t *juego, int indice_herramienta)
 {
-	char tipo_herramienta = juego->herramientas[indice_recolectable].tipo;
+	char tipo_herramienta = juego->herramientas[indice_herramienta].tipo;
 	switch (tipo_herramienta)
 	{
 	case PILA:
-		agregar_pilas_a_linterna(juego, indice_recolectable);
+		agregar_pilas_a_linterna(juego, indice_herramienta);
 		break;
 	default:
 		agregar_herramienta_a_mochila(&(juego->personaje), tipo_herramienta);
-		remover_herramienta_del_mapa(juego, indice_recolectable);
+		remover_herramienta_del_mapa(juego, indice_herramienta);
 	}
 }
 
@@ -117,4 +114,31 @@ void remover_herramienta_del_mapa(juego_t *juego, int indice_herramienta)
 		juego->herramientas[i] = juego->herramientas[i + 1];
 	}
 	juego->cantidad_herramientas--;
+}
+
+bool es_movimiento_valido_para_linterna(char movimiento)
+{
+	bool movimiento_valido = false;
+	switch (movimiento)
+	{
+	case TECLA_MOVER_ARRIBA:
+	case TECLA_MOVER_ABAJO:
+	case TECLA_MOVER_DERECHA:
+	case TECLA_MOVER_IZQUIERDA:
+		movimiento_valido = true;
+	}
+
+	return movimiento_valido;
+}
+
+void agregar_pilas_a_linterna(juego_t *juego, int indice_pila)
+{
+	int indice_linterna = buscar_herramienta_en_mochila(juego->personaje, LINTERNA);
+	int maximas_pilas_linterna = juego->personaje.tipo == PARDO ? DURACION_LINTERNA_PARDO : DURACION_LINTERNA;
+
+	if ((juego->personaje.mochila[indice_linterna].movimientos_restantes + DURACION_PILA) <= maximas_pilas_linterna)
+	{
+		juego->personaje.mochila[indice_linterna].movimientos_restantes += DURACION_PILA;
+		remover_herramienta_del_mapa(juego, indice_pila);
+	}
 }
