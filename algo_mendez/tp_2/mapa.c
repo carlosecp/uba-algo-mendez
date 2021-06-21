@@ -1,7 +1,7 @@
 #include <string.h>
 #include "mapa.h"
 
-/* ===== COORDENADAS ===== */
+/* ==== COORDENADAS ==== */
 
 coordenada_t generar_coordenada(juego_t juego, bool validar_coordenada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe)
 {
@@ -50,7 +50,7 @@ bool son_misma_coordenada(coordenada_t coordenada_a, coordenada_t coordenada_b)
 					(coordenada_a.col == coordenada_b.col));
 }
 
-/* ===== MAPA (BOSQUE) ===== */
+/* ==== MAPA (BOSQUE) ==== */
 
 void inicializar_mapa_vacio(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
 {
@@ -66,31 +66,31 @@ void inicializar_mapa_vacio(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
 void posicionar_todos_elementos_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], juego_t juego)
 {
 	inicializar_mapa_vacio(mapa);
-	posicionar_amiga_chloe_en_mapa(mapa, juego.amiga_chloe, juego.chloe_visible);
+	posicionar_amiga_chloe_en_mapa_aux(mapa, juego.amiga_chloe, juego.chloe_visible);
 
 	for (int i = 0; i < juego.cantidad_obstaculos; i++)
 	{
 		elemento_del_mapa_t obstaculo_a_posicionar = juego.obstaculos[i];
-		posicionar_elemento_del_tipo_en_mapa(mapa, obstaculo_a_posicionar);
+		posicionar_elemento_del_tipo_en_mapa_aux(mapa, obstaculo_a_posicionar);
 	}
 
 	for (int i = 0; i < juego.cantidad_herramientas; i++)
 	{
 		elemento_del_mapa_t herramienta_a_posicionar = juego.herramientas[i];
-		posicionar_elemento_del_tipo_en_mapa(mapa, herramienta_a_posicionar);
+		posicionar_elemento_del_tipo_en_mapa_aux(mapa, herramienta_a_posicionar);
 	}
 
-	posicionar_personaje_en_mapa(mapa, juego.personaje);
+	posicion_personaje_en_mapa_aux(mapa, juego.personaje);
 }
 
-/* ===== AUXILIARES POSICIONAMIENTO DE ELEMENTOS ===== */
+/* ===== AUXILIARES ==== */
 
-void posicionar_personaje_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], personaje_t personaje)
+void posicion_personaje_en_mapa_aux(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], personaje_t personaje)
 {
 	mapa[personaje.posicion.fil][personaje.posicion.col] = personaje.tipo;
 }
 
-void posicionar_amiga_chloe_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t amiga_chloe, bool amiga_chloe_es_visible)
+void posicionar_amiga_chloe_en_mapa_aux(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t amiga_chloe, bool amiga_chloe_es_visible)
 {
 	if (amiga_chloe_es_visible)
 	{
@@ -98,7 +98,7 @@ void posicionar_amiga_chloe_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS]
 	}
 }
 
-void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], elemento_del_mapa_t elemento_a_posicionar)
+void posicionar_elemento_del_tipo_en_mapa_aux(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], elemento_del_mapa_t elemento_a_posicionar)
 {
 	if (elemento_a_posicionar.visible)
 	{
@@ -106,7 +106,7 @@ void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COL
 	}
 }
 
-coordenada_t generar_coordenada_impacto_koala()
+coordenada_t generar_coordenada_colision_koala()
 {
 	int fila_aleatoria = rand() % CANTIDAD_FILAS;
 	coordenada_t coordenada_aleatoria = {

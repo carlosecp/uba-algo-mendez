@@ -78,7 +78,7 @@ void accion_colision_con_obstaculo(personaje_t *personaje, char tipo_obstaculo)
 		personaje->tiempo_perdido += tiempo_perdido_piedra;
 		break;
 	case KOALA:
-		personaje->posicion = generar_coordenada_impacto_koala();
+		personaje->posicion = generar_coordenada_colision_koala();
 		break;
 	}
 }
