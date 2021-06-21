@@ -57,7 +57,7 @@ void renderizar_gps(juego_t juego)
 {
 	if (juego.personaje.tiempo_perdido > TIEMPO_PERDIDO_ACTIVAR_GPS)
 	{
-		printf(" » Posicion Amiga Chloe: { fil: %i, col: %i }\n", juego.amiga_chloe.fil, juego.amiga_chloe.col);
+		printf(" » Posicion Amiga Chloe: { fil: %02i, col: %02i }\n", juego.amiga_chloe.fil, juego.amiga_chloe.col);
 	}
 }
 
@@ -138,7 +138,7 @@ void renderizar_mochila(personaje_t personaje)
 
 void renderizar_bordes_estadisticas()
 {
-	int espacios_extra = 4;
+	int espacios_extra = 7;
 	for (int i = 0; i < (CANTIDAD_COLUMNAS * 3) + espacios_extra; i++)
 	{
 		printf("═");
@@ -148,7 +148,7 @@ void renderizar_bordes_estadisticas()
 
 void renderizar_bordes_mapa(bool borde_superior)
 {
-	int espacios_extra = 4;
+	int espacios_extra = 7;
 	for (int i = 0; i < (CANTIDAD_COLUMNAS * 3) + espacios_extra; i++)
 	{
 		if (i == 0)
@@ -173,20 +173,20 @@ void renderizar_resultados_juego(juego_t juego)
 	printf("\n");
 	if (tiempo_total < TIEMPO_LIMITE)
 	{
-		printf("██╗   ██╗██╗ ██████╗████████╗ ██████╗ ██████╗ ██╗ █████╗ ██╗██╗██╗\n");
-		printf("██║   ██║██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██║██╔══██╗██║██║██║\n");
-		printf("██║   ██║██║██║        ██║   ██║   ██║██████╔╝██║███████║██║██║██║\n");
-		printf("╚██╗ ██╔╝██║██║        ██║   ██║   ██║██╔══██╗██║██╔══██║╚═╝╚═╝╚═╝\n");
-		printf(" ╚████╔╝ ██║╚██████╗   ██║   ╚██████╔╝██║  ██║██║██║  ██║██╗██╗██╗\n");
-		printf("  ╚═══╝  ╚═╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝╚═╝\n");
+		printf(" ██╗   ██╗██╗ ██████╗████████╗ ██████╗ ██████╗ ██╗ █████╗ ██╗██╗██╗\n");
+		printf(" ██║   ██║██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██║██╔══██╗██║██║██║\n");
+		printf(" ██║   ██║██║██║        ██║   ██║   ██║██████╔╝██║███████║██║██║██║\n");
+		printf(" ╚██╗ ██╔╝██║██║        ██║   ██║   ██║██╔══██╗██║██╔══██║╚═╝╚═╝╚═╝\n");
+		printf("  ╚████╔╝ ██║╚██████╗   ██║   ╚██████╔╝██║  ██║██║██║  ██║██╗██╗██╗\n");
+		printf("   ╚═══╝  ╚═╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝╚═╝\n");
 	}
 	else
 	{
-		printf("██████╗ ███████╗██████╗ ██████╗  ██████╗ ████████╗ █████╗ ██╗██╗██╗\n");
-		printf("██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔══██╗██║██║██║\n");
-		printf("██║  ██║█████╗  ██████╔╝██████╔╝██║   ██║   ██║   ███████║██║██║██║\n");
-		printf("██║  ██║██╔══╝  ██╔══██╗██╔══██╗██║   ██║   ██║   ██╔══██║╚═╝╚═╝╚═╝\n");
-		printf("██████╔╝███████╗██║  ██║██║  ██║╚██████╔╝   ██║   ██║  ██║██╗██╗██╗\n");
-		printf("╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝╚═╝\n");
+		printf(" ██████╗ ███████╗██████╗ ██████╗  ██████╗ ████████╗ █████╗ ██╗██╗██╗\n");
+		printf(" ██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔══██╗██║██║██║\n");
+		printf(" ██║  ██║█████╗  ██████╔╝██████╔╝██║   ██║   ██║   ███████║██║██║██║\n");
+		printf(" ██║  ██║██╔══╝  ██╔══██╗██╔══██╗██║   ██║   ██║   ██╔══██║╚═╝╚═╝╚═╝\n");
+		printf(" ██████╔╝███████╗██║  ██║██║  ██║╚██████╔╝   ██║   ██║  ██║██╗██╗██╗\n");
+		printf(" ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝╚═╝\n");
 	}
 }

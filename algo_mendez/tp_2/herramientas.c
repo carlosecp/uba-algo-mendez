@@ -9,7 +9,7 @@ void jugada_utilizar_herramienta(juego_t *juego, char jugada)
 		return;
 	}
 
-	if (juego->personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO && !es_herramienta_valida(jugada))
+	if ((juego->personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO && !es_herramienta_valida(jugada)) || (juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo == jugada))
 	{
 		juego->personaje.elemento_en_uso = NINGUNA_HERRAMIENTA_EN_USO;
 	}
@@ -32,6 +32,11 @@ bool es_herramienta_valida(char jugada)
 		herramienta_valida = true;
 	}
 	return herramienta_valida;
+}
+
+bool herramienta_se_puede_usar(personaje_t personaje)
+{
+	return (personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO && herramienta_tiene_movimientos(personaje));
 }
 
 void utilizar_herramienta(juego_t *juego, char tipo_herramienta)
@@ -66,13 +71,12 @@ void utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 	}
 }
 
-void eliminar_herramienta_de_mochila(personaje_t *personaje)
+void utilizar_misma_herramienta(juego_t *juego)
 {
-	for (int i = personaje->elemento_en_uso; i < personaje->cantidad_elementos; i++)
+	if (juego->personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO)
 	{
-		personaje->mochila[i] = personaje->mochila[i + 1];
+		utilizar_herramienta(juego, juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo);
 	}
-	personaje->cantidad_elementos--;
 }
 
 int buscar_herramienta_en_mochila(personaje_t personaje, char tipo_herramienta)
@@ -94,27 +98,23 @@ int buscar_herramienta_en_mochila(personaje_t personaje, char tipo_herramienta)
 	return ubicacion_herramienta;
 }
 
-bool herramienta_se_puede_usar(personaje_t personaje)
-{
-	return (personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO && herramienta_tiene_movimientos(personaje));
-}
-
 bool herramienta_se_puede_eliminar(personaje_t personaje)
 {
 	return ((personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO) && (personaje.mochila[personaje.elemento_en_uso].tipo != LINTERNA) && (!herramienta_tiene_movimientos(personaje)));
 }
 
+void eliminar_herramienta_de_mochila(personaje_t *personaje)
+{
+	for (int i = personaje->elemento_en_uso; i < personaje->cantidad_elementos; i++)
+	{
+		personaje->mochila[i] = personaje->mochila[i + 1];
+	}
+	personaje->cantidad_elementos--;
+}
+
 bool herramienta_tiene_movimientos(personaje_t personaje)
 {
 	return (personaje.mochila[personaje.elemento_en_uso].movimientos_restantes > 0);
-}
-
-void utilizar_misma_herramienta(juego_t *juego)
-{
-	if (juego->personaje.elemento_en_uso != NINGUNA_HERRAMIENTA_EN_USO)
-	{
-		utilizar_herramienta(juego, juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo);
-	}
 }
 
 /* ==== LINTERNA ==== */
@@ -124,24 +124,29 @@ void utilizar_linterna(juego_t *juego, bool iluminar)
 	switch (juego->personaje.ultimo_movimiento)
 	{
 	case TECLA_MOVER_ARRIBA:
-		linterna_iluminar_columna(juego, false, iluminar);
+		iluminar_columna(juego, false, iluminar);
 		break;
 	case TECLA_MOVER_ABAJO:
-		linterna_iluminar_columna(juego, true, iluminar);
+		iluminar_columna(juego, true, iluminar);
 		break;
 	case TECLA_MOVER_DERECHA:
-		linterna_iluminar_fila(juego, false, iluminar);
+		iluminar_fila(juego, false, iluminar);
 		break;
 	case TECLA_MOVER_IZQUIERDA:
-		linterna_iluminar_fila(juego, true, iluminar);
+		iluminar_fila(juego, true, iluminar);
 		break;
 	}
 
 	agregar_koala_nom_nom(juego);
 }
 
-void linterna_iluminar_fila(juego_t *juego, bool revertir_direccion, bool iluminar)
+void iluminar_fila(juego_t *juego, bool revertir_direccion, bool iluminar)
 {
+	if (iluminar && linterna_fila_es_iluminable(juego->personaje.posicion, juego->amiga_chloe, revertir_direccion))
+		juego->chloe_visible = true;
+	else
+		juego->chloe_visible = false;
+
 	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{
 		if (iluminar && linterna_fila_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
@@ -159,8 +164,13 @@ void linterna_iluminar_fila(juego_t *juego, bool revertir_direccion, bool ilumin
 	}
 }
 
-void linterna_iluminar_columna(juego_t *juego, bool revertir_direccion, bool iluminar)
+void iluminar_columna(juego_t *juego, bool revertir_direccion, bool iluminar)
 {
+	if (iluminar && linterna_columna_es_iluminable(juego->personaje.posicion, juego->amiga_chloe, revertir_direccion))
+		juego->chloe_visible = true;
+	else
+		juego->chloe_visible = false;
+
 	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{
 		if (iluminar && linterna_columna_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion, revertir_direccion))
@@ -198,6 +208,11 @@ bool linterna_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_
 
 void utilizar_vela(juego_t *juego, bool iluminar)
 {
+	if (iluminar && vela_area_es_iluminable(juego->personaje.posicion, juego->amiga_chloe))
+		juego->chloe_visible = true;
+	else
+		juego->chloe_visible = false;
+
 	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{
 		if (iluminar && vela_area_es_iluminable(juego->personaje.posicion, juego->obstaculos[i].posicion))
@@ -235,6 +250,11 @@ bool vela_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t po
 void utilizar_bengala(juego_t *juego, bool iluminar)
 {
 	coordenada_t coordenada_aleatoria = generar_coordenada(*juego, false, false, false);
+
+	if (iluminar && esta_a_distancia_manhattan(coordenada_aleatoria, juego->amiga_chloe))
+		juego->chloe_visible = true;
+	else
+		juego->chloe_visible = false;
 
 	for (int i = 0; i < juego->cantidad_obstaculos; i++)
 	{

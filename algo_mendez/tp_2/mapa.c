@@ -66,7 +66,7 @@ void inicializar_mapa_vacio(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS])
 void posicionar_todos_elementos_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], juego_t juego)
 {
 	inicializar_mapa_vacio(mapa);
-	posicionar_amiga_chloe_en_mapa(mapa, juego.amiga_chloe);
+	posicionar_amiga_chloe_en_mapa(mapa, juego.amiga_chloe, juego.chloe_visible);
 
 	for (int i = 0; i < juego.cantidad_obstaculos; i++)
 	{
@@ -90,9 +90,12 @@ void posicionar_personaje_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], 
 	mapa[personaje.posicion.fil][personaje.posicion.col] = personaje.tipo;
 }
 
-void posicionar_amiga_chloe_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t amiga_chloe)
+void posicionar_amiga_chloe_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], coordenada_t amiga_chloe, bool amiga_chloe_es_visible)
 {
-	mapa[amiga_chloe.fil][amiga_chloe.col] = CHLOE;
+	if (amiga_chloe_es_visible)
+	{
+		mapa[amiga_chloe.fil][amiga_chloe.col] = CHLOE;
+	}
 }
 
 void posicionar_elemento_del_tipo_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], elemento_del_mapa_t elemento_a_posicionar)

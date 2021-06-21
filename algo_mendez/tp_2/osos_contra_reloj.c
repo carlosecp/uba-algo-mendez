@@ -10,6 +10,7 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 {
 	juego->personaje = inicializar_personaje(*juego, tipo_personaje);
 	juego->amiga_chloe = inicializar_amiga_chloe(*juego);
+	juego->chloe_visible = false;
 	inicializar_obstaculos(juego);
 	inicializar_herramientas(juego);
 
@@ -17,7 +18,7 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 
 	while (estado_juego(*juego) == 0)
 	{
-		system("clear");
+		// system("clear");
 		mostrar_juego(*juego);
 		char jugada;
 		printf(" » Registrar jugada: ");
@@ -68,12 +69,26 @@ void mostrar_juego(juego_t juego)
 	renderizar_estadisticas(juego);
 
 	renderizar_bordes_mapa(true);
-	for (int i = 0; i < CANTIDAD_FILAS; i++)
+	for (int i = 0; i < (CANTIDAD_FILAS + 1); i++)
 	{
-		printf("║ ");
+		if (i == 0)
+		{
+			printf("║    ");
+		}
+		else
+		{
+			printf("║ %02i ", (i - 1));
+		}
 		for (int j = 0; j < CANTIDAD_COLUMNAS; j++)
 		{
-			printf(" %c ", mapa[i][j]);
+			if (i == 0)
+			{
+				printf("%02i ", j);
+			}
+			else
+			{
+				printf(" %c ", mapa[i - 1][j]);
+			}
 		}
 		printf(" ║");
 		printf("\n");
