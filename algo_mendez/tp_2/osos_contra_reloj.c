@@ -20,7 +20,7 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 		system("clear");
 		mostrar_juego(*juego);
 		char jugada;
-		printf(" » Registrar jugada: ");
+		printf(" -> Registrar jugada: ");
 		scanf(" %c", &jugada);
 		realizar_jugada(juego, jugada);
 	}

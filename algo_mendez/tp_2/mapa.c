@@ -80,12 +80,12 @@ void posicionar_todos_elementos_en_mapa(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUM
 		posicionar_elemento_del_tipo_en_mapa_aux(mapa, herramienta_a_posicionar);
 	}
 
-	posicion_personaje_en_mapa_aux(mapa, juego.personaje);
+	posicionar_personaje_en_mapa_aux(mapa, juego.personaje);
 }
 
 /* ===== AUXILIARES ==== */
 
-void posicion_personaje_en_mapa_aux(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], personaje_t personaje)
+void posicionar_personaje_en_mapa_aux(char mapa[CANTIDAD_FILAS][CANTIDAD_COLUMNAS], personaje_t personaje)
 {
 	mapa[personaje.posicion.fil][personaje.posicion.col] = personaje.tipo;
 }
