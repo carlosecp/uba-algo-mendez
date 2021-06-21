@@ -9,8 +9,7 @@
 void inicializar_juego(juego_t *juego, char tipo_personaje)
 {
 	juego->personaje = inicializar_personaje(*juego, tipo_personaje);
-	juego->amiga_chloe = inicializar_amiga_chloe(*juego);
-	juego->chloe_visible = false;
+	juego->amiga_chloe = inicializar_amiga_chloe(juego);
 	inicializar_obstaculos(juego);
 	inicializar_herramientas(juego);
 
@@ -18,7 +17,7 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 
 	while (estado_juego(*juego) == 0)
 	{
-		// system("clear");
+		system("clear");
 		mostrar_juego(*juego);
 		char jugada;
 		printf(" » Registrar jugada: ");

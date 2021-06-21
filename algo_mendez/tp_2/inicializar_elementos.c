@@ -70,9 +70,10 @@ elemento_mochila_t generar_una_herramienta_mochila(char tipo_herramienta, char t
 
 /* ==== AMIGA CHLOE ==== */
 
-coordenada_t inicializar_amiga_chloe(juego_t juego)
+coordenada_t inicializar_amiga_chloe(juego_t *juego)
 {
-	return generar_coordenada_amiga_chloe_aux(juego);
+	juego->chloe_visible = false;
+	return generar_coordenada_amiga_chloe_aux(*juego);
 }
 
 /* ==== OBSTACULOS ==== */

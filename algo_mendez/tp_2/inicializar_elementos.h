@@ -83,10 +83,10 @@ elemento_mochila_t generar_una_herramienta_mochila(char tipo_herramienta, char t
 /**
  * Genera la posición de Chloe (diferente a la posición del personaje).
  * @pre Requiere que se haya generado la coordenada del personaje. 
- * @param juego Instancia única del juego ya inicializada. Utilizada para determinar cuales coordenadas ya han sido ocupadas por otros elementos.
+ * @param juego Referencia a la instancia única del juego ya inicializada. Utilizada para determinar cuales coordenadas ya han sido ocupadas por otros elementos y para ocultar a Chloe cuando comienza el juego.
  * @return Coordenada generada para Chloe.
  */
-coordenada_t inicializar_amiga_chloe(juego_t juego);
+coordenada_t inicializar_amiga_chloe(juego_t *juego);
 
 /* ==== OBSTACULOS ==== */
 
