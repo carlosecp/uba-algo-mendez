@@ -60,4 +60,6 @@ bool se_pueden_agregar_pilas_a_linterna(personaje_t personaje);
 
 bool es_herramienta_valida(char jugada);
 
+bool es_movimiento_valido_para_linterna(char movimiento);
+
 #endif

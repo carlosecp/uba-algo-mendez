@@ -1,6 +1,6 @@
 #include "movimiento.h"
 
-/* ==== MOVIMIENTO ===== */
+/* ==== DESPLAZAMIENTO ===== */
 
 void jugada_movimiento(juego_t *juego, char jugada)
 {
@@ -43,22 +43,29 @@ bool coordenada_esta_en_el_mapa(coordenada_t coordenada_buscada)
 	return ((coordenada_buscada.fil >= 0) && (coordenada_buscada.fil < CANTIDAD_FILAS)) && ((coordenada_buscada.col >= 0) && (coordenada_buscada.col < CANTIDAD_COLUMNAS));
 }
 
+/* ==== COLISIONES ==== */
+
 void manejar_colision(juego_t *juego)
 {
-	for (int i = 0; i < juego->cantidad_obstaculos; i++)
+	bool hay_colision = false;
+	int i = 0, j = 0;
+
+	while (!hay_colision && (i < juego->cantidad_obstaculos))
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->obstaculos[i].posicion))
 		{
 			accion_colision_con_obstaculo(&(juego->personaje), juego->obstaculos[i].tipo);
 		}
+		i++;
 	}
 
-	for (int i = 0; i < juego->cantidad_herramientas; i++)
+	while (!hay_colision && (j < juego->cantidad_obstaculos))
 	{
-		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[i].posicion))
+		if (son_misma_coordenada(juego->personaje.posicion, juego->herramientas[j].posicion))
 		{
-			accion_colision_con_herramienta(juego, i);
+			accion_colision_con_herramienta(juego, j);
 		}
+		j++;
 	}
 }
 
@@ -83,46 +90,31 @@ void accion_colision_con_obstaculo(personaje_t *personaje, char tipo_obstaculo)
 
 void accion_colision_con_herramienta(juego_t *juego, int indice_recolectable)
 {
-	char tipo_recolectable = juego->herramientas[indice_recolectable].tipo;
-	switch (tipo_recolectable)
+	char tipo_herramienta = juego->herramientas[indice_recolectable].tipo;
+	switch (tipo_herramienta)
 	{
 	case PILA:
 		agregar_pilas_a_linterna(juego, indice_recolectable);
 		break;
 	default:
-		agregar_recolectable_a_mochila(&(juego->personaje), tipo_recolectable);
-		remover_recolectable_del_mapa(juego, indice_recolectable);
+		agregar_herramienta_a_mochila(&(juego->personaje), tipo_herramienta);
+		remover_herramienta_del_mapa(juego, indice_recolectable);
 	}
 }
 
-void agregar_recolectable_a_mochila(personaje_t *personaje, char tipo_recolectable)
+void agregar_herramienta_a_mochila(personaje_t *personaje, char tipo_herramienta)
 {
 	if (personaje->cantidad_elementos < MAX_HERRAMIENTAS)
 	{
-		agregar_multiples_herramientas_del_tipo_a_mochila(tipo_recolectable, 1, personaje->mochila, &(personaje->cantidad_elementos), personaje->tipo);
+		agregar_multiples_herramientas_del_tipo_a_mochila(tipo_herramienta, 1, personaje->mochila, &(personaje->cantidad_elementos), personaje->tipo);
 	}
 }
 
-void remover_recolectable_del_mapa(juego_t *juego, int indice_herramienta)
+void remover_herramienta_del_mapa(juego_t *juego, int indice_herramienta)
 {
 	for (int i = indice_herramienta; i < juego->cantidad_herramientas; i++)
 	{
 		juego->herramientas[i] = juego->herramientas[i + 1];
 	}
 	juego->cantidad_herramientas--;
-}
-
-bool es_movimiento_valido_para_linterna(char movimiento)
-{
-	bool movimiento_valido = false;
-	switch (movimiento)
-	{
-	case TECLA_MOVER_ARRIBA:
-	case TECLA_MOVER_ABAJO:
-	case TECLA_MOVER_DERECHA:
-	case TECLA_MOVER_IZQUIERDA:
-		movimiento_valido = true;
-	}
-
-	return movimiento_valido;
 }

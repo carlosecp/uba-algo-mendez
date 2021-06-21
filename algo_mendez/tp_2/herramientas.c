@@ -200,7 +200,7 @@ void agregar_pilas_a_linterna(juego_t *juego, int indice_pila)
 	if ((juego->personaje.mochila[indice_linterna].movimientos_restantes + DURACION_PILA) <= maximas_pilas_linterna)
 	{
 		juego->personaje.mochila[indice_linterna].movimientos_restantes += DURACION_PILA;
-		remover_recolectable_del_mapa(juego, indice_pila);
+		remover_herramienta_del_mapa(juego, indice_pila);
 	}
 }
 
@@ -269,4 +269,19 @@ bool esta_a_distancia_manhattan(coordenada_t posicion_centro, coordenada_t posic
 	int diferencia_columnas = abs(posicion_centro.col - posicion_elemento.col);
 
 	return (diferencia_filas + diferencia_columnas) <= 2;
+}
+
+bool es_movimiento_valido_para_linterna(char movimiento)
+{
+	bool movimiento_valido = false;
+	switch (movimiento)
+	{
+	case TECLA_MOVER_ARRIBA:
+	case TECLA_MOVER_ABAJO:
+	case TECLA_MOVER_DERECHA:
+	case TECLA_MOVER_IZQUIERDA:
+		movimiento_valido = true;
+	}
+
+	return movimiento_valido;
 }
