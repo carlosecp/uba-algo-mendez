@@ -36,15 +36,15 @@ int calcular_puntaje_segun_canal_tv(char canal_ingresado)
 	int puntos_segun_canal;
 	switch (canal_ingresado)
 	{
-	case ANIME:
-		puntos_segun_canal = PTS_ANIME;
-		break;
-	case POP:
-		puntos_segun_canal = PTS_POP;
-		break;
-	case LIMPIEZA:
-		puntos_segun_canal = PTS_LIMPIEZA;
-		break;
+		case ANIME:
+			puntos_segun_canal = PTS_ANIME;
+			break;
+		case POP:
+			puntos_segun_canal = PTS_POP;
+			break;
+		case LIMPIEZA:
+			puntos_segun_canal = PTS_LIMPIEZA;
+			break;
 	}
 	return puntos_segun_canal;
 }
@@ -54,15 +54,15 @@ int calcular_puntaje_segun_alimento(char alimento_ingresado)
 	int puntos_segun_alimento;
 	switch (alimento_ingresado)
 	{
-	case BAMBU:
-		puntos_segun_alimento = PTS_BAMBU;
-		break;
-	case PESCADO:
-		puntos_segun_alimento = PTS_PESCADO;
-		break;
-	case FOCAS:
-		puntos_segun_alimento = PTS_FOCAS;
-		break;
+		case BAMBU:
+			puntos_segun_alimento = PTS_BAMBU;
+			break;
+		case PESCADO:
+			puntos_segun_alimento = PTS_PESCADO;
+			break;
+		case FOCAS:
+			puntos_segun_alimento = PTS_FOCAS;
+			break;
 	}
 	return puntos_segun_alimento;
 }
@@ -138,6 +138,7 @@ char asignar_personalidad(int pts_totales)
 char test_de_personalidad()
 {
 	system("clear");
+	renderizar_introduccion();
 	renderizar_bordes_estadisticas();
 	printf(" TEST DE PERSONALIDAD ESCANDALOZA\n");
 	renderizar_bordes_estadisticas();

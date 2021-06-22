@@ -25,8 +25,6 @@ void renderizar_introduccion()
 	printf("║                                                                                                                                     ║\n");
 	printf("║ Buena Suerte!!!                                                                                                                     ║\n");
 	printf("╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
-	printf(" » Presiona Cualquier Tecla para Continuar...");
-	getchar();
 }
 
 void renderizar_estadisticas(juego_t juego)
@@ -48,15 +46,15 @@ void renderizar_resultado_test_de_personalidad(char tipo_personaje)
 	printf(" » Tipo Personaje: ");
 	switch (tipo_personaje)
 	{
-	case POLAR:
-		printf("%s (Polar)", EMOJI_POLAR);
-		break;
-	case PARDO:
-		printf("%s (Pardo)", EMOJI_PARDO);
-		break;
-	case PANDA:
-		printf("%s (Panda)", EMOJI_PANDA);
-		break;
+		case POLAR:
+			printf("%s (Polar)", EMOJI_POLAR);
+			break;
+		case PARDO:
+			printf("%s (Pardo)", EMOJI_PARDO);
+			break;
+		case PANDA:
+			printf("%s (Panda)", EMOJI_PANDA);
+			break;
 	}
 	printf("\n");
 }
@@ -87,24 +85,24 @@ void renderizar_ultimo_movimiento(char ultimo_movimiento)
 	printf(" » Ultimo Movimiento: ");
 	switch (ultimo_movimiento)
 	{
-	case TECLA_MOVER_ARRIBA:
-		printf("⬆️ Arriba");
-		break;
-	case TECLA_MOVER_ABAJO:
-		printf("⬇️ Abajo");
-		break;
-	case TECLA_MOVER_DERECHA:
-		printf("➡️ Derecha");
-		break;
-	case TECLA_MOVER_IZQUIERDA:
-		printf("⬅️ Izquierda");
-		break;
-	case SIN_MOVIMIENTOS:
-		printf("🤔 Sin Movimientos Aún");
-		break;
-	case MOVIMIENTO_INVALIDO:
-		printf("⛔ Movimiento Inválido");
-		break;
+		case TECLA_MOVER_ARRIBA:
+			printf("⬆️ Arriba");
+			break;
+		case TECLA_MOVER_ABAJO:
+			printf("⬇️ Abajo");
+			break;
+		case TECLA_MOVER_DERECHA:
+			printf("➡️ Derecha");
+			break;
+		case TECLA_MOVER_IZQUIERDA:
+			printf("⬅️ Izquierda");
+			break;
+		case SIN_MOVIMIENTOS:
+			printf("🤔 Sin Movimientos Aún");
+			break;
+		case MOVIMIENTO_INVALIDO:
+			printf("⛔ Movimiento Inválido");
+			break;
 	}
 	printf("\n");
 }
@@ -140,11 +138,11 @@ void renderizar_mochila(personaje_t personaje)
 
 	switch (personaje.elemento_en_uso)
 	{
-	case NINGUNA_HERRAMIENTA_EN_USO:
-		printf("Ninguna Herramienta en Uso\n");
-		break;
-	default:
-		printf("%c\n", personaje.mochila[personaje.elemento_en_uso].tipo);
+		case NINGUNA_HERRAMIENTA_EN_USO:
+			printf("Ninguna Herramienta en Uso\n");
+			break;
+		default:
+			printf("%c\n", personaje.mochila[personaje.elemento_en_uso].tipo);
 	}
 }
 

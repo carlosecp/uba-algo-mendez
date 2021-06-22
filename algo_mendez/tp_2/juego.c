@@ -11,8 +11,6 @@
 int main()
 {
 	system("clear");
-	renderizar_introduccion();
-
 	srand((unsigned)time(NULL));
 
 	juego_t juego;
