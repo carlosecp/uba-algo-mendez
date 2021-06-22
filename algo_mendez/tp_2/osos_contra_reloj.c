@@ -66,28 +66,38 @@ void mostrar_juego(juego_t juego)
 	posicionar_todos_elementos_en_mapa(mapa, juego);
 
 	renderizar_estadisticas(juego);
-
 	renderizar_bordes_mapa(true);
 	for (int i = 0; i < (CANTIDAD_FILAS + 1); i++)
 	{
 		if (i == 0)
-		{
 			printf("║    ");
-		}
 		else
-		{
 			printf("║ %02i ", (i - 1));
-		}
+
 		for (int j = 0; j < CANTIDAD_COLUMNAS; j++)
 		{
 			if (i == 0)
-			{
 				printf("%02i ", j);
-			}
+			else if (mapa[i - 1][j] == POLAR)
+				printf("%s", EMOJI_POLAR);
+			else if (mapa[i - 1][j] == PARDO)
+				printf(" %s", EMOJI_PARDO);
+			else if (mapa[i - 1][j] == PANDA)
+				printf(" %s", EMOJI_PANDA);
+			else if (mapa[i - 1][j] == ARBOL)
+				printf(" %s", EMOJI_ARBOL);
+			else if (mapa[i - 1][j] == PIEDRA)
+				printf(" %s", EMOJI_PIEDRA);
+			else if (mapa[i - 1][j] == PILA)
+				printf(" %s", EMOJI_PILA);
+			else if (mapa[i - 1][j] == VELA)
+				printf(" %s", EMOJI_VELA);
+			else if (mapa[i - 1][j] == BENGALA)
+				printf(" %s", EMOJI_BENGALA);
+			else if (mapa[i - 1][j] == KOALA)
+				printf(" %s", EMOJI_KOALA);
 			else
-			{
 				printf(" %c ", mapa[i - 1][j]);
-			}
 		}
 		printf(" ║");
 		printf("\n");

@@ -8,6 +8,16 @@
 #define CANTIDAD_FILAS 20
 #define CANTIDAD_COLUMNAS 30
 
+#define EMOJI_POLAR "‍❄️"
+#define EMOJI_PARDO "🐻"
+#define EMOJI_PANDA "🐼"
+#define EMOJI_ARBOL "🌲"
+#define EMOJI_PIEDRA "🗿"
+#define EMOJI_LINTERNA "🔦"
+#define EMOJI_PILA "🔋"
+#define EMOJI_VELA "🕯️"
+#define EMOJI_BENGALA "🎇"
+#define EMOJI_KOALA "🐨"
 #define ESPACIO_VACIO_MAPA '.'
 
 /* ==== COORDENADAS ==== */

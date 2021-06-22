@@ -1,4 +1,5 @@
 #include "test_de_personalidad.h"
+#include "inicializar_elementos.h"
 
 bool es_canal_tv_valido(char letra_ingresada)
 {
@@ -76,7 +77,7 @@ int resultados_alimento()
 	char alimento_ingresado;
 	do
 	{
-		printf("-> Solo podes guardar un alimento en tu vianda - Bambú (B), Pescado (P), Focas (F): ");
+		printf(" » Solo podes guardar un alimento en tu vianda - Bambú (B), Pescado (P), Focas (F): ");
 		scanf(" %c", &alimento_ingresado);
 	} while (!es_alimento_valido(alimento_ingresado));
 	return calcular_puntaje_segun_alimento(alimento_ingresado);
@@ -87,7 +88,7 @@ int resultados_canal_tv()
 	char canal_ingresado;
 	do
 	{
-		printf("-> Vas a ver televisión un rato, pones el canal de - Anime (A), Musica Pop (M), Limpieza (L): ");
+		printf(" » Vas a ver televisión un rato, pones el canal de - Anime (A), Musica Pop (M), Limpieza (L): ");
 		scanf(" %c", &canal_ingresado);
 	} while (!es_canal_tv_valido(canal_ingresado));
 	return calcular_puntaje_segun_canal_tv(canal_ingresado);
@@ -98,7 +99,7 @@ int resultados_nivel_grito()
 	int nivel_grito_ingresado;
 	do
 	{
-		printf("-> ¡Oh, una rata! ¿Que tan fuerte gritas del 1 al 18? Siendo 1 no gritar y 18 desgarrarse la garganta: ");
+		printf(" » ¡Oh, una rata! ¿Que tan fuerte gritas del 1 al 18? Siendo 1 no gritar y 18 desgarrarse la garganta: ");
 		scanf(" %i", &nivel_grito_ingresado);
 	} while (!es_nivel_grito_valido(nivel_grito_ingresado));
 	return nivel_grito_ingresado;
@@ -120,15 +121,15 @@ char asignar_personalidad(int pts_totales)
 	char personalidad_asignada;
 	if (pts_totales >= MIN_PUNTAJE && pts_totales <= MAX_POLAR)
 	{
-		personalidad_asignada = 'I';
+		personalidad_asignada = POLAR;
 	}
 	else if (pts_totales <= MAX_PANDA)
 	{
-		personalidad_asignada = 'P';
+		personalidad_asignada = PARDO;
 	}
 	else
 	{
-		personalidad_asignada = 'G';
+		personalidad_asignada = PANDA;
 	}
 	printf("Personalidad Asginada: %c\n", personalidad_asignada);
 	return personalidad_asignada;

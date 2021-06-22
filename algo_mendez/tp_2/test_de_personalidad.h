@@ -3,11 +3,6 @@
 #include <stdbool.h>
 #include "estadisticas.h"
 
-/* ==== PERSONAJES (RESULTADOS DEL TEST) ==== */
-#define POLAR 'I'
-#define PANDA 'P'
-#define PARDO 'G'
-
 /* ==== CANALES DE TELEVISION ==== */
 #define ANIME 'A'
 #define POP 'M'
