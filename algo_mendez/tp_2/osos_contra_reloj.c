@@ -78,26 +78,8 @@ void mostrar_juego(juego_t juego)
 		{
 			if (i == 0)
 				printf("%02i ", j);
-			else if (mapa[i - 1][j] == POLAR)
-				printf("%s", EMOJI_POLAR);
-			else if (mapa[i - 1][j] == PARDO)
-				printf(" %s", EMOJI_PARDO);
-			else if (mapa[i - 1][j] == PANDA)
-				printf(" %s", EMOJI_PANDA);
-			else if (mapa[i - 1][j] == ARBOL)
-				printf(" %s", EMOJI_ARBOL);
-			else if (mapa[i - 1][j] == PIEDRA)
-				printf(" %s", EMOJI_PIEDRA);
-			else if (mapa[i - 1][j] == PILA)
-				printf(" %s", EMOJI_PILA);
-			else if (mapa[i - 1][j] == VELA)
-				printf(" %s", EMOJI_VELA);
-			else if (mapa[i - 1][j] == BENGALA)
-				printf(" %s", EMOJI_BENGALA);
-			else if (mapa[i - 1][j] == KOALA)
-				printf(" %s", EMOJI_KOALA);
 			else
-				printf(" %c ", mapa[i - 1][j]);
+				renderizar_emoji_en_mapa(mapa[i - 1][j]);
 		}
 		printf(" ║");
 		printf("\n");

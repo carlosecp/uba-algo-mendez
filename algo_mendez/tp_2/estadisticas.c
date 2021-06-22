@@ -148,6 +148,30 @@ void renderizar_mochila(personaje_t personaje)
 	}
 }
 
+void renderizar_emoji_en_mapa(char tipo_elemento)
+{
+	if (tipo_elemento == POLAR)
+		printf("%s", EMOJI_POLAR);
+	else if (tipo_elemento == PARDO)
+		printf(" %s", EMOJI_PARDO);
+	else if (tipo_elemento == PANDA)
+		printf(" %s", EMOJI_PANDA);
+	else if (tipo_elemento == ARBOL)
+		printf(" %s", EMOJI_ARBOL);
+	else if (tipo_elemento == PIEDRA)
+		printf(" %s", EMOJI_PIEDRA);
+	else if (tipo_elemento == PILA)
+		printf(" %s", EMOJI_PILA);
+	else if (tipo_elemento == VELA)
+		printf(" %s", EMOJI_VELA);
+	else if (tipo_elemento == BENGALA)
+		printf(" %s", EMOJI_BENGALA);
+	else if (tipo_elemento == KOALA)
+		printf(" %s", EMOJI_KOALA);
+	else
+		printf(" %c ", tipo_elemento);
+}
+
 void renderizar_bordes_estadisticas()
 {
 	int espacios_extra = 7;

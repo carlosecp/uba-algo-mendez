@@ -5,6 +5,18 @@
 #include "utiles.h"
 #include "herramientas.h"
 
+#define EMOJI_POLAR "‍❄️"
+#define EMOJI_PARDO "🐻"
+#define EMOJI_PANDA "🐼"
+#define EMOJI_ARBOL "🌲"
+#define EMOJI_PIEDRA "🗿"
+#define EMOJI_LINTERNA "🔦"
+#define EMOJI_PILA "🔋"
+#define EMOJI_VELA "🕯️"
+#define EMOJI_BENGALA "🎇"
+#define EMOJI_KOALA "🐨"
+#define ESPACIO_VACIO_MAPA '.'
+
 #define TIEMPO_LIMITE 120
 
 /**
@@ -53,6 +65,11 @@ void renderizar_ultimo_movimiento(char ultimo_movimiento);
  * @param personaje Instancia única del personaje, utilizada mostrar los elementos de su mochila, sus datos correspondientes y la herramienta que esta siendo utilizada en el momemento. 
  */
 void renderizar_mochila(personaje_t personaje);
+
+/** 
+ * Asigna el emoji a mostrar en el mapa en base al tipo de elemento de cada casilla.
+*/
+void renderizar_emoji_en_mapa(char tipo_elemento);
 
 /**
  * Renderizar bordes totalmente rectos de manera horizontal, con dimensiones iguales a las dimensiones del mapa. 
