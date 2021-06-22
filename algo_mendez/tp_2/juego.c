@@ -14,8 +14,21 @@ int main()
 	srand((unsigned)time(NULL));
 
 	juego_t juego;
-	char tipo_personaje = test_de_personalidad();
+	char tipo_personaje;
+	test_de_personalidad(&tipo_personaje);
 	inicializar_juego(&juego, tipo_personaje);
+
+	while (estado_juego(juego) == 0)
+	{
+		system("clear");
+		mostrar_juego(juego);
+		char jugada;
+		printf(" -> Registrar jugada: ");
+		scanf(" %c", &jugada);
+		realizar_jugada(&juego, jugada);
+	}
+
+	renderizar_resultados_juego(juego);
 
 	return 0;
 }

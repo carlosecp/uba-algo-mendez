@@ -97,9 +97,6 @@ void renderizar_ultimo_movimiento(char ultimo_movimiento)
 		case TECLA_MOVER_IZQUIERDA:
 			printf("⬅️ Izquierda");
 			break;
-		case SIN_MOVIMIENTOS:
-			printf("🤔 Sin Movimientos Aún");
-			break;
 		case MOVIMIENTO_INVALIDO:
 			printf("⛔ Movimiento Inválido");
 			break;
@@ -154,6 +151,8 @@ void renderizar_emoji_en_mapa(char tipo_elemento)
 		printf(" %s", EMOJI_PARDO);
 	else if (tipo_elemento == PANDA)
 		printf(" %s", EMOJI_PANDA);
+	else if (tipo_elemento == CHLOE)
+		printf(" %s", EMOJI_CHLOE);
 	else if (tipo_elemento == ARBOL)
 		printf(" %s", EMOJI_ARBOL);
 	else if (tipo_elemento == PIEDRA)

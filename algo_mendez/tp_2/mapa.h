@@ -16,12 +16,13 @@
  * Generar una coordenada del mapa aleatoria. 
  * @pre Requiere que se haya establecido una semilla para el randomizado de las coordenadas. 
  * @param juego Instancia única del juego ya inicializada. Utilizada para comparar las coordenadas ya ocupadas en caso de que se desee.
+ * @param posicion_inicial_personaje Verdadero si se desea que la coordenada de las columnas sea 0.
  * @param validar_coordenada Determina si se quiere realizar algún tipo de validación para la coordenada generada (asegura que la coordenada esté vacía).
  * @param validar_coordenada_personaje Determina si se comparará la coordenada generada aleatoriamente con la coordenada del personaje (asegura que la coordenada generada no coincida con la del personaje).
  * @param validar_coordenada_amiga_chloe Determina si se comparará la coordenada generada aleatoriamente con la coordenada de Chloe (asegura que la coordenada generada no coincida con la de Chloe).
  * @return Coordenada aleatoria.
  */
-coordenada_t generar_coordenada(juego_t juego, bool validar_coordenada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe);
+coordenada_t generar_coordenada(juego_t juego, bool posicion_inicial_personaje, bool validar_coordenada, bool validar_coordenada_personaje, bool validar_coordenada_amiga_chloe);
 
 /**
  * Determina si la coordenada generada ya ha sido ocupada por otro elemento (en base a los elementos que se deseen validar). 

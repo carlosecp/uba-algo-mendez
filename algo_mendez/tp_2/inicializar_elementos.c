@@ -11,7 +11,7 @@ personaje_t inicializar_personaje(juego_t juego, char tipo_personaje)
 	personaje.cantidad_elementos = generar_mochila(personaje.mochila, tipo_personaje);
 	personaje.elemento_en_uso = NINGUNA_HERRAMIENTA_EN_USO;
 	personaje.tiempo_perdido = 0;
-	personaje.ultimo_movimiento = SIN_MOVIMIENTOS;
+	personaje.ultimo_movimiento = TECLA_MOVER_DERECHA;
 
 	return personaje;
 }
@@ -92,6 +92,8 @@ void inicializar_obstaculos(juego_t *juego)
 		juego->obstaculos[juego->cantidad_obstaculos] = agregar_elemento_del_tipo(*juego, PIEDRA);
 		juego->cantidad_obstaculos++;
 	}
+
+	agregar_koala_nom_nom(juego);
 }
 
 void agregar_koala_nom_nom(juego_t *juego)
@@ -138,15 +140,15 @@ elemento_del_mapa_t agregar_elemento_del_tipo(juego_t juego, char tipo_elemento)
 
 coordenada_t generar_coordenada_personaje_aux(juego_t juego)
 {
-	return generar_coordenada(juego, false, false, false);
+	return generar_coordenada(juego, true, false, false, false);
 }
 
 coordenada_t generar_coordenada_amiga_chloe_aux(juego_t juego)
 {
-	return generar_coordenada(juego, true, true, false);
+	return generar_coordenada(juego, false, true, true, false);
 }
 
 coordenada_t generar_coordenada_elemento_aux(juego_t juego)
 {
-	return generar_coordenada(juego, true, true, true);
+	return generar_coordenada(juego, false, true, true, true);
 }

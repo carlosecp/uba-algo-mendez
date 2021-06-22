@@ -12,20 +12,7 @@ void inicializar_juego(juego_t *juego, char tipo_personaje)
 	juego->amiga_chloe = inicializar_amiga_chloe(juego);
 	inicializar_obstaculos(juego);
 	inicializar_herramientas(juego);
-
 	iniciar_cronometro();
-
-	while (estado_juego(*juego) == 0)
-	{
-		system("clear");
-		mostrar_juego(*juego);
-		char jugada;
-		printf(" -> Registrar jugada: ");
-		scanf(" %c", &jugada);
-		realizar_jugada(juego, jugada);
-	}
-
-	renderizar_resultados_juego(*juego);
 }
 
 int estado_juego(juego_t juego)

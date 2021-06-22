@@ -6,7 +6,6 @@
 #include "inicializar_elementos.h"
 #include "mapa.h"
 
-#define SIN_MOVIMIENTOS ' '
 #define MOVIMIENTO_INVALIDO 'X'
 #define TECLA_MOVER_ARRIBA 'W'
 #define TECLA_MOVER_ABAJO 'S'
@@ -61,10 +60,10 @@ void manejar_colision(juego_t *juego);
 
 /**
  * Evalúa la acción a realizar si se ha colisionado con un obstáculo de cualquier tipo (Ej.: Tiempo perdido que se debe añadir al jugador).
- * @param personaje Referencia a la instancia única personaje. Utilizada para determinar el tiempo perdido que provoca la colisión con cada tipo de obstáculo en base al tipo de personaje.
+ * @param juego Referencia a la instancia única del juego.
  * @param tipo_obstaculo Tipo de obstáculo con el que se ha detectado la colisión.
  */
-void accion_colision_con_obstaculo(personaje_t *personaje, char tipo_obstaculo);
+void accion_colision_con_obstaculo(juego_t *juego, char tipo_obstaculo);
 
 /* ==== RECOLECCIÓN DE HERRAMIENTAS ==== */
 
@@ -90,13 +89,6 @@ void agregar_herramienta_a_mochila(personaje_t *personaje, char tipo_herramienta
  * @param indice_herramienta Ubicación en el vector de obstáculos del mapa en el que se encuentra el recolectable actual.
  */
 void remover_herramienta_del_mapa(juego_t *juego, int indice_herramienta);
-
-/**
- * Determina si el movimiento previo es válido (W, A, S, D) y el personaje se ha desplazada en alguna dirección.
- * @param movimiento Caracter que representa la dirección del último movimiento.
- * @return Verdadero si el último movimiento permite que se utilice la linterna.
- */
-bool es_movimiento_valido_para_linterna(char movimiento);
 
 /**
  * Si se puede (alcanzan nuevas pilas), agrega pilas a la linterna del personaje.

@@ -51,7 +51,7 @@ void manejar_colision(juego_t *juego)
 	{
 		if (son_misma_coordenada(juego->personaje.posicion, juego->obstaculos[i].posicion))
 		{
-			accion_colision_con_obstaculo(&(juego->personaje), juego->obstaculos[i].tipo);
+			accion_colision_con_obstaculo(juego, juego->obstaculos[i].tipo);
 		}
 	}
 
@@ -64,21 +64,26 @@ void manejar_colision(juego_t *juego)
 	}
 }
 
-void accion_colision_con_obstaculo(personaje_t *personaje, char tipo_obstaculo)
+void accion_colision_con_obstaculo(juego_t *juego, char tipo_obstaculo)
 {
-	float tiempo_perdido_arbol = personaje->tipo == PARDO ? TIEMPO_PERDIDO_ARBOL_PARDO : TIEMPO_PERDIDO_ARBOL;
-	float tiempo_perdido_piedra = personaje->tipo == POLAR ? TIEMPO_PERDIDO_PIEDRA_POLAR : TIEMPO_PERDIDO_PIEDRA;
+	float tiempo_perdido_arbol = juego->personaje.tipo == PARDO ? TIEMPO_PERDIDO_ARBOL_PARDO : TIEMPO_PERDIDO_ARBOL;
+	float tiempo_perdido_piedra = juego->personaje.tipo == POLAR ? TIEMPO_PERDIDO_PIEDRA_POLAR : TIEMPO_PERDIDO_PIEDRA;
+
+	if ((juego->personaje.tipo == PANDA) && (tipo_obstaculo == ARBOL) && !(juego->chloe_visible))
+	{
+		juego->chloe_visible = true;
+	}
 
 	switch (tipo_obstaculo)
 	{
 	case ARBOL:
-		personaje->tiempo_perdido += tiempo_perdido_arbol;
+		juego->personaje.tiempo_perdido += tiempo_perdido_arbol;
 		break;
 	case PIEDRA:
-		personaje->tiempo_perdido += tiempo_perdido_piedra;
+		juego->personaje.tiempo_perdido += tiempo_perdido_piedra;
 		break;
 	case KOALA:
-		personaje->posicion = generar_coordenada_colision_koala();
+		juego->personaje.posicion = generar_coordenada_colision_koala();
 		break;
 	}
 }
@@ -114,21 +119,6 @@ void remover_herramienta_del_mapa(juego_t *juego, int indice_herramienta)
 		juego->herramientas[i] = juego->herramientas[i + 1];
 	}
 	juego->cantidad_herramientas--;
-}
-
-bool es_movimiento_valido_para_linterna(char movimiento)
-{
-	bool movimiento_valido = false;
-	switch (movimiento)
-	{
-	case TECLA_MOVER_ARRIBA:
-	case TECLA_MOVER_ABAJO:
-	case TECLA_MOVER_DERECHA:
-	case TECLA_MOVER_IZQUIERDA:
-		movimiento_valido = true;
-	}
-
-	return movimiento_valido;
 }
 
 void agregar_pilas_a_linterna(juego_t *juego, int indice_pila)

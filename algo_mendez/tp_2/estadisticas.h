@@ -8,6 +8,7 @@
 #define EMOJI_POLAR "‍❄️"
 #define EMOJI_PARDO "🐻"
 #define EMOJI_PANDA "🐼"
+#define EMOJI_CHLOE "👧"
 #define EMOJI_ARBOL "🌲"
 #define EMOJI_PIEDRA "🗿"
 #define EMOJI_LINTERNA "🔦"
@@ -15,7 +16,6 @@
 #define EMOJI_VELA "🕯️"
 #define EMOJI_BENGALA "🎇"
 #define EMOJI_KOALA "🐨"
-#define ESPACIO_VACIO_MAPA '.'
 
 #define TIEMPO_LIMITE 120
 

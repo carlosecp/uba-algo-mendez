@@ -4,8 +4,9 @@
 
 void jugada_utilizar_herramienta(juego_t *juego, char jugada)
 {
-	if ((jugada == LINTERNA && !es_movimiento_valido_para_linterna(juego->personaje.ultimo_movimiento)) || juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo == BENGALA)
+	if (juego->personaje.mochila[juego->personaje.elemento_en_uso].tipo == BENGALA)
 	{
+		juego->personaje.mochila[juego->personaje.elemento_en_uso].movimientos_restantes--;
 		return;
 	}
 
@@ -249,7 +250,7 @@ bool vela_columna_es_iluminable(coordenada_t posicion_personaje, coordenada_t po
 
 void utilizar_bengala(juego_t *juego, bool iluminar)
 {
-	coordenada_t coordenada_aleatoria = generar_coordenada(*juego, false, false, false);
+	coordenada_t coordenada_aleatoria = generar_coordenada(*juego, false, false, false, false);
 
 	if (iluminar && esta_a_distancia_manhattan(coordenada_aleatoria, juego->amiga_chloe))
 		juego->chloe_visible = true;
