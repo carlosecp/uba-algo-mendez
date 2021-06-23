@@ -27,10 +27,10 @@ bool es_herramienta_valida(char jugada)
 	bool herramienta_valida = false;
 	switch (jugada)
 	{
-	case TECLA_ENCENDER_LINTERNA:
-	case TECLA_ENCENDER_VELA:
-	case TECLA_ENCENDER_BENGALA:
-		herramienta_valida = true;
+		case TECLA_ENCENDER_LINTERNA:
+		case TECLA_ENCENDER_VELA:
+		case TECLA_ENCENDER_BENGALA:
+			herramienta_valida = true;
 	}
 	return herramienta_valida;
 }
@@ -60,15 +60,15 @@ void utilizar_herramienta(juego_t *juego, char tipo_herramienta)
 
 	switch (tipo_herramienta)
 	{
-	case LINTERNA:
-		utilizar_linterna(juego, iluminar);
-		break;
-	case VELA:
-		utilizar_vela(juego, iluminar);
-		break;
-	case BENGALA:
-		utilizar_bengala(juego, iluminar);
-		break;
+		case LINTERNA:
+			utilizar_linterna(juego, iluminar);
+			break;
+		case VELA:
+			utilizar_vela(juego, iluminar);
+			break;
+		case BENGALA:
+			utilizar_bengala(juego, iluminar);
+			break;
 	}
 }
 
@@ -124,18 +124,18 @@ void utilizar_linterna(juego_t *juego, bool iluminar)
 {
 	switch (juego->personaje.ultimo_movimiento)
 	{
-	case TECLA_MOVER_ARRIBA:
-		iluminar_columna(juego, false, iluminar);
-		break;
-	case TECLA_MOVER_ABAJO:
-		iluminar_columna(juego, true, iluminar);
-		break;
-	case TECLA_MOVER_DERECHA:
-		iluminar_fila(juego, false, iluminar);
-		break;
-	case TECLA_MOVER_IZQUIERDA:
-		iluminar_fila(juego, true, iluminar);
-		break;
+		case TECLA_MOVER_ARRIBA:
+			iluminar_columna(juego, false, iluminar);
+			break;
+		case TECLA_MOVER_ABAJO:
+			iluminar_columna(juego, true, iluminar);
+			break;
+		case TECLA_MOVER_DERECHA:
+			iluminar_fila(juego, false, iluminar);
+			break;
+		case TECLA_MOVER_IZQUIERDA:
+			iluminar_fila(juego, true, iluminar);
+			break;
 	}
 
 	agregar_koala_nom_nom(juego);
@@ -279,5 +279,5 @@ bool esta_a_distancia_manhattan(coordenada_t posicion_centro, coordenada_t posic
 	int diferencia_filas = abs(posicion_centro.fil - posicion_elemento.fil);
 	int diferencia_columnas = abs(posicion_centro.col - posicion_elemento.col);
 
-	return (diferencia_filas + diferencia_columnas) <= 2;
+	return (diferencia_filas + diferencia_columnas) <= 3;
 }
