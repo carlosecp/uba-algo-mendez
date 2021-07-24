@@ -49,8 +49,35 @@ typedef struct comida
 	int precio;
 } comida_t;
 
-void eliminar_comida(comida_t comidas[])
+void eliminar_comida(comida_t comidas[], int tope_comidas, comida_t comidas_malas[], int tope_comidas_malas, comida_t nuevas_comidas[], int *tope_nuevas_comidas)
 {
+	int i = 0, j = 0;
+	(*tope_nuevas_comidas) = 0;
+
+	while (i < tope_comidas && j < tope_comidas_malas)
+	{
+		int comparacion = strcmp(comidas[i].nombre, comidas_malas[j].nombre);
+		if (comparacion == 0)
+		{
+			i++;
+			j++;
+		}
+		else if (comparacion < 0)
+		{
+			comida_t comida_buena;
+			strcpy(comida_buena.nombre, comidas[i].nombre);
+			comida_buena.es_vegana = comidas[i].es_vegana;
+			comida_buena.tiene_tacc = comidas[i].tiene_tacc;
+			comida_buena.precio = comidas[i].precio;
+
+			nuevas_comidas[(*tope_nuevas_comidas)] = comida_buena;
+			i++;
+		}
+		else
+		{
+			j++;
+		}
+	}
 }
 
 int main()
