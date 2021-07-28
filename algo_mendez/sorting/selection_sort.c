@@ -1,38 +1,35 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "utils.h"
 
-void selection_sort(int array[], int n) {
-  int minimum;
-  int temp;
+void selection_sort(int vector[], int tope)
+{
+	int temp, minimo;
+	for (int i = 0; i < (tope - 1); i++)
+	{
+		minimo = i;
+		for (int j = (i + 1); j < tope; j++)
+		{
+			if (vector[j] < vector[minimo])
+			{
+				minimo = j;
+			}
+		}
 
-  for (int i = 0; i < (n - 1); i++) {
-    minimum = i;
-    for (int j = (i + 1); j < n; j++) {
-      if (array[minimum] > array[j]) {
-        minimum = j;
-      }
-    }
-
-    temp = array[i];
-    array[i] = array[minimum];
-    array[minimum] = temp;
-  }
+		temp = vector[i];
+		vector[i] = vector[minimo];
+		vector[minimo] = temp;
+	}
 }
 
-void print_array(int array[], int n) {
-  for (int i = 0; i < n; i++) {
-    printf("%i, ", array[i]);
-  }
-  printf("\n");
-}
+int main(int argc, char *argv[])
+{
+	int vector[MAX_VECTOR];
+	int tope = 0;
 
-int main() {
-  int array[] = {64, 25, 12, 22, 11};
-  int n = sizeof(array) / sizeof(array[0]);
+	cargar_vector(vector, &tope, argc, argv);
 
-  print_array(array, n);
-  selection_sort(array, n);
-  print_array(array, n);
+	imprimir_vector(vector, tope);
+	selection_sort(vector, tope);
+	imprimir_vector(vector, tope);
 
-  return 0;
+	return 0;
 }

@@ -1,33 +1,32 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "utils.h"
 
-void bubble_sort(int array[], int n) {
-  int temp;
-  for (int i = 0; i < (n - 1); i++) {
-    for (int j = 0; j < (n - i) - 1; j++) {
-      if (array[j] > array[j + 1]) {
-        temp = array[j];
-        array[j] = array[j + 1];
-        array[j + 1] = temp;
-      }
-    }
-  }
+void bubble_sort(int vector[], int tope)
+{
+	int temp;
+	for (int i = 0; i < (tope - 1); i++)
+	{
+		for (int j = 0; j < (tope - i - 1); j++)
+		{
+			if (vector[j] > vector[j + 1])
+			{
+				temp = vector[j];
+				vector[j] = vector[j + 1];
+				vector[j + 1] = temp;
+			}
+		}
+	}
 }
 
-void print_array(int array[], int n) {
-  for (int i = 0; i < n; i++) {
-    printf("%i, ", array[i]);
-  }
-  printf("\n");
-}
+int main(int argc, char *argv[])
+{
+	int vector[MAX_VECTOR];
+	int tope = 0;
 
-int main() {
-  int array[] = {64, 25, 12, 22, 11};
-  int n = sizeof(array) / sizeof(array[0]);
+	cargar_vector(vector, &tope, argc, argv);
 
-  print_array(array, n);
-  bubble_sort(array, n);
-  print_array(array, n);
+	imprimir_vector(vector, tope);
+	bubble_sort(vector, tope);
+	imprimir_vector(vector, tope);
 
-  return 0;
+	return 0;
 }

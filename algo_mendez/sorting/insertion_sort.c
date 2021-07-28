@@ -1,36 +1,33 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "utils.h"
 
-void insertion_sort(int array[], int n) {
-  int key;
-  int j;
+void insertion_sort(int vector[], int tope)
+{
+	int j, aux;
+	for (int i = 0; i < tope; i++)
+	{
+		j = i;
+		aux = vector[i];
 
-  for (int i = 1; i < n; i++) {
-    key = array[i];
-    j = i - 1;
+		while ((j > 0) && (aux < vector[j - 1]))
+		{
+			vector[j] = vector[j - 1];
+			j--;
+		}
 
-    while ((key < array[j]) && (j >= 0)) {
-      array[j + 1] = array[j];
-      j--;
-    }
-    array[j + 1] = key;
-  }
+		vector[j] = aux;
+	}
 }
 
-void print_array(int array[], int n) {
-  for (int i = 0; i < n; i++) {
-    printf("%i, ", array[i]);
-  }
-  printf("\n");
-}
+int main(int argc, char *argv[])
+{
+	int vector[MAX_VECTOR];
+	int tope = 0;
 
-int main() {
-  int array[] = {64, 25, 12, 22, 11};
-  int n = sizeof(array) / sizeof(array[0]);
+	cargar_vector(vector, &tope, argc, argv);
 
-  print_array(array, n);
-  insertion_sort(array, n);
-  print_array(array, n);
+	imprimir_vector(vector, tope);
+	insertion_sort(vector, tope);
+	imprimir_vector(vector, tope);
 
-  return 0;
+	return 0;
 }

@@ -1,50 +1,49 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "utils.h"
 
-int partition(int array[], int low, int high) {
-  int pivot = array[high];
-  int i = (low - 1);
-  int temp;
+int partition(int vector[], int low, int high)
+{
+	int pivot = vector[high];
+	int i = (low - 1); // Greater element index
 
-  for (int j = low; j < high; j++) {
-    if (array[j] <= pivot) {
-      i++;
-      temp = array[j];
-      array[j] = pivot;
-      pivot = temp;
-    }
-  }
+	int temp;
+	for (int j = low; j < high; j++)
+	{
+		if (vector[j] <= pivot)
+		{
+			i++;
+			temp = vector[i];
+			vector[i] = vector[j];
+			vector[j] = temp;
+		}
+	}
 
-  temp = array[i + 1];
-  array[i + 1] = high;
-  high = temp;
+	temp = vector[high];
+	vector[high] = vector[i + 1];
+	vector[i + 1] = temp;
 
-  return (i + 1);
+	return (i + 1);
 }
 
-void quick_sort(int array[], int low, int high) {
-  if (low < high) {
-    int pi = partition(array, low, high);
-
-    quick_sort(array, low, pi - 1);
-    quick_sort(array, pi + 1, high);
-  }
+void quicksort(int vector[], int low, int high)
+{
+	if (low < high)
+	{
+		int pi = partition(vector, low, high);
+		quicksort(vector, low, pi - 1);
+		quicksort(vector, pi + 1, high);
+	}
 }
 
-void print_array(int array[], int n) {
-  for (int i = 0; i < n; i++) {
-    printf("%i, ", array[i]);
-  }
-  printf("\n");
-}
+int main(int argc, char *argv[])
+{
+	int vector[MAX_VECTOR];
+	int tope = 0;
 
-int main() {
-  int array[] = {64, 25, 12, 22, 11};
-  int n = sizeof(array) / sizeof(array[0]);
+	cargar_vector(vector, &tope, argc, argv);
 
-  print_array(array, n);
-  quick_sort(array, 0, n);
-  print_array(array, n);
+	imprimir_vector(vector, tope);
+	quicksort(vector, 0, tope - 1);
+	imprimir_vector(vector, tope);
 
-  return 0;
+	return 0;
 }
