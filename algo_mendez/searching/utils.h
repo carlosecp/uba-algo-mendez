@@ -6,8 +6,10 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define MAX 1000
+#define MAX_VECTOR 100
 
 void imprimir_vector(int vector[], int tope);
+
+void cargar_vector(int vector[], int *tope, int argc, char *argv[]);
 
 #endif

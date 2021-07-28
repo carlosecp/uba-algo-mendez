@@ -16,3 +16,12 @@ void imprimir_vector(int vector[], int tope)
 	}
 	printf("]\n");
 }
+
+void cargar_vector(int vector[], int *tope, int argc, char *argv[])
+{
+	for (int i = 1; i < argc; i++)
+	{
+		vector[(i - 1)] = atoi(argv[i]);
+		(*tope)++;
+	}
+}
