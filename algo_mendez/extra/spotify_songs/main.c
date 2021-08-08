@@ -33,17 +33,19 @@ void buscar_cancion_artista(FILE *archivo_canciones,
 }
 
 void eliminar_canciones_duracion(FILE *archivo_original, FILE *archivo_nuevo,
-                                 char nombre_artista[MAX_ARTISTA], float duracion_minima) {
-	cancion_t cancion_temp;
+                                 char nombre_artista[MAX_ARTISTA],
+                                 float duracion_minima) {
+  cancion_t cancion_temp;
 
-	int leidos = fread(&cancion_temp, sizeof(cancion_t), 1, archivo_original);
-	while (leidos != 0) {
-		if (strcmp(cancion_temp.artista, nombre_artista) != 0 && cancion_temp.duracion_ms >= duracion_minima) {
-			fwrite(&cancion_temp, sizeof(cancion_t), 1, archivo_nuevo);
-		}
+  int leidos = fread(&cancion_temp, sizeof(cancion_t), 1, archivo_original);
+  while (leidos != 0) {
+    if (strcmp(cancion_temp.artista, nombre_artista) != 0 &&
+        cancion_temp.duracion_ms >= duracion_minima) {
+      fwrite(&cancion_temp, sizeof(cancion_t), 1, archivo_nuevo);
+    }
 
-		leidos = fread(&cancion_temp, sizeof(cancion_t), 1, archivo_original);
-	}
+    leidos = fread(&cancion_temp, sizeof(cancion_t), 1, archivo_original);
+  }
 }
 
 int main() {
@@ -56,7 +58,7 @@ int main() {
 
   buscar_cancion_artista(archivo_canciones, NOMBRE_ARTISTA);
 
-	FILE *archivo_canciones_eliminadas = fopen(NOMBRE_ARCHIVO_ELIMINADAS, "w");
+  FILE *archivo_canciones_eliminadas = fopen(NOMBRE_ARCHIVO_ELIMINADAS, "w");
 
   if (archivo_canciones == NULL) {
     fprintf(stderr, "Error al crear el archivo: %s", NOMBRE_ARCHIVO_ELIMINADAS);
@@ -64,7 +66,7 @@ int main() {
   }
 
   fclose(archivo_canciones);
-	fclose(archivo_canciones_eliminadas);
+  fclose(archivo_canciones_eliminadas);
 
   return EXITO;
 }
