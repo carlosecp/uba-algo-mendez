@@ -3,11 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void
-agregar_substring_a_vector(char** vector_strings, size_t long_substring) {
-
-}
-
 int
 es_char_de_substring(char char_substring, char separador) {
 	return char_substring != separador && char_substring != '\0';
