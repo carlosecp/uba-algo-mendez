@@ -1,40 +1,55 @@
-// #include "split.h"
+#include "split.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define END_OF_STRING '\0'
+char** split(const char* string, char separador){
+	if (string == NULL) return NULL;
 
-void split(const char* string, char separador){
-    size_t long_string = 0;
-    size_t cant_substrings = 0;
+	size_t long_string = 0;
+	size_t cant_substrings = 0;
 
-	size_t i = 0;
-    for (i = 0; string[i] != '\0'; i++) {
-        if (string[i] == separador) cant_substrings++;
-		long_string++;
+	for (; string[long_string]; long_string++) {
+		if (string[long_string] == separador) cant_substrings++;
+		printf("string[%li]: %c\n", long_string, string[long_string]);
 	}
 
-	cant_substrings += 1;
-	char** vector_substrings = malloc((cant_substrings + 1) * sizeof(char*));
+	if (cant_substrings) cant_substrings++;
+	printf("cant_substrings: %li\n", cant_substrings);
+
+	char** vector_strings = malloc((cant_substrings + 1) * sizeof(char*));
 
 	size_t long_substring = 0;
-	char** substring;
-
-	for (i = 0; string[i] != '\0'; i++) {
+	for (size_t i = 0; i < cant_substrings; i++) {
 		long_substring = 0;
-		while (string[long_substring] != separador) long_substring++;
+		while (string[long_substring] != separador && string[long_substring] != '\0')
+			long_substring++;
 
-		substring = malloc((long_substring + 1) * sizeof(char));
-		memcpy(*vector_substrings, substring, long_substring);
-		vector_substrings[long_substring] = '\0';
+		vector_strings[i] = malloc((long_substring + 1) * sizeof(char));
+		for (size_t j = 0; j < long_substring; j++)
+			vector_strings[i][j] = string[j];
 
-		long_substring++;
+		vector_strings[i][long_substring] = '\0';
+		string += (long_substring + 1);
 	}
 
-    printf("Long: %li\nCant: %li", long_string, cant_substrings);
+	vector_strings[cant_substrings] = NULL;
+
+	return vector_strings;
+}
+
+void imprimir_strings(char* vector_strings[]) {
+	for (size_t i = 0; vector_strings[i]; i++) {
+		for (size_t j = 0; vector_strings[i][j] != '\0'; j++)
+			printf("vector_strings[%li]: %c", i, vector_strings[i][j]);
+		printf("\n");
+	}
 }
 
 int main() {
-    split("testing:testing:testing", ':');
-    return 0;
+	char* string = ",";
+	char** vector_strings = split(string, ',');
+	imprimir_strings(vector_strings);
+	free(vector_strings);
+	return 0;
 }

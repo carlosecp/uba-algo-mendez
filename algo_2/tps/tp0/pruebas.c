@@ -8,7 +8,7 @@ void dadoUnStringNULL_devuelveNULL(){
     pa2m_afirmar(split(NULL, ',')==NULL, "Split de un string NULL resulta en NULL");
 }
 
-void dadoUnStringVacío_devuelveUnVectorConElStringYUnNULL(){
+void dadoUnStringVacio_devuelveUnVectorConElStringYUnNULL(){
     char** vector = NULL;
     char* string = "";
 
@@ -92,7 +92,7 @@ int main(){
 
     pa2m_nuevo_grupo("Split de strings vacíos o nulos");
     dadoUnStringNULL_devuelveNULL();
-    dadoUnStringVacío_devuelveUnVectorConElStringYUnNULL();
+    dadoUnStringVacio_devuelveUnVectorConElStringYUnNULL();
 
     pa2m_nuevo_grupo("Split de strings separados por comas");
     dadoUnStringSeparadoPorComasYUnaComa_devuelveUnVectorConLosStringsDelimitadosPorLasComas();
