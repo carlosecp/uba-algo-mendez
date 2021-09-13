@@ -5,14 +5,16 @@
 
 void
 agregar_substring_a_vector(char** vector_strings, size_t long_substring) {
-	
+
 }
 
-int es_char_de_substring(char char_substring, char separador) {
+int
+es_char_de_substring(char char_substring, char separador) {
 	return char_substring != separador && char_substring != '\0';
 }
 
-char** split(const char* string, char separador){
+char**
+split(const char* string, char separador){
 	if (!string) return NULL;
 
 	size_t long_string = 0;
