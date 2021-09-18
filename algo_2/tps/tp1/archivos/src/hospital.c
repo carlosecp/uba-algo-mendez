@@ -1,48 +1,70 @@
-#include <stdio.h>
 #include "hospital.h"
 #include "split.h"
+#include <stdio.h>
+#include "parser_archivo.h"
 
 struct _hospital_pkm_t {
 	size_t cantidad_pokemon;
-	pokemon_t *vector_pokemones;
+	pokemon_t* vector_pokemones;
 	size_t cantidad_entrenadores;
 };
 
 struct _pkm_t {
-	char *nombre;
+	char* nombre;
 	size_t nivel;
 };
 
-struct _entrenador_t {
+typedef struct _entrenador_t {
 	int id;
-	char *nombre;
-};
+	char* nombre;
+} entrenador_t;
 
-typedef struct _entrenador_t entrenador_t;
+typedef struct _registro_t {
+	entrenador_t entrenador;
+	pokemon_t* vector_pokemones;
+} registro_t;
 
 hospital_t *hospital_crear() {
 	return calloc(1, sizeof(hospital_t));
 }
 
-char* leer_archivo(FILE* archivo) {
-	if (!archivo)
+registro_t obtener_registro(char* registro_archivo) {
+	char** data_registro_archivo = split(registro_archivo, ';');
+	registro_t registro;
+
+	registro.entrenador.id = atoi(data_registro_archivo[0]);
+	registro.entrenador.nombre = data_registro_archivo[1];
+
+	printf("Entrenador: {%i;%s}\n", registro.entrenador.id, registro.entrenador.nombre);
+	for (size_t i = 2; data_registro_archivo[i]; i += 2) {
+		printf("Pokemon: {%s; %s}\n", data_registro_archivo[i], data_registro_archivo[i + 1]);
+	}
+	printf("\n");
+
+	return registro;
+}
+
+registro_t* obtener_vector_registros(char* contenido_archivo) {
+	if (!contenido_archivo)
 		return NULL;
 
-	fseek(archivo, 0, SEEK_END);
-	size_t longitud_archivo = ftell(archivo);
-	rewind(archivo);
-
-	char* contenido = malloc((longitud_archivo + 1) * sizeof(char));
-	size_t leidos = fread(contenido, 1, longitud_archivo, archivo);
-	if (!leidos) {
-		free(contenido);
+	char**  listado_registros_archivo = split(contenido_archivo, '\n');
+	if (!listado_registros_archivo)
 		return NULL;
+
+	size_t cantidad_registros = 0;
+	while (listado_registros_archivo[cantidad_registros])
+		cantidad_registros++;
+
+	registro_t* vector_registros = malloc((cantidad_registros + 1) * sizeof(registro_t));
+	if (!vector_registros)
+		return NULL;
+
+	for (size_t i = 0; i < cantidad_registros; i++) {
+		obtener_registro(listado_registros_archivo[i]);
 	}
 
-	contenido[longitud_archivo] = 0;
-	fclose(archivo);
-
-	return contenido;
+	return vector_registros;
 }
 
 bool hospital_leer_archivo(hospital_t *hospital, const char *nombre_archivo)
@@ -51,14 +73,18 @@ bool hospital_leer_archivo(hospital_t *hospital, const char *nombre_archivo)
 	if (!hospital || !archivo)
 		return false;
 
-	char* contenido_archivo = leer_archivo(archivo);
+	char* contenido_archivo = leer_contenido_archivo(archivo, 10);
 	if (!contenido_archivo)
 		return false;
 
-	char** registros = split(contenido_archivo, '\n');
-	// Falta hacer los frees aqui
+	registro_t* listado_registros = obtener_vector_registros(contenido_archivo);
+	if (!listado_registros) {
+		free(contenido_archivo);
+		return false;
+	}
 
 	free(contenido_archivo);
+	free(listado_registros);
 	return true;
 }
 
