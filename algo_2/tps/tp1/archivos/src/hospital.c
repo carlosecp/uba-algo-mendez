@@ -20,27 +20,24 @@ hospital_t *hospital_crear()
 }
 
 char* leer_archivo(FILE* archivo) {
-	char* contenido_archivo = malloc(sizeof(char));
-	if (!contenido_archivo)
+	if (!archivo)
 		return NULL;
-	
-	size_t cantidad_caracteres = 0;
 
-	char caracter_leido;
-	while ((caracter_leido = fgetc(archivo)) != EOF) {
-		char* contenido_archivo_aux = realloc(contenido_archivo, cantidad_caracteres + 1);
-		if (!contenido_archivo_aux) {
-			free(contenido_archivo);
-			return NULL;
-		}
+	fseek(archivo, 0, SEEK_END);
+	size_t longitud_archivo = ftell(archivo);
+	rewind(archivo);
 
-		contenido_archivo[cantidad_caracteres] = caracter_leido;
-		cantidad_caracteres++;
+	char* contenido = malloc((longitud_archivo + 1) * sizeof(char));
+	size_t leidos = fread(contenido, 1, longitud_archivo, archivo);
+	if (!leidos) {
+		free(contenido);
+		return NULL;
 	}
 
-	contenido_archivo[cantidad_caracteres] = 0;
+	contenido[longitud_archivo] = 0;
+	fclose(archivo);
 
-	return contenido_archivo;
+	return contenido;
 }
 
 bool hospital_leer_archivo(hospital_t *hospital, const char *nombre_archivo)
@@ -53,8 +50,9 @@ bool hospital_leer_archivo(hospital_t *hospital, const char *nombre_archivo)
 	if (!contenido_archivo)
 		return false;
 
-	printf("Contenido:\n%s", contenido_archivo);
+	char** registros = split(contenido_archivo, '\n');
 
+	free(contenido_archivo);
 	return true;
 }
 

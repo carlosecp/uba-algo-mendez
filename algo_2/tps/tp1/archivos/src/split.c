@@ -1,61 +1,37 @@
+#include "split.h"
 #include <stdlib.h>
-#include <stdio.h>
 
-size_t contar_substrings(const char* string, char separador) {
-	if (!string)
-		return 1;
-	
-	return (*string == separador ? 1 : 0) + contar_substrings(string, separador);
+int es_char_de_substring(char char_substring, char separador) {
+	return char_substring != separador && char_substring != '\0';
 }
 
-size_t contar_longitud_substring(const char* string, char separador) {
-	if (*string == separador) 
-		return 0;
-	
-	return 1 + contar_longitud_substring(string + 1, separador);
-}
+char** split(const char* string, char separador){
+	if (!string) return NULL;
 
-char* duplicar_substring(const char* string, size_t longitud_substring) {
-	char* substring = malloc((longitud_substring + 1) * sizeof(char));
-	if (!substring)
-		return NULL;
+	size_t long_string = 0;
+	size_t cant_substrings = 0;
 
-	for (size_t i = 0; i < longitud_substring; i++)
-		substring[i] = string[i];
-	
-	substring[longitud_substring] = 0;
+	for (; string[long_string]; long_string++)
+		if (string[long_string] == separador) cant_substrings++;
 
-	return substring;
-}
+	cant_substrings++;
 
-void liberar_vector(char** vector_strings) {
-	while (*vector_strings) {
-		free(*vector_strings);
-		vector_strings++;
-	}
-}
+	char** vector_strings = malloc((cant_substrings + 1) * sizeof(char*));
+	size_t long_substring = 0;
 
-char** split(const char* string, char separador) {
-	if (!string)
-		return NULL;
+	for (size_t i = 0; i < cant_substrings; i++) {
+		long_substring = 0;
+		while (es_char_de_substring(string[long_substring], separador))
+			long_substring++;
 
-	size_t cantidad_substrings = contar_substrings(string, separador);
+		vector_strings[i] = malloc((long_substring + 1) * sizeof(char));
+		for (size_t j = 0; j < long_substring; j++)
+			vector_strings[i][j] = string[j];
 
-	char** vector_substrings = malloc((cantidad_substrings + 1) * sizeof(char*));
-	if (!vector_substrings)
-		return NULL;
-
-	for (size_t i = 0; i < cantidad_substrings; i++) {
-		size_t longitud_substring = contar_longitud_substring(string, separador);
-		char* substring = duplicar_substring(string, longitud_substring);
-		if (!substring)
-			liberar_vector(vector_substrings);
-
-		vector_substrings[i] = substring;
-		string += longitud_substring;
+		vector_strings[i][long_substring] = '\0';
+		string += (long_substring + 1);
 	}
 
-	vector_substrings[cantidad_substrings] = NULL;
-
-	return vector_substrings;
+	vector_strings[cant_substrings] = NULL;
+	return vector_strings;
 }
