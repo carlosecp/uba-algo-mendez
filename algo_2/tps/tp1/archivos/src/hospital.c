@@ -2,20 +2,25 @@
 #include "hospital.h"
 #include "split.h"
 
-struct _hospital_pkm_t
-{
+struct _hospital_pkm_t {
 	size_t cantidad_pokemon;
 	pokemon_t *vector_pokemones;
+	size_t cantidad_entrenadores;
 };
 
-struct _pkm_t
-{
+struct _pkm_t {
 	char *nombre;
 	size_t nivel;
 };
 
-hospital_t *hospital_crear()
-{
+struct _entrenador_t {
+	int id;
+	char *nombre;
+};
+
+typedef struct _entrenador_t entrenador_t;
+
+hospital_t *hospital_crear() {
 	return calloc(1, sizeof(hospital_t));
 }
 
@@ -51,6 +56,7 @@ bool hospital_leer_archivo(hospital_t *hospital, const char *nombre_archivo)
 		return false;
 
 	char** registros = split(contenido_archivo, '\n');
+	// Falta hacer los frees aqui
 
 	free(contenido_archivo);
 	return true;
@@ -59,13 +65,13 @@ bool hospital_leer_archivo(hospital_t *hospital, const char *nombre_archivo)
 size_t
 hospital_cantidad_pokemon(hospital_t *hospital)
 {
-	return 0;
+	return hospital -> cantidad_pokemon;
 }
 
 size_t
 hospital_cantidad_entrenadores(hospital_t *hospital)
 {
-	return 0;
+	return hospital -> cantidad_entrenadores;
 }
 
 size_t
@@ -79,20 +85,26 @@ void hospital_destruir(hospital_t *hospital)
 	size_t cantidad_pokemones = hospital_cantidad_pokemon(hospital);
 	for (size_t i = 0; i < cantidad_pokemones; i++)
 	{
-		free(hospital->vector_pokemones[i].nombre);
+		free(hospital -> vector_pokemones[i].nombre);
 	}
-	free(hospital->vector_pokemones);
+	free(hospital -> vector_pokemones);
 	free(hospital);
 }
 
 size_t
 pokemon_nivel(pokemon_t *pokemon)
 {
-	return 0;
+	if (!pokemon)
+		return 0;
+	
+	return pokemon -> nivel;
 }
 
 const char *
 pokemon_nombre(pokemon_t *pokemon)
 {
-	return NULL;
+	if (!pokemon)
+		return NULL;
+
+	return pokemon -> nombre;
 }
