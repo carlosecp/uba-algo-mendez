@@ -4,7 +4,7 @@
 
 struct _hospital_pkm_t {
     size_t cantidad_pokemon;
-    size_t cantidad_entrenadores;
+    size_t cantidad_entrenador;
     pokemon_t* vector_pokemones;
     entrenador_t* vector_entrenadores;
 };
@@ -46,25 +46,21 @@ hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo) {
         entrenador_t entrenador_temp;
         entrenador_temp.id = atoi(data_registro_temp[0]);
         entrenador_temp.nombre = data_registro_temp[1];
-        printf("%s:\n", entrenador_temp.nombre);
 
         for (size_t j = 2; data_registro_temp[j]; j += 2) {
             pokemon_t pokemon_temp;
             pokemon_temp.nombre = data_registro_temp[j];
             pokemon_temp.nivel = (size_t)atoi(data_registro_temp[j + 1]);
-            printf("%s\n", pokemon_temp.nombre);
         }
 
         free_vector_strings(data_registro_temp);
         free(data_registro_temp);
     }
     
-    free(lineas_registros[0]);
-    free(lineas_registros[1]);
-    free(lineas_registros[2]);
-
     free(contenido_archivo);
+    free_vector_strings(lineas_registros);
     free(lineas_registros);
+
     return true;
 }
 
@@ -75,7 +71,7 @@ hospital_cantidad_pokemon(hospital_t* hospital) {
 
 size_t
 hospital_cantidad_entrenadores(hospital_t* hospital) {
-    return hospital->cantidad_entrenadores;
+    return hospital->cantidad_entrenador;
 }
 
 size_t
@@ -85,11 +81,18 @@ hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)) {
 
 void
 hospital_destruir(hospital_t* hospital) {
-    size_t cantidad_pokemones = hospital_cantidad_pokemon(hospital);
-    for (size_t i = 0; i < cantidad_pokemones; i++) {
+    size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
+    for (size_t i = 0; i < cantidad_pokemon; i++) {
         free(hospital->vector_pokemones[i].nombre);
     }
+
+    size_t cantidad_entrenador = hospital_cantidad_pokemon(hospital);
+    for (size_t i = 0; i < cantidad_entrenador; i++) {
+        free(hospital->vector_pokemones[i].nombre);
+    }
+
     free(hospital->vector_pokemones);
+    free(hospital->vector_entrenadores);
     free(hospital);
 }
 
