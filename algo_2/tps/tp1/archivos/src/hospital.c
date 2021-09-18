@@ -19,24 +19,28 @@ hospital_t *hospital_crear()
 	return calloc(1, sizeof(hospital_t));
 }
 
-typedef struct _string_t {
-	char* contenido;
-	size_t cantidad_caracteres;
-	size_t max_caracteres;
-} string_t;
-
-string_t* string_crear(size_t max_caracteres_inicial) {
-	string_t* string = malloc(sizeof(string));
-	if (!string) 
+char* leer_archivo(FILE* archivo) {
+	char* contenido_archivo = malloc(sizeof(char));
+	if (!contenido_archivo)
 		return NULL;
+	
+	size_t cantidad_caracteres = 0;
 
-	string -> cantidad_caracteres = 0;
-	string -> max_caracteres = max_caracteres_inicial;
-	string -> contenido = calloc(string -> max_caracteres + 1, sizeof(char));
-	if (!(string -> contenido))
-		return NULL;
+	char caracter_leido;
+	while ((caracter_leido = fgetc(archivo)) != EOF) {
+		char* contenido_archivo_aux = realloc(contenido_archivo, cantidad_caracteres + 1);
+		if (!contenido_archivo_aux) {
+			free(contenido_archivo);
+			return NULL;
+		}
 
-	return string;
+		contenido_archivo[cantidad_caracteres] = caracter_leido;
+		cantidad_caracteres++;
+	}
+
+	contenido_archivo[cantidad_caracteres] = 0;
+
+	return contenido_archivo;
 }
 
 bool hospital_leer_archivo(hospital_t *hospital, const char *nombre_archivo)
@@ -45,23 +49,11 @@ bool hospital_leer_archivo(hospital_t *hospital, const char *nombre_archivo)
 	if (!hospital || !archivo)
 		return false;
 
-	string_t* string_registros = string_crear(10);
-	if (!string_registros)
+	char* contenido_archivo = leer_archivo(archivo);
+	if (!contenido_archivo)
 		return false;
 
-	char char_leido;
-	while ((char_leido = fgetc(archivo)) != EOF) {
-		if (string_registros -> cantidad_caracteres >= string_registros -> max_caracteres) {
-			string_registros -> max_caracteres *= 2;
-			string_registros -> contenido = realloc(string_registros -> contenido, string_registros -> max_caracteres);
-		}
-		string_registros -> contenido[string_registros -> cantidad_caracteres++] = char_leido;
-	}
-
-	printf("%s", string_registros -> contenido);
-	fclose(archivo);
-
-	// Ahora parseo la string
+	printf("Contenido:\n%s", contenido_archivo);
 
 	return true;
 }
