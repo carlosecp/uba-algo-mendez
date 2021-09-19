@@ -5,7 +5,6 @@
 int main(int argc, char *argv[]) {
 	hospital_t* hospital = hospital_crear();
 	hospital_leer_archivo(hospital, "test.csv");
-
-	// hospital_destruir(hospital);
+	hospital_destruir(hospital);
 	return 0;
 }

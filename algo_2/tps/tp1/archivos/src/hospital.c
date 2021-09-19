@@ -1,8 +1,6 @@
 #include <stdio.h>
-#include <string.h>
 #include "hospital.h"
 #include "archivo.h"
-#include "split.h"
 
 struct _hospital_pkm_t {
     size_t cantidad_pokemon;
@@ -21,22 +19,6 @@ hospital_crear() {
     return calloc(1, sizeof(hospital_t));
 }
 
-pokemon_t*
-generar_vector_pokemones(char** lineas_registros) {
-    pokemon_t* vector_pokemones = NULL;
-
-    for (size_t i = 0; lineas_registros[i]; i++) {
-        char** linea_registro = archivo_leer_linea_registro(lineas_registros[i]);
-        if (!linea_registro)
-            return NULL;
-
-        free_vector_strings(linea_registro);
-        free(linea_registro);
-    }
-
-    return vector_pokemones;
-}
-
 bool
 hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo) {
     FILE* archivo = fopen(nombre_archivo, "r");
@@ -47,12 +29,16 @@ hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo) {
     if (!contenido_archivo)
         return false;
 
-    char** lineas_registros = split(contenido_archivo, '\n');
+    char** lineas_registros = archivo_obtener_lineas_registros(contenido_archivo);
     free(contenido_archivo);
     if (!lineas_registros)
         return false;
 
-    printf("%s", contenido_archivo);
+    size_t cantidad_registros = archivo_cantidad_registros(lineas_registros);
+    printf("%li", cantidad_registros);
+    
+    free_vector_strings(lineas_registros);
+    free(lineas_registros);
 
     return true;
 }
@@ -75,16 +61,17 @@ hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)) {
 void
 hospital_destruir(hospital_t* hospital) {
     size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
-    size_t cantidad_entrenador = hospital_cantidad_pokemon(hospital);
-
     for (size_t i = 0; i < cantidad_pokemon; i++) {
-        // free(hospital->vector_pokemones[i].nombre);
+        free(hospital->vector_pokemones[i].nombre);
     }
 
+    size_t cantidad_entrenador = hospital_cantidad_pokemon(hospital);
     for (size_t i = 0; i < cantidad_entrenador; i++) {
-        // free(hospital->vector_entrenadores[i].nombre);
+        free(hospital->vector_pokemones[i].nombre);
     }
 
+    free(hospital->vector_pokemones);
+    free(hospital->vector_entrenadores);
     free(hospital);
 }
 
