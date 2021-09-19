@@ -12,7 +12,7 @@ typedef struct _entrenador_t {
 
 char* archivo_leer(FILE* archivo, size_t max_caracteres_inicial);
 
-char** archivo_lineas_registros(char* contenido_archivo);
+char** archivo_separar_lineas_registros(char* contenido_archivo);
 
 size_t archivo_cantidad_registros(char** lineas_registros);
 

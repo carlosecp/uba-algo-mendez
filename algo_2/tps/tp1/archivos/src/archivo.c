@@ -33,14 +33,6 @@ archivo_leer(FILE* archivo, size_t max_caracteres_inicial) {
 	return contenido_archivo;
 }
 
-char**
-archivo_lineas_registros(char* contenido_archivo) {
-	if (!contenido_archivo)
-		return NULL;
-
-	return split(contenido_archivo, '\n');
-}
-
 size_t
 archivo_cantidad_registros(char** lineas_registros) {
 	size_t cantidad_registros = 0;
@@ -62,8 +54,8 @@ archivo_leer_linea_registro(char* linea_registro) {
 
 void
 free_vector_strings(char** vector_strings) {
-	while (*vector_strings) {
-		free(*vector_strings);
-		vector_strings++;
-	}
+	for (size_t i = 0; vector_strings[i]; i++)
+		free(vector_strings[i]);
+
+	free(vector_strings);
 }

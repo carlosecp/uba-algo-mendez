@@ -2,6 +2,7 @@
 #include <string.h>
 #include "hospital.h"
 #include "archivo.h"
+#include "split.h"
 
 struct _hospital_pkm_t {
     size_t cantidad_pokemon;
@@ -46,24 +47,12 @@ hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo) {
     if (!contenido_archivo)
         return false;
 
-    char** lineas_registros = archivo_lineas_registros(contenido_archivo);
-    if (!lineas_registros) {
-        free(contenido_archivo);
-        return false;
-	}
-
-    pokemon_t* vector_pokemones = generar_vector_pokemones(lineas_registros);
-    if (!vector_pokemones) {
-        free(contenido_archivo);
-        free_vector_strings(lineas_registros);
-        free(lineas_registros);
-        return false;
-	}
-
+    char** lineas_registros = split(contenido_archivo, '\n');
     free(contenido_archivo);
-    free_vector_strings(lineas_registros);
-    free(lineas_registros);
-    free(vector_pokemones);
+    if (!lineas_registros)
+        return false;
+
+    printf("%s", contenido_archivo);
 
     return true;
 }

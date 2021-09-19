@@ -1,37 +1,57 @@
 #include "split.h"
 #include <stdlib.h>
+#include <string.h>
 
-int es_char_de_substring(char char_substring, char separador) {
-	return char_substring != separador && char_substring != '\0';
+size_t
+contar_substrings(const char* string, char separador) {
+	if (!(*string))
+		return 1;
+
+	if (*string == separador)
+		return 1 + contar_substrings(string + 1, separador);
+	
+	return contar_substrings(string + 1, separador);
 }
 
-char** split(const char* string, char separador){
-	if (!string) return NULL;
+size_t
+contar_longitud_substring(const char* string, char separador) {
+	size_t i = 0;
+	while (string[i] != '\0' && string[i] != separador)
+		i++;
 
-	size_t long_string = 0;
-	size_t cant_substrings = 0;
+	return i;
+}
 
-	for (; string[long_string]; long_string++)
-		if (string[long_string] == separador) cant_substrings++;
+char*
+duplicar_string(const char* string, size_t longitud) {
+	char* nuevo_string = malloc((longitud + 1) * sizeof(char));
+	if (!nuevo_string)
+		return NULL;
 
-	cant_substrings++;
+	for (size_t i = 0; i < longitud; i++)
+		nuevo_string[i] = string[i];
 
-	char** vector_strings = malloc((cant_substrings + 1) * sizeof(char*));
-	size_t long_substring = 0;
+	nuevo_string[longitud] = 0;
+	return nuevo_string;
+}
 
-	for (size_t i = 0; i < cant_substrings; i++) {
-		long_substring = 0;
-		while (es_char_de_substring(string[long_substring], separador))
-			long_substring++;
+char**
+split(const char* string, char separador) {
+	if (!string)
+		return NULL;
+	
+	size_t cantidad_substrings = contar_substrings(string, separador);
+	char** vector_substrings = calloc((cantidad_substrings + 1), sizeof(void*));
+	if (!vector_substrings)
+		return NULL;
+	
+	for (size_t i = 0; i < cantidad_substrings; i++) {
+		size_t longitud_substring = contar_longitud_substring(string, separador);
+		char* substring = duplicar_string(string, longitud_substring);
 
-		vector_strings[i] = malloc((long_substring + 1) * sizeof(char));
-		for (size_t j = 0; j < long_substring; j++)
-			vector_strings[i][j] = string[j];
-
-		vector_strings[i][long_substring] = '\0';
-		string += (long_substring + 1);
+		vector_substrings[i] = substring;
+		string += longitud_substring + 1;
 	}
 
-	vector_strings[cant_substrings] = NULL;
-	return vector_strings;
+	return vector_substrings;
 }
