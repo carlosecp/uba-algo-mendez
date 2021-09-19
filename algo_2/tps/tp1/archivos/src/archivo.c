@@ -53,7 +53,7 @@ archivo_cantidad_registros(char** lineas_registros) {
 }
 
 char**
-archivo_data_registro(char* linea_registro) {
+archivo_leer_linea_registro(char* linea_registro) {
 	if (!linea_registro)
 		return NULL;
 
