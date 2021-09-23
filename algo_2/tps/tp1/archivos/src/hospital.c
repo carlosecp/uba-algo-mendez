@@ -1,3 +1,4 @@
+#include <string.h>
 #include "hospital.h"
 #include "split.h"
 #include "parser.h"
@@ -12,9 +13,36 @@ struct _pkm_t{
 	size_t nivel;
 };
 
+typedef struct entrenador {
+	int id;
+	char* nombre;
+} entrenador_t;
+
 hospital_t*
 hospital_crear(){
 	return NULL;
+}
+
+bool
+hospital_guardar_informacion(hospital_t* hospital, char** lineas_archivo) {
+	if (!lineas_archivo)
+		return false;
+
+	size_t cantidad_registros = parser_obtener_cantidad_registros(lineas_archivo);
+	for (size_t i = 0; i < (cantidad_registros - 1); i++) {
+		char** informacion_lineas = parser_obtener_informacion_linea(lineas_archivo[i]);
+
+		entrenador_t* entrenador = malloc(sizeof(entrenador_t));
+		entrenador -> id = atoi(informacion_lineas[0]);
+		strcpy(entrenador -> nombre, informacion_lineas[1]);
+
+		printf("Entrenador: {%i, %s}\n", entrenador -> id, entrenador -> nombre);
+
+		free(informacion_lineas);
+		free(entrenador);
+	}
+
+	return true;
 }
 
 bool
@@ -30,16 +58,18 @@ hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo){
 	if (!buffer)
 		return false;
 
-	char** lineas = split(buffer -> contenido, '\n');
-	printf("%s", lineas[0]);
+	char** lineas_archivo = parser_obtener_lineas_archivo(buffer);
+	if (!lineas_archivo) {
+		free(buffer);
+		return false;
+	}
 
+	hospital_guardar_informacion(hospital, lineas_archivo);
+
+	free_vector_strings(lineas_archivo);
+	free(lineas_archivo);
 	free(buffer -> contenido);
 	free(buffer);
-
-	free(lineas[0]);
-	free(lineas[1]);
-	free(lineas[2]);
-	free(lineas);
 
 	return false;
 }

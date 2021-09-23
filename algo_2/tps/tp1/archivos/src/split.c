@@ -1,37 +1,61 @@
-#include "split.h"
 #include <stdlib.h>
+#include "split.h"
+#include "parser.h"
 
-int es_char_de_substring(char char_substring, char separador) {
-	return char_substring != separador && char_substring != '\0';
+size_t contar_substrings(const char* string, char separador) {
+	if (*string == 0) 
+		return 1;
+	if (*string == separador)
+		return 1 + contar_substrings(string + 1, separador);
+
+	return contar_substrings(string + 1, separador);
+}
+
+size_t contar_longitud_substring(const char* string, char separador) {
+	size_t i = 0;
+
+	while (string[i] != 0 && string[i] != separador)
+		i++;
+
+	return i;
+}
+
+char* duplicar_string(const char* string, size_t longitud_string) {
+	char* substring = malloc((longitud_string + 1) * sizeof(char));
+	if (!substring)
+		return NULL;
+
+	for (size_t i = 0; i < longitud_string; i++)
+		substring[i] = string[i];
+
+	substring[longitud_string] = 0;
+	return substring;
 }
 
 char** split(const char* string, char separador){
-	if (!string) return NULL;
+	if (!string)
+		return NULL;
 
-	size_t long_string = 0;
-	size_t cant_substrings = 0;
+	size_t cantidad_substrings = contar_substrings(string, separador);
 
-	for (; string[long_string]; long_string++)
-		if (string[long_string] == separador) cant_substrings++;
+	char** vector_strings = malloc((cantidad_substrings + 1) * sizeof(char*));
+	if (!vector_strings)
+		return NULL;
 
-	cant_substrings++;
+	for (size_t i = 0; i < cantidad_substrings; i++) {
+		size_t longitud_substring = contar_longitud_substring(string, separador);
+		char* substring = duplicar_string(string, longitud_substring);
+		if (!substring) {
+			free_vector_strings(vector_strings);
+			free(vector_strings);
+			return NULL;
+		}
 
-	char** vector_strings = malloc((cant_substrings + 1) * sizeof(char*));
-	size_t long_substring = 0;
-
-	for (size_t i = 0; i < cant_substrings; i++) {
-		long_substring = 0;
-		while (es_char_de_substring(string[long_substring], separador))
-			long_substring++;
-
-		vector_strings[i] = malloc((long_substring + 1) * sizeof(char));
-		for (size_t j = 0; j < long_substring; j++)
-			vector_strings[i][j] = string[j];
-
-		vector_strings[i][long_substring] = '\0';
-		string += (long_substring + 1);
+		vector_strings[i] = substring;
+		string += longitud_substring + 1;
 	}
 
-	vector_strings[cant_substrings] = NULL;
+	vector_strings[cantidad_substrings] = NULL;
+
 	return vector_strings;
 }
