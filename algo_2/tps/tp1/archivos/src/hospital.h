@@ -7,6 +7,7 @@
 typedef struct _hospital_pkm_t hospital_t;
 typedef struct _pkm_t pokemon_t;
 
+
 /**
  * Reserva memoria para un hospital y la inicializa.
  *
@@ -47,6 +48,14 @@ size_t hospital_cantidad_pokemon(hospital_t* hospital);
  * Devuelve la cantidad de pokemon a los que se les aplicó la función (hayan devuelto true o false).
  */
 size_t hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p));
+
+/**
+ * Guarda un archivo con el nombre dado. El formato del archivo debe ser igual
+ * al del caso de lectura.
+ *
+ * Devuelve true si pudo guardarlo o false en caso de error.
+ */
+bool hospital_guardar_archivo(hospital_t* hospital, const char* nombre_archivo);
 
 /**
  *  Libera el hospital y toda la memoria utilizada por el mismo.
