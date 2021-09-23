@@ -32,13 +32,14 @@ hospital_guardar_informacion(hospital_t* hospital, char** lineas_archivo) {
 	for (size_t i = 0; i < (cantidad_registros - 1); i++) {
 		char** informacion_lineas = parser_obtener_informacion_linea(lineas_archivo[i]);
 
+		// TODO: Okay, definitivamente esta aqui la fuga de memoria
 		entrenador_t* entrenador = malloc(sizeof(entrenador_t));
 		entrenador -> id = atoi(informacion_lineas[0]);
 		strcpy(entrenador -> nombre, informacion_lineas[1]);
 
-		printf("Entrenador: {%i, %s}\n", entrenador -> id, entrenador -> nombre);
-
+		free_vector_strings(informacion_lineas);
 		free(informacion_lineas);
+		free(entrenador -> nombre);
 		free(entrenador);
 	}
 

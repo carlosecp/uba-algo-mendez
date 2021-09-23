@@ -1,108 +1,155 @@
 #include "pa2mm.h"
-#include "split.h"
+#include "src/hospital.h"
 
 #include "string.h"
 #include <stdbool.h>
 
-void dadoUnStringNULL_devuelveNULL(){
-    pa2m_afirmar(split(NULL, ',')==NULL, "Split de un string NULL resulta en NULL");
+bool ignorar_pokemon(pokemon_t* p){
+    p = p;
+    return true;
 }
 
-void dadoUnStringVacío_devuelveUnVectorConElStringYUnNULL(){
-    char** vector = NULL;
-    char* string = "";
+/* No intenten esto en sus casas */
+/* Ya vamos a ver como evitar esto en el TDA Lista */
+struct{
+    pokemon_t* pokemon[500];
+    size_t cantidad;
+} acumulados;
 
-    pa2m_afirmar((vector = split(string,','))!= NULL, "Puedo hacer split de un string vacío");
-
-    pa2m_afirmar(vector[0] != string, "El primer elemento del vector no es el string original");
-    pa2m_afirmar(strcmp(vector[0],string)==0, "El primer elemento del vector es un string vacío");
-    pa2m_afirmar(vector[1] == NULL, "El segundo elemento del vector es NULL");
-
-    free(vector[0]);
-    free(vector);
+void resetear_acumulados(){
+    acumulados.cantidad = 0;
 }
 
-void dadoUnStringSeparadoPorComasYUnaComa_devuelveUnVectorConLosStringsDelimitadosPorLasComas(){
-    char** vector = NULL;
-    char* string = "1,2,3";
-
-    pa2m_afirmar((vector = split(string,','))!= NULL, "Puedo hacer split del string 1,2,3 separando por ,");
-
-    pa2m_afirmar(vector && vector[0] && strcmp(vector[0],"1")==0, "El primer elemento del vector es \"1\"");
-    pa2m_afirmar(vector && vector[1] && strcmp(vector[1],"2")==0, "El segundo elemento del vector es \"2\"");
-    pa2m_afirmar(vector && vector[2] && strcmp(vector[2],"3")==0, "El tercer elemento del vector es \"3\"");
-    pa2m_afirmar(vector && vector[3] == NULL, "El cuarto elemento del vector es NULL");
-
-    free(vector[0]);
-    free(vector[1]);
-    free(vector[2]);
-    free(vector);
+bool acumular_pokemon(pokemon_t* p){
+    acumulados.pokemon[acumulados.cantidad] = p;
+    acumulados.cantidad++;
+    return true;
 }
 
-void dadoUnStringDeComasYUnaComa_devuelveUnVectorConStringsVacios(){
-    char** vector = NULL;
-    char* string = ",,,,";
-
-    pa2m_afirmar((vector = split(string,','))!= NULL, "Puedo hacer split del string ,,,, separando por ,");
-
-    pa2m_afirmar(vector && vector[0] && strcmp(vector[0],"")==0, "El primer elemento del vector es \"\"");
-    pa2m_afirmar(vector && vector[1] && strcmp(vector[1],"")==0, "El segundo elemento del vector es \"\"");
-    pa2m_afirmar(vector && vector[2] && strcmp(vector[2],"")==0, "El tercer elemento del vector es \"\"");
-    pa2m_afirmar(vector && vector[3] && strcmp(vector[3],"")==0, "El cuarto elemento del vector es \"\"");
-    pa2m_afirmar(vector && vector[4] && strcmp(vector[4],"")==0, "El quinto elemento del vector es \"\"");
-
-    pa2m_afirmar(vector && vector[5] == NULL, "El sexto elemento del vector es NULL");
-
-    free(vector[0]);
-    free(vector[1]);
-    free(vector[2]);
-    free(vector[3]);
-    free(vector[4]);
-    free(vector);
+bool acumular_pokemon_hasta_miltank(pokemon_t* p){
+    acumulados.pokemon[acumulados.cantidad] = p;
+    acumulados.cantidad++;
+    return strcmp(pokemon_nombre(p), "miltank");
 }
 
-void dadoUnStringLargoSeparadoPorEspacios_devuelveUnVectorConLosStringsSeparadosPorEspacios(){
-    char** vector = NULL;
-    char string[32768];
+bool acumulados_en_orden_correcto(){
+    if(acumulados.cantidad < 2)
+        return true;
+    pokemon_t* anterior = acumulados.pokemon[0];
+    for(int i=1;i<acumulados.cantidad;i++){
+        pokemon_t* actual =  acumulados.pokemon[i];
+        if(strcmp(pokemon_nombre(anterior), pokemon_nombre(actual)) > 0)
+            return false;
+    }
+    return true;
+}
 
-    memset(string, '?', 32767);
-    string[1024] = ' ';
-    string[8192] = ' ';
-    string[16384] = ' ';
-    string[32767] = 0;
+/* Pruebas */
+
+void puedoCrearYDestruirUnHospital(){
+    hospital_t* h=NULL;
+
+    pa2m_afirmar((h=hospital_crear()), "Crear un hospital devuelve un hospital");
+
+    pa2m_afirmar(hospital_cantidad_entrenadores(h)==0, "Un hospital se crea con cero entrenadores");
+    pa2m_afirmar(hospital_cantidad_pokemon(h)==0, "Un hospital se crea con cero pokemon");
+
+    pa2m_afirmar(hospital_a_cada_pokemon(h, ignorar_pokemon)==0, "Recorrer los pokemon resulta en 0 pokemon recorridos");
+
+    hospital_destruir(h);
+}
+
+void dadoUnHospitalNULL_lasPuedoAplicarLasOperacionesDelHospitalSinProblema(){
+    hospital_t* h=NULL;
+
+    pa2m_afirmar(hospital_cantidad_entrenadores(h)==0, "Un hospital NULL tiene cero entrenadores");
+    pa2m_afirmar(hospital_cantidad_pokemon(h)==0, "Un hospital NULL tiene cero pokemon");
+
+    pa2m_afirmar(hospital_a_cada_pokemon(h, ignorar_pokemon)==0, "Recorrer los pokemon de un hospital NULL resulta en 0 pokemon recorridos");
+
+    hospital_destruir(h);
+}
+
+void dadoUnArchivoVacio_NoSeAgreganPokemonAlHospital(){
+    hospital_t* h=hospital_crear();
+
+    pa2m_afirmar(hospital_leer_archivo(h, "ejemplos/archivo_vacio.hospital"), "Puedo leer un archivo vacío");
+
+    pa2m_afirmar(hospital_cantidad_entrenadores(h)==0, "Un hospital vacío tiene cero entrenadores");
+    pa2m_afirmar(hospital_cantidad_pokemon(h)==0, "Un hospital vacío tiene tiene cero pokemon");
+
+    pa2m_afirmar(hospital_a_cada_pokemon(h, ignorar_pokemon)==0, "Recorrer los pokemon resulta en 0 pokemon recorridos");
+
+    hospital_destruir(h);
+}
+
+void dadoUnArchivoConUnEntrenador_SeAgregaElEntrenadorYSusPokemonAlHospital(){
+    hospital_t* h=hospital_crear();
+
+    pa2m_afirmar(hospital_leer_archivo(h, "ejemplos/un_entrenador.hospital"), "Puedo leer un archivo con un entrenador");
+
+    pa2m_afirmar(hospital_cantidad_entrenadores(h)==1, "El hospital tiene 1 entrenador");
+    pa2m_afirmar(hospital_cantidad_pokemon(h)==3, "El hospital tiene 3 pokemon");
+
+    resetear_acumulados();
+    pa2m_afirmar(hospital_a_cada_pokemon(h, acumular_pokemon)==3, "Recorrer los pokemon resulta en 3 pokemon recorridos");
+    pa2m_afirmar(acumulados_en_orden_correcto(), "Los pokemon se recorrieron en orden alfabetico");
+
+    hospital_destruir(h);
+}
+
+void dadoUnArchivoConVariosEntrenadores_SeAgreganLosEntrenadoresYSusPokemonAlHospital(){
+    hospital_t* h=hospital_crear();
+
+    pa2m_afirmar(hospital_leer_archivo(h, "ejemplos/varios_entrenadores.hospital"), "Puedo leer un archivo con varios entrenadores");
+
+    pa2m_afirmar(hospital_cantidad_entrenadores(h)==5, "El hospital tiene 5 entrenadores");
+    pa2m_afirmar(hospital_cantidad_pokemon(h)==24, "El hospital tiene 24 pokemon");
+
+    resetear_acumulados();
+    pa2m_afirmar(hospital_a_cada_pokemon(h, acumular_pokemon)==24, "Recorrer los pokemon resulta en 24 pokemon recorridos");
+    pa2m_afirmar(acumulados_en_orden_correcto(), "Los pokemon se recorrieron en orden alfabetico");
+
+    hospital_destruir(h);
+}
 
 
-    pa2m_afirmar((vector = split(string,' '))!= NULL, "Puedo hacer split de un string muy grande");
+void dadosVariosArchivos_puedoAgregarlosTodosAlMismoHospital(){
+    hospital_t* h=hospital_crear();
 
-    pa2m_afirmar(vector && vector[0] && vector[0][0]=='?', "El primer elemento del vector no es nulo ni un vector vacío");
-    pa2m_afirmar(vector && vector[1] && vector[1][0]=='?', "El segundo elemento del vector no es nulo ni un vector vacío");
-    pa2m_afirmar(vector && vector[2] && vector[2][0]=='?', "El tercer elemento del vector no es nulo ni un vector vacío");
-    pa2m_afirmar(vector && vector[3] && vector[3][0]=='?', "El cuarto elemento del vector no es nulo ni un vector vacío");
-    pa2m_afirmar(vector && vector[4]==NULL, "El quinto elemento del vector es NULL");
+    pa2m_afirmar(hospital_leer_archivo(h, "ejemplos/varios_entrenadores.hospital"), "Puedo leer un archivo con varios entrenadores");
+    pa2m_afirmar(hospital_leer_archivo(h, "ejemplos/varios_entrenadores.hospital"), "Puedo leer otro archivo con varios entrenadores");
+    pa2m_afirmar(hospital_leer_archivo(h, "ejemplos/varios_entrenadores.hospital"), "Puedo leer un tercer archivo con varios entrenadores");
 
-    free(vector[0]);
-    free(vector[1]);
-    free(vector[2]);
-    free(vector[3]);
-    free(vector);
+    pa2m_afirmar(hospital_cantidad_entrenadores(h)==15, "El hospital tiene 15 entrenadores");
+    pa2m_afirmar(hospital_cantidad_pokemon(h)==72, "El hospital tiene 72 pokemon");
 
+    resetear_acumulados();
+    pa2m_afirmar(hospital_a_cada_pokemon(h, acumular_pokemon)==72, "Recorrer los pokemon resulta en 72 pokemon recorridos");
+    pa2m_afirmar(acumulados_en_orden_correcto(), "Los pokemon se recorrieron en orden alfabetico");
+
+    hospital_destruir(h);
 }
 
 int main(){
 
-    pa2m_nuevo_grupo("Split de strings vacíos o nulos");
-    dadoUnStringNULL_devuelveNULL();
-    dadoUnStringVacío_devuelveUnVectorConElStringYUnNULL();
+    pa2m_nuevo_grupo("Pruebas de  creación y destrucción");
+    puedoCrearYDestruirUnHospital();
 
-    pa2m_nuevo_grupo("Split de strings separados por comas");
-    dadoUnStringSeparadoPorComasYUnaComa_devuelveUnVectorConLosStringsDelimitadosPorLasComas();
+    pa2m_nuevo_grupo("Pruebas con NULL");
+    dadoUnHospitalNULL_lasPuedoAplicarLasOperacionesDelHospitalSinProblema();
 
-    pa2m_nuevo_grupo("Split de un strings solo de separadores");
-    dadoUnStringDeComasYUnaComa_devuelveUnVectorConStringsVacios();
+    pa2m_nuevo_grupo("Pruebas con un archivo vacío");
+    dadoUnArchivoVacio_NoSeAgreganPokemonAlHospital();
 
-    pa2m_nuevo_grupo("Split de un string largo");
-    dadoUnStringLargoSeparadoPorEspacios_devuelveUnVectorConLosStringsSeparadosPorEspacios();
+    pa2m_nuevo_grupo("Pruebas con un archivo de un entrenador");
+    dadoUnArchivoConUnEntrenador_SeAgregaElEntrenadorYSusPokemonAlHospital();
 
+    pa2m_nuevo_grupo("Pruebas con un archivo de varios entrenadores");
+    dadoUnArchivoConVariosEntrenadores_SeAgreganLosEntrenadoresYSusPokemonAlHospital();
+
+    pa2m_nuevo_grupo("Pruebas con mas de un archivo");
+    dadosVariosArchivos_puedoAgregarlosTodosAlMismoHospital();
 
     return pa2m_mostrar_reporte();
 }
