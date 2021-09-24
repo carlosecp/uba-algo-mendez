@@ -2,7 +2,8 @@
 #include "split.h"
 #include "parser.h"
 
-size_t contar_substrings(const char* string, char separador) {
+size_t
+contar_substrings(const char* string, char separador) {
 	if (*string == 0) 
 		return 1;
 	if (*string == separador)
@@ -11,7 +12,8 @@ size_t contar_substrings(const char* string, char separador) {
 	return contar_substrings(string + 1, separador);
 }
 
-size_t contar_longitud_substring(const char* string, char separador) {
+size_t
+contar_longitud_substring(const char* string, char separador) {
 	size_t i = 0;
 
 	while (string[i] != 0 && string[i] != separador)
@@ -20,7 +22,8 @@ size_t contar_longitud_substring(const char* string, char separador) {
 	return i;
 }
 
-char* duplicar_string(const char* string, size_t longitud_string) {
+char*
+duplicar_string(const char* string, size_t longitud_string) {
 	char* substring = malloc((longitud_string + 1) * sizeof(char));
 	if (!substring)
 		return NULL;
@@ -32,7 +35,8 @@ char* duplicar_string(const char* string, size_t longitud_string) {
 	return substring;
 }
 
-char** split(const char* string, char separador){
+char**
+split(const char* string, char separador){
 	if (!string)
 		return NULL;
 

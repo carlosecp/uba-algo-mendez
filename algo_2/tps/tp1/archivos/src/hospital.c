@@ -3,6 +3,7 @@
 #include "split.h"
 #include "parser.h"
 
+
 struct _hospital_pkm_t{
 	size_t cantidad_pokemon;
 	pokemon_t* vector_pokemones;
@@ -23,6 +24,32 @@ hospital_crear(){
 	return NULL;
 }
 
+entrenador_t*
+crear_entrenador(char* id, char* nombre) {
+	entrenador_t* nuevo_entrenador = malloc(sizeof(entrenador_t));
+	if (!nuevo_entrenador)
+		return NULL;
+
+	nuevo_entrenador -> id = atoi(id);
+	nuevo_entrenador -> nombre = malloc((strlen(nombre) + 1) * sizeof(char));
+	if (!nuevo_entrenador -> nombre) {
+		free(nuevo_entrenador);
+		return NULL;
+	}
+
+	strcpy(nuevo_entrenador -> nombre, nombre);
+	return nuevo_entrenador;
+}
+
+void
+free_entrenador(entrenador_t* entrenador) {
+	if (!entrenador)
+		return;
+
+	free(entrenador -> nombre);
+	free(entrenador);
+}
+
 bool
 hospital_guardar_informacion(hospital_t* hospital, char** lineas_archivo) {
 	if (!lineas_archivo)
@@ -33,14 +60,18 @@ hospital_guardar_informacion(hospital_t* hospital, char** lineas_archivo) {
 		char** informacion_lineas = parser_obtener_informacion_linea(lineas_archivo[i]);
 
 		// TODO: Okay, definitivamente esta aqui la fuga de memoria
-		entrenador_t* entrenador = malloc(sizeof(entrenador_t));
-		entrenador -> id = atoi(informacion_lineas[0]);
-		strcpy(entrenador -> nombre, informacion_lineas[1]);
+		entrenador_t* nuevo_entrenador = crear_entrenador(informacion_lineas[0], informacion_lineas[1]);
+		if (!nuevo_entrenador) {
+			free_vector_strings(informacion_lineas);
+			free(informacion_lineas);
+			return false;
+		}
+
+		printf("Entrenador: {%i, %s}\n", nuevo_entrenador -> id, nuevo_entrenador -> nombre);
 
 		free_vector_strings(informacion_lineas);
 		free(informacion_lineas);
-		free(entrenador -> nombre);
-		free(entrenador);
+		free_entrenador(nuevo_entrenador);
 	}
 
 	return true;
@@ -55,22 +86,11 @@ hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo){
 	if (!archivo)
 		return false;
 
-	buffer_t* buffer = buffer_leer(archivo);
-	if (!buffer)
-		return false;
-
-	char** lineas_archivo = parser_obtener_lineas_archivo(buffer);
-	if (!lineas_archivo) {
-		free(buffer);
-		return false;
+	while (!feof(archivo)) {
+		char buffer[MAX_LECTURA];
+		char* linea_leida = leer_linea(buffer, MAX_LECTURA, archivo);
+		printf("%s", linea_leida);
 	}
-
-	hospital_guardar_informacion(hospital, lineas_archivo);
-
-	free_vector_strings(lineas_archivo);
-	free(lineas_archivo);
-	free(buffer -> contenido);
-	free(buffer);
 
 	return false;
 }

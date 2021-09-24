@@ -7,11 +7,13 @@ typedef struct vector {
 } vector_t;
 
 vector_t* vector_crear() {
-	return calloc(sizeof(vector_t));
+	return calloc(1, sizeof(vector_t));
 }
 
-size_t vector_cantidad(vector* vector) {
-	if (vector) return vector->cantidad_elementos;
+size_t vector_cantidad(vector_t* vector) {
+	if (vector)
+		return vector->cantidad_elementos;
+	return 0;
 }
 
 vector_t* vector_agregar(vector_t* vector, void* elemento) {
