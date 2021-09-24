@@ -1,3 +1,3 @@
-2;Carlos;Poke1;LvlPoke1;Poke2;LvlPoke2
-4;Eduardo;Poke3;LvlPoke3
-6;Castillo;Poke4;LvlPoke4;Poke5;LvlPoke5;Poke6;LvlPoke6
+2;Carlos;Poke1;1;Poke2;2
+4;Eduardo;Poke3;3
+6;Castillo;Poke4;4;Poke5;5;Poke6;6

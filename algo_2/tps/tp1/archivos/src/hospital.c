@@ -1,30 +1,82 @@
+#include <stdio.h>
 #include <string.h>
 #include "hospital.h"
-#include "split.h"
 #include "parser.h"
 
-struct _hospital_pkm_t{
-	size_t cantidad_pokemon;
-	pokemon_t* vector_pokemones;
-};
-
-struct _pkm_t{
-	char* nombre;
-	size_t nivel;
-};
-
 typedef struct entrenador {
-	int id;
+	int   id;
 	char* nombre;
 } entrenador_t;
 
+struct _hospital_pkm_t{
+	size_t        cantidad_pokemon;
+	size_t        cantidad_entrenador;
+	pokemon_t*    vector_pokemones;
+	entrenador_t* vector_entrenadores;
+};
+
+struct _pkm_t{
+	char*  nombre;
+	size_t nivel;
+};
+
 hospital_t*
 hospital_crear(){
-	return NULL;
+	hospital_t* hospital = malloc(sizeof(hospital_t));
+	if (!hospital)
+		return NULL;
+
+	hospital -> cantidad_pokemon    = 0;
+	hospital -> cantidad_entrenador = 0;
+	hospital -> vector_pokemones    = NULL;
+	hospital -> vector_entrenadores = NULL;
+
+	return hospital;
+}
+
+pokemon_t*
+crear_pokemon(char* nivel, char* nombre) {
+	if (!nombre)
+		return NULL;
+
+	pokemon_t* nuevo_pokemon = malloc(sizeof(pokemon_t));
+	if (!nuevo_pokemon)
+		return NULL;
+
+	nuevo_pokemon -> nivel = (size_t)atoi(nivel);
+	nuevo_pokemon -> nombre = malloc((strlen(nombre) + 1) * sizeof(char));
+	if (!nuevo_pokemon -> nombre) {
+		free(nuevo_pokemon);
+		return NULL;
+	}
+
+	strcpy(nuevo_pokemon -> nombre, nombre);
+	return nuevo_pokemon;
+}
+
+void
+hospital_guardar_pokemon(hospital_t* hospital, pokemon_t* nuevo_pokemon) {
+	if (!hospital || !nuevo_pokemon)
+		return;
+
+	hospital -> vector_pokemones = realloc(hospital -> vector_pokemones, (hospital -> cantidad_pokemon + 1) * sizeof(pokemon_t));
+	hospital -> vector_pokemones[(hospital -> cantidad_pokemon)++] = *nuevo_pokemon;
+}
+
+void
+free_pokemon(pokemon_t* pokemon) {
+	if (!pokemon)
+		return;
+
+	free(pokemon -> nombre);
+	free(pokemon);
 }
 
 entrenador_t*
 crear_entrenador(char* id, char* nombre) {
+	if (!nombre)
+		return NULL;
+
 	entrenador_t* nuevo_entrenador = malloc(sizeof(entrenador_t));
 	if (!nuevo_entrenador)
 		return NULL;
@@ -41,6 +93,15 @@ crear_entrenador(char* id, char* nombre) {
 }
 
 void
+hospital_guardar_entrenador(hospital_t* hospital, entrenador_t* nuevo_entrenador) {
+	if (!hospital || !nuevo_entrenador)
+		return;
+
+	hospital -> vector_entrenadores = realloc(hospital -> vector_entrenadores, (hospital -> cantidad_entrenador + 1) * sizeof(entrenador_t));
+	hospital -> vector_entrenadores[(hospital -> cantidad_entrenador)++] = *nuevo_entrenador;
+}
+
+void
 free_entrenador(entrenador_t* entrenador) {
 	if (!entrenador)
 		return;
@@ -50,57 +111,74 @@ free_entrenador(entrenador_t* entrenador) {
 }
 
 bool
-hospital_guardar_informacion(hospital_t* hospital, char** lineas_archivo) {
-	if (!lineas_archivo)
+hospital_guardar_informacion(hospital_t* hospital, char* linea_archivo) {
+	if (!hospital || !linea_archivo)
 		return false;
 
-	size_t cantidad_registros = parser_obtener_cantidad_registros(lineas_archivo);
-	for (size_t i = 0; i < (cantidad_registros - 1); i++) {
-		char** informacion_lineas = parser_obtener_informacion_linea(lineas_archivo[i]);
+	char** informacion_linea = obtener_informacion_linea(linea_archivo);
+	if (!informacion_linea)
+		return false;
 
-		entrenador_t* nuevo_entrenador = crear_entrenador(informacion_lineas[0], informacion_lineas[1]);
-		if (!nuevo_entrenador) {
-			free_vector_strings(informacion_lineas);
-			free(informacion_lineas);
-			return false;
-		}
-
-		printf("Entrenador: {%i, %s}\n", nuevo_entrenador -> id, nuevo_entrenador -> nombre);
-
-		free_vector_strings(informacion_lineas);
-		free(informacion_lineas);
-		free_entrenador(nuevo_entrenador);
+	entrenador_t* nuevo_entrenador = crear_entrenador(informacion_linea[0], informacion_linea[1]);
+	if (!nuevo_entrenador) {
+		free(informacion_linea);
+		return false;
 	}
+
+	hospital_guardar_entrenador(hospital, nuevo_entrenador);
+
+	for (size_t i = 2; informacion_linea[i]; i += 2) {
+		pokemon_t* nuevo_pokemon = crear_pokemon(informacion_linea[i + 1], informacion_linea[i]);
+		// printf("Pokemon: {%s, %i}\n", nuevo_pokemon -> nombre, (int)(nuevo_pokemon -> nivel));
+		free_pokemon(nuevo_pokemon);
+	}
+
+	free_vector_strings(informacion_linea);
+	free(informacion_linea);
+	free(nuevo_entrenador);
 
 	return true;
 }
-
 bool
 hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo){
-	/* if (!hospital)
-		return false; */
+	if (!hospital)
+		return false;
 
 	FILE* archivo = fopen(nombre_archivo, "r");
 	if (!archivo)
 		return false;
 
-	while (!feof(archivo)) {
-		char buffer[MAX_LECTURA];
-		char* linea_leida = leer_linea(buffer, MAX_LECTURA, archivo);
-		printf("%s", linea_leida);
+	char* linea = leer_linea(archivo);
+	while (linea) {
+		printf("Linea: %s\n", linea);
+		hospital_guardar_informacion(hospital, linea);
+		free(linea);
+		linea = leer_linea(archivo);
 	}
 
-	return false;
+	size_t cantidad_entrenador = hospital_cantidad_entrenadores(hospital);
+	for (size_t i = 0; i < cantidad_entrenador; i++) {
+		printf("Entrenador: {%s}\n", hospital -> vector_entrenadores[i].nombre);
+	}
+
+	fclose(archivo);
+	return true;
 }
 
 size_t
 hospital_cantidad_pokemon(hospital_t* hospital){
-	return 0;
+	if (!hospital)
+		return 0;
+
+	return hospital -> cantidad_pokemon;
 }
 
 size_t
 hospital_cantidad_entrenadores(hospital_t* hospital){
-	return 0;
+	if (!hospital)
+		return 0;
+
+	return hospital -> cantidad_entrenador;
 }
 
 size_t
@@ -110,7 +188,16 @@ hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)){
 
 void
 hospital_destruir(hospital_t* hospital){
+	if (hospital -> vector_entrenadores) {
+		size_t cantidad_entrenador = hospital_cantidad_entrenadores(hospital);
+		for (size_t i = 0; i < cantidad_entrenador; i++)
+			free(hospital -> vector_entrenadores[i].nombre);
+		
+		free(hospital -> vector_entrenadores);
+	}
 
+	if (hospital)
+		free(hospital);
 }
 
 size_t

@@ -4,19 +4,37 @@
 #include "split.h"
 
 char*
-leer_linea(char* buffer, size_t longitud_buffer, FILE* archivo) {
-	char* linea_leida = fgets(buffer, (int)longitud_buffer, archivo);
-	if (!linea_leida)
+leer_linea(FILE* archivo) {
+	size_t caracteres_leidos = 0;
+	size_t max_caracteres = CANTIDAD_CARACTERES;
+	char* linea = malloc(max_caracteres * sizeof(char));
+	if (!linea)
 		return NULL;
 
-	size_t longitud_string = strlen(buffer);
-	if (longitud_string == 0 || buffer[longitud_string - 1] != '\n') {
-		char resto_string[MAX_LECTURA];
-		leer_linea(resto_string, MAX_LECTURA, archivo);
+	while (fgets(linea + caracteres_leidos, (int)max_caracteres - (int)caracteres_leidos, archivo)) {
+		size_t longitud_string = strlen(linea + caracteres_leidos);
+		if (longitud_string > 0 && *(linea + caracteres_leidos + longitud_string - 1) == '\n') {
+			*(linea + caracteres_leidos + longitud_string - 1) = 0;
+			return linea;
+		} else {
+			char* linea_aux = realloc(linea, max_caracteres * 2);
+			if (!linea_aux) {
+				free(linea);
+				return NULL;
+			}
+
+			linea = linea_aux;
+			max_caracteres *= 2;
+		}
+		caracteres_leidos += longitud_string;
 	}
 
-	buffer[longitud_string - 1] = 0;
-	return buffer;
+	if (!caracteres_leidos) {
+		free(linea);
+		return NULL;
+	}
+
+	return linea;
 }
 
 char**

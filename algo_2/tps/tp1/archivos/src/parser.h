@@ -3,9 +3,9 @@
 
 #include <stdio.h>
 
-#define MAX_LECTURA 1024
+#define CANTIDAD_CARACTERES 1024
 
-char* leer_linea(char* buffer, size_t longitud_buffer, FILE* archivo);
+char* leer_linea(FILE* archivo);
 
 char** obtener_informacion_linea(char* linea_archivo);
 
