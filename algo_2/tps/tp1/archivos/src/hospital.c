@@ -3,7 +3,6 @@
 #include "split.h"
 #include "parser.h"
 
-
 struct _hospital_pkm_t{
 	size_t cantidad_pokemon;
 	pokemon_t* vector_pokemones;
@@ -59,7 +58,6 @@ hospital_guardar_informacion(hospital_t* hospital, char** lineas_archivo) {
 	for (size_t i = 0; i < (cantidad_registros - 1); i++) {
 		char** informacion_lineas = parser_obtener_informacion_linea(lineas_archivo[i]);
 
-		// TODO: Okay, definitivamente esta aqui la fuga de memoria
 		entrenador_t* nuevo_entrenador = crear_entrenador(informacion_lineas[0], informacion_lineas[1]);
 		if (!nuevo_entrenador) {
 			free_vector_strings(informacion_lineas);
