@@ -137,7 +137,7 @@ int main(){
     puedoCrearYDestruirUnHospital();
 
     pa2m_nuevo_grupo("Pruebas con NULL");
-    dadoUnHospitalNULL_lasPuedoAplicarLasOperacionesDelHospitalSinProblema();
+    // dadoUnHospitalNULL_lasPuedoAplicarLasOperacionesDelHospitalSinProblema();
 
     pa2m_nuevo_grupo("Pruebas con un archivo vacío");
     dadoUnArchivoVacio_NoSeAgreganPokemonAlHospital();
