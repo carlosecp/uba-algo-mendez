@@ -199,6 +199,9 @@ hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)){
 
 void
 hospital_destruir(hospital_t* hospital){
+	if (!hospital)
+		return;
+
 	if (hospital -> vector_pokemones) {
 		size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
 		for (size_t i = 0; i < cantidad_pokemon; i++)
