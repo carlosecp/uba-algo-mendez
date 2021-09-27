@@ -22,16 +22,7 @@ struct _pkm_t {
 
 hospital_t*
 hospital_crear() {
-	hospital_t* hospital = malloc(sizeof(hospital_t));
-	if (!hospital)
-		return NULL;
-
-	hospital -> cantidad_pokemon    = 0;
-	hospital -> cantidad_entrenador = 0;
-	hospital -> vector_pokemones    = NULL;
-	hospital -> vector_entrenadores = NULL;
-
-	return hospital;
+	return calloc(1, sizeof(hospital_t));
 }
 
 pokemon_t*
@@ -168,20 +159,20 @@ hospital_cantidad_entrenadores(hospital_t* hospital){
 }
 
 void
-ordenar_pokemones(pokemon_t* vector_pokemones, size_t cantidad_pokemon) {
-	if (!vector_pokemones)
+ordenar_pokemones(pokemon_t** vector_pokemones, size_t cantidad_pokemon) {
+	if (!vector_pokemones || !cantidad_pokemon)
 		return;
 
 	for (size_t i = 0; i < (cantidad_pokemon - 1); i++) {
 		size_t indice_min = i;
 		for (size_t j = i + 1; j < cantidad_pokemon; j++) {
-			if (strcmp(vector_pokemones[j].nombre, vector_pokemones[indice_min].nombre) < 0)
+			if (strcmp((*vector_pokemones[j]).nombre, (*vector_pokemones[indice_min]).nombre) < 0)
 				indice_min = j;
 		}
 
-		pokemon_t temp = vector_pokemones[indice_min];
-		vector_pokemones[indice_min] = vector_pokemones[i];
-		vector_pokemones[i] = temp;
+		pokemon_t temp = *vector_pokemones[indice_min];
+		*vector_pokemones[indice_min] = *vector_pokemones[i];
+		*vector_pokemones[i] = temp;
 	}
 }
 
@@ -190,11 +181,19 @@ hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)){
 	if (!hospital || !funcion)
 		return 0;
 
-	ordenar_pokemones(hospital -> vector_pokemones, hospital_cantidad_pokemon(hospital));
+	size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
+	pokemon_t** pokemones_aux = malloc(cantidad_pokemon * sizeof(pokemon_t*));
+	if (!pokemones_aux)
+		return 0;
 
-	size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital), i = 0;
-	while ((i < cantidad_pokemon) && funcion(&(hospital -> vector_pokemones[i])))
-		i++;
+	for (size_t i = 0; i < cantidad_pokemon; i++)
+		pokemones_aux[i] = hospital -> vector_pokemones + i;
+
+	ordenar_pokemones(pokemones_aux, cantidad_pokemon);
+
+	size_t i = 0;
+	for (; (i < cantidad_pokemon) && funcion(pokemones_aux[i]); i++);
+	free(pokemones_aux);
 
 	return i;
 }
