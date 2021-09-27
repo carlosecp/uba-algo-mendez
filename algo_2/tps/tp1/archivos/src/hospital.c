@@ -59,7 +59,8 @@ hospital_guardar_pokemon(hospital_t* hospital, pokemon_t* nuevo_pokemon) {
 	if (!hospital || !nuevo_pokemon)
 		return;
 
-	hospital -> vector_pokemones = realloc(hospital -> vector_pokemones, (hospital -> cantidad_pokemon + 1) * sizeof(pokemon_t));
+	size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
+	hospital -> vector_pokemones = realloc(hospital -> vector_pokemones, (cantidad_pokemon + 1) * sizeof(pokemon_t));
 	hospital -> vector_pokemones[(hospital -> cantidad_pokemon)++] = *nuevo_pokemon;
 }
 
@@ -88,7 +89,8 @@ hospital_guardar_entrenador(hospital_t* hospital, entrenador_t* nuevo_entrenador
 	if (!hospital || !nuevo_entrenador)
 		return;
 
-	hospital -> vector_entrenadores = realloc(hospital -> vector_entrenadores, (hospital -> cantidad_entrenador + 1) * sizeof(entrenador_t));
+	size_t cantidad_entrenador = hospital_cantidad_entrenadores(hospital);
+	hospital -> vector_entrenadores = realloc(hospital -> vector_entrenadores, (cantidad_entrenador + 1) * sizeof(entrenador_t));
 	hospital -> vector_entrenadores[(hospital -> cantidad_entrenador)++] = *nuevo_entrenador;
 }
 
