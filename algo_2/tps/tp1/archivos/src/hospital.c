@@ -202,7 +202,7 @@ hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)){
 
 	free(pokemones_aux);
 
-	return i;
+	return i == cantidad_pokemon ? i : i + 1;
 }
 
 void
