@@ -25,6 +25,9 @@ hospital_crear() {
 	return calloc(1, sizeof(hospital_t));
 }
 
+/**
+  * 
+  */
 pokemon_t*
 crear_pokemon(char* nivel, char* nombre) {
 	if (!nombre)
@@ -45,16 +48,26 @@ crear_pokemon(char* nivel, char* nombre) {
 	return nuevo_pokemon;
 }
 
+/**
+  *
+  */
 void
 hospital_guardar_pokemon(hospital_t* hospital, pokemon_t* nuevo_pokemon) {
 	if (!hospital || !nuevo_pokemon)
 		return;
 
-	size_t cantidad_pokemon      = hospital_cantidad_pokemon(hospital);
-	hospital -> vector_pokemones = realloc(hospital -> vector_pokemones, (cantidad_pokemon + 1) * sizeof(pokemon_t));
+	size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
+	pokemon_t* vector_pokemones_aux = realloc(hospital -> vector_pokemones, (cantidad_pokemon + 1) * sizeof(pokemon_t));
+	if (!vector_pokemones_aux)
+		return;
+
+	hospital -> vector_pokemones = vector_pokemones_aux;
 	hospital -> vector_pokemones[(hospital -> cantidad_pokemon)++] = *nuevo_pokemon;
 }
 
+/**
+  *
+  */
 entrenador_t*
 crear_entrenador(char* id, char* nombre) {
 	if (!nombre)
@@ -75,16 +88,26 @@ crear_entrenador(char* id, char* nombre) {
 	return nuevo_entrenador;
 }
 
+/**
+  *
+  */
 void
 hospital_guardar_entrenador(hospital_t* hospital, entrenador_t* nuevo_entrenador) {
 	if (!hospital || !nuevo_entrenador)
 		return;
 
 	size_t cantidad_entrenador = hospital_cantidad_entrenadores(hospital);
-	hospital -> vector_entrenadores = realloc(hospital -> vector_entrenadores, (cantidad_entrenador + 1) * sizeof(entrenador_t));
+	entrenador_t* vector_entrenadores_aux = realloc(hospital -> vector_entrenadores, (cantidad_entrenador + 1) * sizeof(entrenador_t));
+	if (!vector_entrenadores_aux)
+		return;
+
+	hospital -> vector_entrenadores = vector_entrenadores_aux;
 	hospital -> vector_entrenadores[(hospital -> cantidad_entrenador)++] = *nuevo_entrenador;
 }
 
+/**
+  *
+  */
 bool
 hospital_guardar_informacion(hospital_t* hospital, char* linea_archivo) {
 	if (!hospital || !linea_archivo)
@@ -157,28 +180,25 @@ hospital_cantidad_entrenadores(hospital_t* hospital){
 	return hospital -> cantidad_entrenador;
 }
 
-size_t
-encontrar_primer_pokemon(pokemon_t** vector_pokemones, size_t cantidad_pokemon) {
-	size_t minimo = 0;
-	for (size_t i = 0; i < cantidad_pokemon; i++) {
-		if (strcmp((*vector_pokemones[i]).nombre, (*vector_pokemones[minimo]).nombre) < 0)
-			minimo = i;
-	}
-
-	return minimo;
-}
-
+/**
+  *
+  */
 void
-ordenar_pokemones(pokemon_t** vector_pokemones, size_t cantidad_pokemon) {
+ordenar_pokemones(pokemon_t* vector_pokemones, size_t cantidad_pokemon) {
 	if (!vector_pokemones || !cantidad_pokemon)
 		return;
 
-	size_t minimo = encontrar_primer_pokemon(vector_pokemones, cantidad_pokemon);
-	pokemon_t* temp = vector_pokemones[minimo];
-	vector_pokemones[minimo] = vector_pokemones[0];
-	vector_pokemones[0] = temp;
+	for (size_t i = 0; i < (cantidad_pokemon - 1); i++) {
+		size_t indice_min = i;
+		for (size_t j = i + 1; j < cantidad_pokemon; j++) {
+			if (strcmp(vector_pokemones[j].nombre, vector_pokemones[indice_min].nombre) < 0)
+				indice_min = j;
+		}
 
-	ordenar_pokemones(vector_pokemones + 1, cantidad_pokemon - 1);
+		pokemon_t temp = vector_pokemones[indice_min];
+		vector_pokemones[indice_min] = vector_pokemones[i];
+		vector_pokemones[i] = temp;
+	}
 }
 
 size_t
@@ -187,22 +207,13 @@ hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)){
 		return 0;
 
 	size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
+	ordenar_pokemones(hospital -> vector_pokemones, cantidad_pokemon);
 
-	pokemon_t** pokemones_aux = malloc(cantidad_pokemon * sizeof(pokemon_t*));
-	if (!pokemones_aux)
-		return 0;
+	size_t recorridos = 0;
+	while ((recorridos < cantidad_pokemon) && funcion(&(hospital -> vector_pokemones[recorridos])))
+		recorridos++;
 
-	for (size_t i = 0; i < cantidad_pokemon; i++)
-		pokemones_aux[i] = &(hospital -> vector_pokemones[i]);
-
-	ordenar_pokemones(pokemones_aux, cantidad_pokemon);
-
-	size_t i = 0;
-	while ((i < cantidad_pokemon) && funcion(pokemones_aux[i])) i++;
-
-	free(pokemones_aux);
-
-	return i == cantidad_pokemon ? i : i + 1;
+	return recorridos == cantidad_pokemon ? recorridos : recorridos + 1;
 }
 
 void
