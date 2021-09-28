@@ -34,7 +34,7 @@ crear_pokemon(char* nivel, char* nombre) {
 	if (!nuevo_pokemon)
 		return NULL;
 
-	nuevo_pokemon -> nivel = (size_t)atoi(nivel);
+	nuevo_pokemon -> nivel  = (size_t)atoi(nivel);
 	nuevo_pokemon -> nombre = malloc((strlen(nombre) + 1) * sizeof(char));
 	if (!nuevo_pokemon -> nombre) {
 		free(nuevo_pokemon);
@@ -50,7 +50,7 @@ hospital_guardar_pokemon(hospital_t* hospital, pokemon_t* nuevo_pokemon) {
 	if (!hospital || !nuevo_pokemon)
 		return;
 
-	size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
+	size_t cantidad_pokemon      = hospital_cantidad_pokemon(hospital);
 	hospital -> vector_pokemones = realloc(hospital -> vector_pokemones, (cantidad_pokemon + 1) * sizeof(pokemon_t));
 	hospital -> vector_pokemones[(hospital -> cantidad_pokemon)++] = *nuevo_pokemon;
 }
@@ -127,9 +127,8 @@ hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo){
 		return false;
 
 	FILE* archivo = fopen(nombre_archivo, "r");
-	if (!archivo) {
+	if (!archivo)
 		return false;
-	}
 
 	char* linea = leer_linea(archivo);
 	while (linea) {
@@ -158,22 +157,28 @@ hospital_cantidad_entrenadores(hospital_t* hospital){
 	return hospital -> cantidad_entrenador;
 }
 
+size_t
+encontrar_primer_pokemon(pokemon_t** vector_pokemones, size_t cantidad_pokemon) {
+	size_t minimo = 0;
+	for (size_t i = 0; i < cantidad_pokemon; i++) {
+		if (strcmp((*vector_pokemones[i]).nombre, (*vector_pokemones[minimo]).nombre) < 0)
+			minimo = i;
+	}
+
+	return minimo;
+}
+
 void
 ordenar_pokemones(pokemon_t** vector_pokemones, size_t cantidad_pokemon) {
 	if (!vector_pokemones || !cantidad_pokemon)
 		return;
 
-	for (size_t i = 0; i < (cantidad_pokemon - 1); i++) {
-		size_t indice_min = i;
-		for (size_t j = i + 1; j < cantidad_pokemon; j++) {
-			if (strcmp((*vector_pokemones[j]).nombre, (*vector_pokemones[indice_min]).nombre) < 0)
-				indice_min = j;
-		}
+	size_t minimo = encontrar_primer_pokemon(vector_pokemones, cantidad_pokemon);
+	pokemon_t* temp = vector_pokemones[minimo];
+	vector_pokemones[minimo] = vector_pokemones[0];
+	vector_pokemones[0] = temp;
 
-		pokemon_t temp = *vector_pokemones[indice_min];
-		*vector_pokemones[indice_min] = *vector_pokemones[i];
-		*vector_pokemones[i] = temp;
-	}
+	ordenar_pokemones(vector_pokemones + 1, cantidad_pokemon - 1);
 }
 
 size_t
@@ -182,17 +187,19 @@ hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)){
 		return 0;
 
 	size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
+
 	pokemon_t** pokemones_aux = malloc(cantidad_pokemon * sizeof(pokemon_t*));
 	if (!pokemones_aux)
 		return 0;
 
 	for (size_t i = 0; i < cantidad_pokemon; i++)
-		pokemones_aux[i] = hospital -> vector_pokemones + i;
+		pokemones_aux[i] = &(hospital -> vector_pokemones[i]);
 
 	ordenar_pokemones(pokemones_aux, cantidad_pokemon);
 
 	size_t i = 0;
-	for (; (i < cantidad_pokemon) && funcion(pokemones_aux[i]); i++);
+	while ((i < cantidad_pokemon) && funcion(pokemones_aux[i])) i++;
+
 	free(pokemones_aux);
 
 	return i;
@@ -227,7 +234,6 @@ size_t
 pokemon_nivel(pokemon_t* pokemon){
 	if (!pokemon)
 		return 0;
-	
 	return pokemon -> nivel;
 }
 
@@ -235,6 +241,5 @@ const char*
 pokemon_nombre(pokemon_t* pokemon){
 	if (!pokemon)
 		return NULL;
-
 	return pokemon -> nombre;
 }
