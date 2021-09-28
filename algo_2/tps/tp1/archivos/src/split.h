@@ -29,4 +29,9 @@
  */
 char** split(const char* string, char separador);
 
+/**
+  * Recibe un vector de strings y libera la memoria utilizada por las strings que contiene.
+  */
+void free_vector_strings(char** vector_strings);
+
 #endif // SPLIT_H_

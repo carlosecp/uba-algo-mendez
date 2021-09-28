@@ -63,3 +63,12 @@ split(const char* string, char separador){
 
 	return vector_strings;
 }
+
+void
+free_vector_strings(char** vector_strings) {
+	while (*vector_strings) {
+		free(*vector_strings);
+		vector_strings++;
+	}
+}
+

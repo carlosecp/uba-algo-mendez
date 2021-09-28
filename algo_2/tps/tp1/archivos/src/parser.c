@@ -5,6 +5,9 @@
 
 char*
 leer_linea(FILE* archivo) {
+	if (!archivo)
+		return NULL;
+
 	size_t caracteres_leidos = 0;
 	size_t max_caracteres = CANTIDAD_CARACTERES;
 	char* linea = malloc(max_caracteres * sizeof(char));
@@ -44,13 +47,5 @@ obtener_informacion_linea(char* linea_archivo) {
 		return NULL;
 
 	return informacion_linea;
-}
-
-void
-free_vector_strings(char** vector_strings) {
-	while (*vector_strings) {
-		free(*vector_strings);
-		vector_strings++;
-	}
 }
 
