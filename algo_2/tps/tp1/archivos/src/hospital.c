@@ -229,11 +229,10 @@ hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)){
 	ordenar_referencia_a_pokemones(referencias_pokemones, cantidad_pokemon);
 
 	size_t recorridos = 0;
-	while ((recorridos < cantidad_pokemon) && funcion(referencias_pokemones[recorridos]))
-		recorridos++;
+	while ((recorridos < cantidad_pokemon) && funcion(referencias_pokemones[recorridos++]));
 
 	free(referencias_pokemones);
-	return recorridos == cantidad_pokemon ? recorridos : recorridos + 1;
+	return recorridos;
 }
 
 void
