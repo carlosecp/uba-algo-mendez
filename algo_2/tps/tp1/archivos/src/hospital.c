@@ -23,7 +23,8 @@ struct _pkm_t {
 };
 
 hospital_t*
-hospital_crear() {
+hospital_crear()
+{
 	return calloc(1, sizeof(hospital_t));
 }
 
@@ -32,7 +33,8 @@ hospital_crear() {
   * En caso de error devuelve NULL. Caso contrario, un puntero al nuevo pokemon creado.
   */
 pokemon_t*
-crear_pokemon(char* nivel, char* nombre) {
+crear_pokemon(char* nivel, char* nombre)
+{
 	if (!nombre)
 		return NULL;
 
@@ -56,7 +58,8 @@ crear_pokemon(char* nivel, char* nombre) {
   * En caso de error no agrega el pokemon dado al hospital.
   */
 void
-hospital_guardar_pokemon(hospital_t* hospital, pokemon_t* nuevo_pokemon) {
+hospital_guardar_pokemon(hospital_t* hospital, pokemon_t* nuevo_pokemon)
+{
 	if (!hospital || !nuevo_pokemon)
 		return;
 
@@ -74,7 +77,8 @@ hospital_guardar_pokemon(hospital_t* hospital, pokemon_t* nuevo_pokemon) {
   * En caso de error devuelve NULL. Caso contrario, un puntero al nuevo entrenador creado.
   */
 entrenador_t*
-crear_entrenador(char* id, char* nombre) {
+crear_entrenador(char* id, char* nombre)
+{
 	if (!nombre)
 		return NULL;
 
@@ -98,7 +102,8 @@ crear_entrenador(char* id, char* nombre) {
   * En caso de error no agrega el pokemon dado al hospital.
   */
 void
-hospital_guardar_entrenador(hospital_t* hospital, entrenador_t* nuevo_entrenador) {
+hospital_guardar_entrenador(hospital_t* hospital, entrenador_t* nuevo_entrenador)
+{
 	if (!hospital || !nuevo_entrenador)
 		return;
 
@@ -118,7 +123,8 @@ hospital_guardar_entrenador(hospital_t* hospital, entrenador_t* nuevo_entrenador
  * Devuelve true si pudo guardarlo o false en caso de error.
   */
 bool
-hospital_guardar_informacion(hospital_t* hospital, char* linea_archivo) {
+hospital_guardar_informacion(hospital_t* hospital, char* linea_archivo)
+{
 	if (!hospital || !linea_archivo)
 		return false;
 
@@ -154,7 +160,8 @@ hospital_guardar_informacion(hospital_t* hospital, char* linea_archivo) {
 }
 
 bool
-hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo){
+hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo)
+{
 	if (!hospital)
 		return false;
 
@@ -176,14 +183,16 @@ hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo){
 }
 
 size_t
-hospital_cantidad_pokemon(hospital_t* hospital){
+hospital_cantidad_pokemon(hospital_t* hospital)
+{
 	if (!hospital)
 		return 0;
 	return hospital -> cantidad_pokemon;
 }
 
 size_t
-hospital_cantidad_entrenadores(hospital_t* hospital){
+hospital_cantidad_entrenadores(hospital_t* hospital)
+{
 	if (!hospital)
 		return 0;
 	return hospital -> cantidad_entrenador;
@@ -199,7 +208,8 @@ hospital_cantidad_entrenadores(hospital_t* hospital){
   * de pokemones actual.
   */
 void
-ordenar_referencia_a_pokemones(pokemon_t** referencias_pokemones, size_t cantidad_pokemon) {
+ordenar_referencia_a_pokemones(pokemon_t** referencias_pokemones, size_t cantidad_pokemon)
+{
 	if (!referencias_pokemones || !cantidad_pokemon)
 		return;
 
@@ -217,7 +227,8 @@ ordenar_referencia_a_pokemones(pokemon_t** referencias_pokemones, size_t cantida
 }
 
 size_t
-hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)){
+hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p))
+{
 	if (!hospital || !funcion)
 		return 0;
 
@@ -236,7 +247,8 @@ hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)){
 }
 
 void
-hospital_destruir(hospital_t* hospital){
+hospital_destruir(hospital_t* hospital)
+{
 	if (!hospital)
 		return;
 
@@ -261,14 +273,16 @@ hospital_destruir(hospital_t* hospital){
 }
 
 size_t
-pokemon_nivel(pokemon_t* pokemon){
+pokemon_nivel(pokemon_t* pokemon)
+{
 	if (!pokemon)
 		return 0;
 	return pokemon -> nivel;
 }
 
 const char*
-pokemon_nombre(pokemon_t* pokemon){
+pokemon_nombre(pokemon_t* pokemon)
+{
 	if (!pokemon)
 		return NULL;
 	return pokemon -> nombre;

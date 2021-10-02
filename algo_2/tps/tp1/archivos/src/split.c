@@ -3,9 +3,11 @@
 #include "parser.h"
 
 size_t
-contar_substrings(const char* string, char separador) {
+contar_substrings(const char* string, char separador)
+{
 	if (*string == 0) 
 		return 1;
+
 	if (*string == separador)
 		return 1 + contar_substrings(string + 1, separador);
 
@@ -13,7 +15,8 @@ contar_substrings(const char* string, char separador) {
 }
 
 size_t
-contar_longitud_substring(const char* string, char separador) {
+contar_longitud_substring(const char* string, char separador)
+{
 	size_t i = 0;
 
 	while (string[i] != 0 && string[i] != separador)
@@ -23,7 +26,8 @@ contar_longitud_substring(const char* string, char separador) {
 }
 
 char*
-duplicar_string(const char* string, size_t longitud_string) {
+duplicar_string(const char* string, size_t longitud_string)
+{
 	char* substring = malloc((longitud_string + 1) * sizeof(char));
 	if (!substring)
 		return NULL;
@@ -36,7 +40,8 @@ duplicar_string(const char* string, size_t longitud_string) {
 }
 
 char**
-split(const char* string, char separador){
+split(const char* string, char separador)
+{
 	if (!string)
 		return NULL;
 
@@ -49,6 +54,7 @@ split(const char* string, char separador){
 	for (size_t i = 0; i < cantidad_substrings; i++) {
 		size_t longitud_substring = contar_longitud_substring(string, separador);
 		char* substring = duplicar_string(string, longitud_substring);
+
 		if (!substring) {
 			free_vector_strings(vector_strings);
 			free(vector_strings);
@@ -65,7 +71,8 @@ split(const char* string, char separador){
 }
 
 void
-free_vector_strings(char** vector_strings) {
+free_vector_strings(char** vector_strings)
+{
 	while (*vector_strings) {
 		free(*vector_strings);
 		vector_strings++;

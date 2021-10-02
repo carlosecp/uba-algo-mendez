@@ -4,7 +4,8 @@
 #include "split.h"
 
 char*
-leer_linea(FILE* archivo) {
+leer_linea(FILE* archivo)
+{
 	if (!archivo)
 		return NULL;
 
@@ -41,7 +42,8 @@ leer_linea(FILE* archivo) {
 }
 
 char**
-obtener_informacion_linea(char* linea_archivo) {
+obtener_informacion_linea(char* linea_archivo)
+{
 	char** informacion_linea = split(linea_archivo, ';');
 	if (!informacion_linea)
 		return NULL;
