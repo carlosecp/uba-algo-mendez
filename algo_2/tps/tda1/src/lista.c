@@ -2,12 +2,16 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-lista_t* lista_crear(){
-    return NULL;
+lista_t*
+lista_crear()
+{
+    return calloc(1, sizeof(lista_t));
 }
 
-lista_t* lista_insertar(lista_t* lista, void* elemento){
-    return NULL;
+lista_t*
+lista_insertar(lista_t* lista, void* elemento)
+{
+    return lista;
 }
 
 lista_t* lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
@@ -43,6 +47,7 @@ size_t lista_tamanio(lista_t* lista){
 }
 
 void lista_destruir(lista_t* lista){
+    free(lista);
 }
 
 lista_iterador_t* lista_iterador_crear(lista_t* lista){

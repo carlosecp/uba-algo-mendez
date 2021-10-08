@@ -1,16 +1,8 @@
 #include "pila.h"
 #include "lista.h"
 
-pila_t*
-pila_crear()
-{
-	pila_t* cola = (pila_t*)malloc(sizeof(lista_t));
-	if (!cola)
-		return NULL;
-
-	((lista_t*)cola) -> cantidad = 0;
-
-    return cola;
+pila_t* pila_crear(){
+    return NULL;
 }
 
 pila_t* pila_apilar(pila_t* pila, void* elemento){
