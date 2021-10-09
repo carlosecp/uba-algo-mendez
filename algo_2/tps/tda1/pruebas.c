@@ -191,6 +191,24 @@ dadaUnaListaCon10Elementos_alInsertarUnElementoEnLaPosicion5_seAgregaExitosament
 /* Lista: Eliminacion */
 
 void
+dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElElemento()
+{
+	lista_t* lista = lista_crear();
+
+	char a = 'a', b = 'b', c = 'c';
+	lista = lista_insertar(lista, &a);
+	lista = lista_insertar(lista, &b);
+	lista = lista_insertar(lista, &c);
+
+	pa2m_afirmar(*(char*)lista_quitar(lista) == c,
+		"Quitar elemento devuelve el elemento");
+	pa2m_afirmar(*(char*)lista_ultimo(lista) == b,
+		"El nuevo elemento final es el que era el penultimo");
+
+	lista_destruir(lista);
+}
+
+void
 dadaUnaListaNULL_alIntentarQuitalUnElemento_devuelveNULL()
 {
 	lista_t* lista = NULL;
@@ -213,22 +231,6 @@ dadaUnaListaVacia_alIntentarQuitalUnElemento_devuelveNULL()
 }
 
 void
-dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElElemento()
-{
-	lista_t* lista = lista_crear();
-
-	double elemento = 3.14159;
-	lista = lista_insertar(lista, NULL);
-	lista = lista_insertar(lista, NULL);
-	lista = lista_insertar(lista, &elemento);
-
-	pa2m_afirmar(*(double*)lista_quitar(lista) == elemento,
-		"Quitar elemento devuelve el elemento");
-
-	lista_destruir(lista);
-}
-
-void
 dadaUnaListaCon1Elemento_alQuitarElElemento_elNodoInicialYFinalApuntanANULL()
 {
 	lista_t* lista = lista_crear();
@@ -238,9 +240,9 @@ dadaUnaListaCon1Elemento_alQuitarElElemento_elNodoInicialYFinalApuntanANULL()
 	lista_quitar(lista);
 
 	pa2m_afirmar(lista_primero(lista) == NULL,
-		"Para lista con 1 elemento, al quitar el elemento nodo inicial apunta a NULL");
+		"Para lista con 1 elemento, al quitar el elemento, el nodo inicial apunta a NULL");
 	pa2m_afirmar(lista_ultimo(lista) == NULL,
-		"Para lista con 1 elemento, al quitar el elemento nodo final apunta a NULL");
+		"Para lista con 1 elemento, al quitar el elemento, el nodo final apunta a NULL");
 
 	lista_destruir(lista);
 }
@@ -250,21 +252,47 @@ dadaUnaListaCon5Elementos_alQuitarLos2UltimosElementosExitosamente_laListaQuedaC
 {
 	lista_t* lista = lista_crear();
 
-	lista = lista_insertar(lista, NULL);
-	lista = lista_insertar(lista, NULL);
-	lista = lista_insertar(lista, NULL);
-	lista = lista_insertar(lista, NULL);
-	lista = lista_insertar(lista, NULL);
+	char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
+	lista = lista_insertar(lista, &a);
+	lista = lista_insertar(lista, &b);
+	lista = lista_insertar(lista, &c);
+	lista = lista_insertar(lista, &d);
+	lista = lista_insertar(lista, &e);
 	lista_quitar(lista);
 	lista_quitar(lista);
 
 	pa2m_afirmar(lista_tamanio(lista) == 3,
 		"Para lista con 5 elementos, al quitar los 2 ultimos elementos el tamanio es 3");
+	pa2m_afirmar(*(char*)lista_ultimo(lista) == c,
+		"Para lista con 5 elementos, al quitar los 2 ultimos elementos el elemento final es el que era el tercero");
+
+	lista_destruir(lista);
+}
+
+void
+dadaUnaListaCon5Elementos_alQuitarLos5UltimosElementosExitosamente_laListaQuedaVacia()
+{
+	lista_t* lista = lista_crear();
+
+	lista = lista_insertar(lista, NULL);
+	lista = lista_insertar(lista, NULL);
+	lista_quitar(lista);
+
+	pa2m_afirmar(lista_tamanio(lista) == 1,
+		"Al quitar todos los elementos de la lista queda vacia");
 
 	lista_destruir(lista);
 }
 
 /* Lista: Eliminacion en Posicion Especifica */
+
+void
+dadaUnaListaCon5Elementos_alQuitarUnElementoEnLaPosicion3Exitosamente_devuelveElElemento()
+{
+	lista_t* lista = lista_crear();
+
+	lista_destruir(lista);
+}
 
 /* Lista: Acceso Elementos */
 
@@ -338,11 +366,12 @@ main()
 	dadaUnaListaCon10Elementos_alInsertarUnElementoEnLaPosicion5_seAgregaExitosamente();
 
 	pa2m_nuevo_grupo("Lista: Eliminacion");
+	// dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElElemento();
 	dadaUnaListaNULL_alIntentarQuitalUnElemento_devuelveNULL();
 	dadaUnaListaVacia_alIntentarQuitalUnElemento_devuelveNULL();
-	dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElElemento();
 	dadaUnaListaCon1Elemento_alQuitarElElemento_elNodoInicialYFinalApuntanANULL();
 	dadaUnaListaCon5Elementos_alQuitarLos2UltimosElementosExitosamente_laListaQuedaConTamanio3();
+	// dadaUnaListaCon5Elementos_alQuitarLos5UltimosElementosExitosamente_laListaQuedaVacia();
 
 	pa2m_nuevo_grupo("Lista: Eliminacion en Posicion Especifica");
 
