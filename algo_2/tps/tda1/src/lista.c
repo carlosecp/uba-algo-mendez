@@ -14,6 +14,16 @@ lista_insertar(lista_t* lista, void* elemento)
     if (!lista)
         return NULL;
 
+    nodo_t* nodo = calloc(1, sizeof(nodo_t));
+    if (!nodo)
+        return lista;
+
+    nodo -> elemento = elemento;
+
+    if (!lista -> nodo_inicio)
+        lista -> nodo_inicio = nodo;
+    
+    lista -> nodo_fin = nodo;
     lista -> cantidad++;
 
     return lista;
@@ -46,13 +56,19 @@ lista_elemento_en_posicion(lista_t* lista, size_t posicion)
 void*
 lista_primero(lista_t* lista)
 {
-    return NULL;
+    if (!lista || !(lista -> nodo_inicio))
+        return NULL;
+
+    return lista -> nodo_inicio -> elemento;
 }
 
 void*
 lista_ultimo(lista_t* lista)
 {
-    return NULL;
+    if (!lista || !(lista -> nodo_fin))
+        return NULL;
+
+    return lista -> nodo_fin -> elemento;
 }
 
 bool
@@ -64,7 +80,10 @@ lista_vacia(lista_t* lista)
 size_t
 lista_tamanio(lista_t* lista)
 {
-    return 0;
+    if (!lista)
+        return 0;
+
+    return lista -> cantidad;
 }
 
 void
