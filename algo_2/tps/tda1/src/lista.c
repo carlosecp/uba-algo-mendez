@@ -2,6 +2,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include <stdio.h>
+
 lista_t*
 lista_crear()
 {
@@ -20,10 +22,13 @@ lista_insertar(lista_t* lista, void* elemento)
 
     nodo -> elemento = elemento;
 
-    if (!lista -> nodo_inicio)
-        lista -> nodo_inicio = nodo;
+    if (!(lista -> nodo_inicio))
+        lista -> nodo_inicio = lista -> nodo_fin = nodo;
+    else {
+        lista -> nodo_fin -> siguiente = nodo;
+        lista -> nodo_fin = nodo;
+    }
     
-    lista -> nodo_fin = nodo;
     lista -> cantidad++;
 
     return lista;
@@ -74,7 +79,10 @@ lista_ultimo(lista_t* lista)
 bool
 lista_vacia(lista_t* lista)
 {
-    return false;
+    if (!lista)
+        return true;
+
+    return lista_tamanio(lista) == 0;
 }
 
 size_t
@@ -89,6 +97,15 @@ lista_tamanio(lista_t* lista)
 void
 lista_destruir(lista_t* lista)
 {
+    if (!lista)
+        return;
+
+    while (lista -> nodo_inicio) {
+        nodo_t* nodo_actual = lista -> nodo_inicio;
+        lista -> nodo_inicio = nodo_actual -> siguiente;
+        free(nodo_actual);
+    }
+
     free(lista);
 }
 
