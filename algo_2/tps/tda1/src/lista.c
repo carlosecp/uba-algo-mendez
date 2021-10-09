@@ -16,17 +16,17 @@ lista_insertar(lista_t* lista, void* elemento)
     if (!lista)
         return NULL;
 
-    nodo_t* nodo = calloc(1, sizeof(nodo_t));
-    if (!nodo)
+    nodo_t* nuevo_nodo = calloc(1, sizeof(nodo_t));
+    if (!nuevo_nodo)
         return lista;
 
-    nodo -> elemento = elemento;
+    nuevo_nodo -> elemento = elemento;
 
     if (!(lista -> nodo_inicio))
-        lista -> nodo_inicio = lista -> nodo_fin = nodo;
+        lista -> nodo_inicio = lista -> nodo_fin = nuevo_nodo;
     else {
-        lista -> nodo_fin -> siguiente = nodo;
-        lista -> nodo_fin = nodo;
+        lista -> nodo_fin -> siguiente = nuevo_nodo;
+        lista -> nodo_fin = nuevo_nodo;
     }
     
     lista -> cantidad++;
@@ -37,13 +37,60 @@ lista_insertar(lista_t* lista, void* elemento)
 lista_t*
 lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion)
 {
+    if (!lista)
+        return NULL;
+
+    nodo_t* nuevo_nodo = calloc(1, sizeof(nodo_t));
+    if (!nuevo_nodo)
+        return NULL;
+
+    nuevo_nodo -> elemento = elemento;
+
+    if (posicion == 0) {
+        nuevo_nodo -> siguiente = lista -> nodo_inicio;
+        lista -> nodo_inicio = nuevo_nodo;
+    }
+    else if (posicion >= lista_tamanio(lista)) {
+        lista -> nodo_fin -> siguiente = nuevo_nodo;
+        lista -> nodo_fin = nuevo_nodo;
+    }
+    else {
+        nodo_t* nodo_anterior_a_posicion = lista -> nodo_inicio;
+        for (size_t i = 0; i < (posicion - 1); i++)
+            nodo_anterior_a_posicion = nodo_anterior_a_posicion -> siguiente;
+
+        nuevo_nodo -> siguiente = nodo_anterior_a_posicion -> siguiente;
+        nodo_anterior_a_posicion -> siguiente = nuevo_nodo;
+    }
+
+    lista -> cantidad++;
     return lista;
 }
 
 void*
 lista_quitar(lista_t* lista)
 {
-    return NULL;
+    if (!lista || !lista_tamanio(lista))
+        return NULL;
+
+    void* elemento_quitado =
+        lista_elemento_en_posicion(lista, (lista_tamanio(lista) - 1));
+
+    if (lista_tamanio(lista) == 1) {
+        free(lista -> nodo_inicio);
+        lista -> nodo_inicio = lista -> nodo_fin = NULL;
+    }
+    else {
+        nodo_t* nodo_anterior_al_ultimo = lista -> nodo_inicio;
+        while (nodo_anterior_al_ultimo -> siguiente)
+            nodo_anterior_al_ultimo = nodo_anterior_al_ultimo -> siguiente;
+        
+        free(nodo_anterior_al_ultimo -> siguiente);
+        nodo_anterior_al_ultimo -> siguiente = NULL;
+    }
+
+    lista -> cantidad--;
+    return elemento_quitado;
 }
 
 void*
@@ -55,7 +102,24 @@ lista_quitar_de_posicion(lista_t* lista, size_t posicion)
 void*
 lista_elemento_en_posicion(lista_t* lista, size_t posicion)
 {
-    return NULL;
+    if (!lista || posicion >= lista_tamanio(lista))
+        return NULL;
+
+    if (posicion == 0)
+        return lista_primero(lista);
+
+    if (posicion == (lista_tamanio(lista) - 1))
+        return lista_ultimo(lista);
+
+    nodo_t* nodo_actual = lista -> nodo_inicio;
+    size_t i = 0;
+
+    while (i < posicion && nodo_actual) {
+        nodo_actual = nodo_actual -> siguiente;
+        i++;
+    }
+
+    return nodo_actual -> elemento;
 }
 
 void*
