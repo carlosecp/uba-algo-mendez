@@ -111,15 +111,11 @@ lista_elemento_en_posicion(lista_t* lista, size_t posicion)
     if (posicion == (lista_tamanio(lista) - 1))
         return lista_ultimo(lista);
 
-    nodo_t* nodo_actual = lista -> nodo_inicio;
-    size_t i = 0;
+    nodo_t* nodo_en_posicion = lista -> nodo_inicio;
+    for (size_t i = 0; (i < posicion) && nodo_en_posicion; i++)
+        nodo_en_posicion = nodo_en_posicion -> siguiente;
 
-    while (i < posicion && nodo_actual) {
-        nodo_actual = nodo_actual -> siguiente;
-        i++;
-    }
-
-    return nodo_actual -> elemento;
+    return nodo_en_posicion -> elemento;
 }
 
 void*
