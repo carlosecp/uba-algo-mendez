@@ -203,7 +203,7 @@ dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElEl
 	pa2m_afirmar(*(char*)lista_quitar(lista) == c,
 		"Quitar elemento devuelve el elemento");
 	pa2m_afirmar(*(char*)lista_ultimo(lista) == b,
-		"El nuevo elemento final es el que era el penultimo");
+		"Al quitar un elemento, el nuevo elemento final es el que era el penultimo");
 
 	lista_destruir(lista);
 }
@@ -276,9 +276,16 @@ dadaUnaListaCon5Elementos_alQuitarLos5UltimosElementosExitosamente_laListaQuedaV
 
 	lista = lista_insertar(lista, NULL);
 	lista = lista_insertar(lista, NULL);
+	lista = lista_insertar(lista, NULL);
+	lista = lista_insertar(lista, NULL);
+	lista = lista_insertar(lista, NULL);
+	lista_quitar(lista);
+	lista_quitar(lista);
+	lista_quitar(lista);
+	lista_quitar(lista);
 	lista_quitar(lista);
 
-	pa2m_afirmar(lista_tamanio(lista) == 1,
+	pa2m_afirmar(lista_vacia(lista),
 		"Al quitar todos los elementos de la lista queda vacia");
 
 	lista_destruir(lista);
@@ -345,6 +352,57 @@ dadaUnaListaCon3Elementos_alAccederAlElementoEnLaPosicion1_devuelveElElemento()
 	lista_destruir(lista);
 }
 
+/* Lista: Mixtos */
+
+void
+dadaUnaLista_sePuedenAplicarMultiplesOperacionesExitosamente()
+{
+	lista_t* lista = lista_crear();
+
+	pa2m_afirmar(lista_vacia(lista), "Lista se crea vacia");
+
+	lista = lista_insertar(lista, NULL);
+	lista = lista_insertar(lista, NULL);
+	lista = lista_insertar(lista, NULL);
+	lista = lista_insertar(lista, NULL);
+	lista = lista_insertar(lista, NULL);
+
+	pa2m_afirmar(lista_tamanio(lista) == 5, "Se agregan 5 elementos");
+
+	double elemento = 3.14159;
+	lista = lista_insertar_en_posicion(lista, &elemento, 2);
+
+	pa2m_afirmar(*(double*)lista_elemento_en_posicion(lista, 2) == elemento,
+		"Elemento 3.14159 insertado en la posicion 2");
+
+	lista_quitar(lista);
+	lista_quitar(lista);
+	lista_quitar(lista);
+
+	pa2m_afirmar(*(double*)lista_ultimo(lista) == elemento,
+		"Tras quitar 3 elementos del final, el ultimo elemento es 3.14159");
+
+	lista = lista_insertar_en_posicion(lista, lista_ultimo(lista), 0);
+	pa2m_afirmar(*(double*)lista_primero(lista) == elemento,
+		"Ultimo elemento insertado en la posicion 0");
+
+	double nuevo_primer_elemento = 2.71828;
+	lista = lista_insertar_en_posicion(lista, &nuevo_primer_elemento, 0);
+
+	pa2m_afirmar(*(double*)lista_primero(lista) == nuevo_primer_elemento,
+		"Elemento 2.71828 insertado en la posicion 0");
+	pa2m_afirmar(*(double*)lista_elemento_en_posicion(lista, 1) == elemento,
+		"Ultimo elemento insertado en la posicion 0, ahora esta en posicion 1");
+	pa2m_afirmar(lista_tamanio(lista) == 5, "El tamanio de la lista es 5");
+
+	lista = lista_insertar(lista, &elemento);
+	lista = lista_insertar(lista, lista_quitar(lista));
+	pa2m_afirmar(*(double*)lista_ultimo(lista) == elemento,
+		"Se puede quitar y volver a poner el ultimo elemento");
+
+	lista_destruir(lista);
+}
+
 int
 main()
 {
@@ -366,12 +424,12 @@ main()
 	dadaUnaListaCon10Elementos_alInsertarUnElementoEnLaPosicion5_seAgregaExitosamente();
 
 	pa2m_nuevo_grupo("Lista: Eliminacion");
-	// dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElElemento();
+	dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElElemento();
 	dadaUnaListaNULL_alIntentarQuitalUnElemento_devuelveNULL();
 	dadaUnaListaVacia_alIntentarQuitalUnElemento_devuelveNULL();
 	dadaUnaListaCon1Elemento_alQuitarElElemento_elNodoInicialYFinalApuntanANULL();
 	dadaUnaListaCon5Elementos_alQuitarLos2UltimosElementosExitosamente_laListaQuedaConTamanio3();
-	// dadaUnaListaCon5Elementos_alQuitarLos5UltimosElementosExitosamente_laListaQuedaVacia();
+	dadaUnaListaCon5Elementos_alQuitarLos5UltimosElementosExitosamente_laListaQuedaVacia();
 
 	pa2m_nuevo_grupo("Lista: Eliminacion en Posicion Especifica");
 
@@ -380,4 +438,7 @@ main()
 	dadaUnaListaVacia_alAccederAUnElemento_devuelveNULL();
 	dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL();
 	dadaUnaListaCon3Elementos_alAccederAlElementoEnLaPosicion1_devuelveElElemento();
+
+	pa2m_nuevo_grupo("Lista: Mixtos");
+	dadaUnaLista_sePuedenAplicarMultiplesOperacionesExitosamente();
 }

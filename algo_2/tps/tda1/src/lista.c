@@ -82,7 +82,7 @@ lista_quitar(lista_t* lista)
     }
     else {
         nodo_t* nodo_penultimo = lista -> nodo_inicio;
-        for (size_t i = 0; i < (lista_tamanio(lista) - 2); i++)
+        while (nodo_penultimo -> siguiente -> siguiente)
             nodo_penultimo = nodo_penultimo -> siguiente;
 
         free(nodo_penultimo -> siguiente);
