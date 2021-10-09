@@ -5,49 +5,48 @@
 #include <stdlib.h>
 #include "pa2mm.h"
 
-/* PRUEBAS DE LISTA */
-/* CREACION */
+/* Lista -> Creacion */
 
 void
-alCrearUnaLista_seCreaExitosamente()
+alCrearUnaListaExitosamente_devuelveLaLista()
 {
 	lista_t* lista = lista_crear();
 
-	pa2m_afirmar(lista != NULL, "La lista se crea exitosamente");
-	pa2m_afirmar(lista -> nodo_inicio == NULL, "El nodo de inicio de la lista es igual a NULL");
-	pa2m_afirmar(lista -> nodo_fin == NULL, "El nodo de fin de la lista es igual a NULL");
-	pa2m_afirmar(lista -> cantidad == 0, "La cantidad de nodos igual a 0");
-
-	lista_destruir(lista);
-}
-
-/* INSERCION */
-
-void
-dadaUnaLista_alInsertarUnElemento_retornaLaLista()
-{
-	lista_t* lista = lista_crear();
-
-	int elemento = 0;
-	pa2m_afirmar(lista_insertar(lista, &elemento), "Al insertar un nodo exitosamente");
+	pa2m_afirmar(lista != NULL, "Crear una lista devuelve la lista")
 
 	lista_destruir(lista);
 }
 
 void
-dadaUnaListaNULL_alInsertarUnElemento_retornaNULL()
+alCrearUnaListaExitosamente_elNodoInicialYFinalApuntanANULL()
 {
-	lista_t* lista = lista_crear();
-
-	lista_destruir();
 }
 
+void
+alCrearUnaListaExitosamente_elTamanioEsIgualA0()
+{
+}
+
+/* Lista -> Insercion */
+
+void
+dadaUnaLista_alInsertarUnElementoExitosamente_devuelveLaLista()
+{
+}
+
+void
+dadaUnaListaNULL_alIntentarInsertarUnElemento_devuelveNULL()
+{
+}
+
+void
+dadaUnaLista_alInsertarUnElemento_seIncrementaLaCantidadDeElementos()
+{
+}
 
 int
 main()
 {
-  pa2m_nuevo_grupo("Pruebas de creacion de lista");
-  alCrearUnaLista_seCreaExitosamente();
-
-  return pa2m_mostrar_reporte();
+	pa2m_nuevo_grupo("Pruebas creacion lista");
+	alCrearUnaListaExitosamente_devuelveLaLista();
 }
