@@ -461,6 +461,36 @@ dadaUnaLista_sePuedenAplicarMultiplesOperacionesExitosamente() {
     lista_destruir(lista);
 }
 
+void
+stressTest()
+{
+    lista_t* lista = lista_crear();
+
+    size_t vector[25];
+
+    for (size_t i = 1; i <= 25; i++) {
+        vector[i - 1] = i;
+        lista = lista_insertar(lista, &vector[i - 1]);
+    }
+
+    size_t tamanio = lista_tamanio(lista);
+    for (size_t i = 0; i < tamanio; i++)
+        printf("[%li]", *(size_t*)lista_elemento_en_posicion(lista, i));
+    
+    printf("\n");
+
+    for (size_t i = 0; i < 10; i++)
+        lista_quitar_de_posicion(lista, 0);
+
+    tamanio = lista_tamanio(lista);
+    for (size_t i = 0; i < tamanio; i++)
+        printf("[%li]", *(size_t*)lista_elemento_en_posicion(lista, i));
+    
+    printf("\n");
+
+    lista_destruir(lista);
+}
+
 int
 main() {
     pa2m_nuevo_grupo("Lista: Creacion");
@@ -501,6 +531,8 @@ main() {
     // dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL();
     // dadaUnaListaCon3Elementos_alAccederAlElementoEnLaPosicion1_devuelveElElemento();
 
-    // pa2m_nuevo_grupo("Lista: Mixtos");
+    pa2m_nuevo_grupo("Lista: Mixtos");
     // dadaUnaLista_sePuedenAplicarMultiplesOperacionesExitosamente();
+
+    stressTest();
 }
