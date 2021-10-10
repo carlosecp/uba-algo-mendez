@@ -97,7 +97,20 @@ lista_quitar(lista_t* lista)
 void*
 lista_quitar_de_posicion(lista_t* lista, size_t posicion)
 {
-    return NULL;
+    if (!lista || !lista_tamanio(lista))
+        return NULL;
+
+    void* elemento_quitado =
+        lista_elemento_en_posicion(lista, posicion);
+
+    if (posicion == 0) {
+    }
+    else if (posicion >= lista_tamanio(lista)) {
+    }
+    else {
+    }
+
+    return elemento_quitado;
 }
 
 void*
