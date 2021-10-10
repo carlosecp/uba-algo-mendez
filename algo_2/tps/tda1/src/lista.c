@@ -1,4 +1,5 @@
 #include "lista.h"
+#include "nodo.h"
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -16,21 +17,16 @@ lista_insertar(lista_t* lista, void* elemento)
     if (!lista)
         return NULL;
 
-    nodo_t* nodo_nuevo = calloc(1, sizeof(nodo_t));
-    if (!nodo_nuevo)
-        return lista;
+    nodo_t* nodo = nodo_crear(elemento);
+    if (!nodo)
+        return NULL;
 
-    nodo_nuevo -> elemento = elemento;
-
-    if (!(lista -> nodo_inicio))
-        lista -> nodo_inicio = lista -> nodo_fin = nodo_nuevo;
     else {
-        lista -> nodo_fin -> siguiente = nodo_nuevo;
-        lista -> nodo_fin = nodo_nuevo;
+        lista -> nodo_fin -> siguiente = nodo;
+        lista -> nodo_fin = nodo;
     }
     
     lista -> cantidad++;
-
     return lista;
 }
 
@@ -40,27 +36,31 @@ lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion)
     if (!lista)
         return NULL;
 
-    nodo_t* nodo_nuevo = calloc(1, sizeof(nodo_t));
-    if (!nodo_nuevo)
+    nodo_t* nodo = nodo_crear(elemento);
+    if (!nodo)
         return NULL;
 
-    nodo_nuevo -> elemento = elemento;
+    if (!(lista -> nodo_inicio))
+        lista -> nodo_inicio = lista -> nodo_fin = nodo;
 
     if (posicion == 0) {
-        nodo_nuevo -> siguiente = lista -> nodo_inicio;
-        lista -> nodo_inicio = nodo_nuevo;
+        nodo -> siguiente = lista -> nodo_inicio;
+        lista -> nodo_inicio = nodo;
     }
-    else if (posicion >= lista_tamanio(lista)) {
-        lista -> nodo_fin -> siguiente = nodo_nuevo;
-        lista -> nodo_fin = nodo_nuevo;
-    }
-    else {
-        nodo_t* nodo_anterior_a_posicion = lista -> nodo_inicio;
-        for (size_t i = 0; i < (posicion - 1); i++)
-            nodo_anterior_a_posicion = nodo_anterior_a_posicion -> siguiente;
 
-        nodo_nuevo -> siguiente = nodo_anterior_a_posicion -> siguiente;
-        nodo_anterior_a_posicion -> siguiente = nodo_nuevo;
+    else if (posicion >= lista_tamanio(lista)) {
+        lista -> nodo_fin -> siguiente = nodo;
+        lista -> nodo_fin = nodo;
+    }
+
+    else {
+        nodo_t* nodo_anterior_al_insertado =
+            nodo_anterior_a_posicion_aux(lista -> nodo_inicio, posicion);
+        if (!nodo_anterior_al_insertado)
+            return NULL;
+
+        nodo -> siguiente = nodo_anterior_al_insertado -> siguiente;
+        nodo_anterior_al_insertado -> siguiente = nodo;
     }
 
     lista -> cantidad++;
@@ -70,22 +70,27 @@ lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion)
 void*
 lista_quitar(lista_t* lista)
 {
-    if (!lista || !lista_tamanio(lista))
+    size_t tamanio = 0;
+    void* elemento_quitado = NULL;
+
+    if (!lista || !(tamanio = lista_tamanio(lista)))
         return NULL;
 
-    void* elemento_quitado =
-        lista_elemento_en_posicion(lista, (lista_tamanio(lista) - 1));
-
-    if (lista_tamanio(lista) == 1) {
+    if (tamanio == 1) {
+        elemento_quitado = lista_primero(lista);
         free(lista -> nodo_inicio);
+
         lista -> nodo_inicio = lista -> nodo_fin = NULL;
     }
-    else {
-        nodo_t* nodo_penultimo = lista -> nodo_inicio;
-        while (nodo_penultimo -> siguiente -> siguiente)
-            nodo_penultimo = nodo_penultimo -> siguiente;
 
+    else {
+        nodo_t* nodo_penultimo = nodo_penultimo_aux(lista -> nodo_inicio);
+        if (!nodo_penultimo)
+            return NULL;
+
+        elemento_quitado = nodo_penultimo -> siguiente -> elemento;
         free(nodo_penultimo -> siguiente);
+
         nodo_penultimo -> siguiente = NULL;
         lista -> nodo_fin = nodo_penultimo;
     }
@@ -97,32 +102,55 @@ lista_quitar(lista_t* lista)
 void*
 lista_quitar_de_posicion(lista_t* lista, size_t posicion)
 {
+    size_t tamanio = 0;
+    void* elemento_quitado = NULL;
+
     if (!lista || !lista_tamanio(lista))
         return NULL;
+    
+    if (posicion == 0) {
+        printf("QUE BONITA QUE ES LA VIDA");
+    }
 
-    void* elemento_quitado =
-        lista_elemento_en_posicion(lista, posicion);
+    else if (posicion >= lista_tamanio(lista)) {
+    }
 
+    else {
+        nodo_t* nodo_anterior_al_quitado =
+            nodo_anterior_a_posicion_aux(lista -> nodo_inicio, posicion);
+        if (!nodo_anterior_al_quitado)
+            return NULL;
+
+        nodo_t* nodo_quitado = nodo_anterior_al_quitado -> siguiente;
+        elemento_quitado = nodo_quitado -> elemento;
+
+        nodo_anterior_al_quitado -> siguiente = nodo_quitado -> siguiente;
+        free(nodo_quitado);
+    }
+
+    lista -> cantidad--;
     return elemento_quitado;
 }
 
 void*
 lista_elemento_en_posicion(lista_t* lista, size_t posicion)
 {
-    if (!lista || posicion >= lista_tamanio(lista))
+    size_t tamanio = 0;
+
+    if (!lista || posicion >= (tamanio = lista_tamanio(lista)))
         return NULL;
 
     if (posicion == 0)
         return lista_primero(lista);
 
-    if (posicion == (lista_tamanio(lista) - 1))
+    if (posicion == (tamanio - 1))
         return lista_ultimo(lista);
 
-    nodo_t* nodo_en_posicion = lista -> nodo_inicio;
-    for (size_t i = 0; (i < posicion) && nodo_en_posicion; i++)
-        nodo_en_posicion = nodo_en_posicion -> siguiente;
+    nodo_t* nodo = nodo_en_posicion(lista -> nodo_inicio, posicion);
+    if (!nodo)
+        return NULL;
 
-    return nodo_en_posicion -> elemento;
+    return nodo -> elemento;
 }
 
 void*

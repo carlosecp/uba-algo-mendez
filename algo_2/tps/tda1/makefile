@@ -8,7 +8,7 @@ valgrind: pruebas
 	valgrind $(VALGRIND_FLAGS) ./pruebas 2>&1
 
 pruebas: src/*.c pruebas.c
-	$(CC) $(CFLAGS) src/lista.c src/cola.c src/pila.c pruebas.c -o pruebas 2>&1
+	$(CC) $(CFLAGS) src/nodo.c src/lista.c src/cola.c src/pila.c pruebas.c -o pruebas 2>&1
 
 clean:
 	rm -f *.o pruebas 2>&1

@@ -297,6 +297,9 @@ dadaUnaListaConVariosElementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosam
 
     pa2m_afirmar(*(char*)lista_quitar_de_posicion(lista, 2) == c,
                  "Quitar de posicion devuelve el elemento");
+    pa2m_afirmar(
+        *(char*)lista_elemento_en_posicion(lista, 2) == d,
+        "Al quitar un elemento especifico, el elemento que le seguia toma su lugar");
 
     lista_destruir(lista);
 }
@@ -324,8 +327,37 @@ dadaUnaListaVacia_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL
 }
 
 void
-dadaUnaListaCon5Elementos_alQuitarUnElementoEnLaPosicion3Exitosamente_devuelveElElemento() {
+dadaUnaListaConVariosElementos_alQuitarElElementoEnLaPosicion0_seEliminaElPrimerElemento()
+{
     lista_t* lista = lista_crear();
+
+    char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
+    lista = lista_insertar(lista, &a);
+    lista = lista_insertar(lista, &b);
+    lista = lista_insertar(lista, &c);
+    lista = lista_insertar(lista, &d);
+    lista = lista_insertar(lista, &e);
+
+    pa2m_afirmar(*(char*)lista_quitar_de_posicion(lista, 0) == a,
+        "Quitar elemento en la posicion 0 efectivamente quita el primer elemento");
+    
+    lista_destruir(lista);
+}
+
+void
+dadaUnaListaCon5Elementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_laListaQuedaConTamanio4() {
+    lista_t* lista = lista_crear();
+
+    char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
+    lista = lista_insertar(lista, &a);
+    lista = lista_insertar(lista, &b);
+    lista = lista_insertar(lista, &c);
+    lista = lista_insertar(lista, &d);
+    lista = lista_insertar(lista, &e);
+    lista_quitar_de_posicion(lista, 1);
+
+    pa2m_afirmar(lista_tamanio(lista) == 4,
+        "Para una lista con 5 elementos, al quitar un elemento especifico la lista queda con tamanio 4");
 
     lista_destruir(lista);
 }
@@ -460,6 +492,8 @@ main() {
 	dadaUnaListaConVariosElementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento();
 	dadaUnaListaNULL_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
 	dadaUnaListaVacia_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
+    dadaUnaListaConVariosElementos_alQuitarElElementoEnLaPosicion0_seEliminaElPrimerElemento();
+    dadaUnaListaCon5Elementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_laListaQuedaConTamanio4();
 
     pa2m_nuevo_grupo("Lista: Acceso Elementos");
     dadaUnaListaNULL_alAccederAUnElemento_devuelveNULL();
