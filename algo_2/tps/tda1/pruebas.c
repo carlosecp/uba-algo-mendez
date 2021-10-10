@@ -496,10 +496,10 @@ main() {
     dadaUnaListaCon5Elementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_laListaQuedaConTamanio4();
 
     pa2m_nuevo_grupo("Lista: Acceso Elementos");
-    dadaUnaListaNULL_alAccederAUnElemento_devuelveNULL();
-    dadaUnaListaVacia_alAccederAUnElemento_devuelveNULL();
-    dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL();
-    dadaUnaListaCon3Elementos_alAccederAlElementoEnLaPosicion1_devuelveElElemento();
+    // dadaUnaListaNULL_alAccederAUnElemento_devuelveNULL();
+    // dadaUnaListaVacia_alAccederAUnElemento_devuelveNULL();
+    // dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL();
+    // dadaUnaListaCon3Elementos_alAccederAlElementoEnLaPosicion1_devuelveElElemento();
 
     // pa2m_nuevo_grupo("Lista: Mixtos");
     // dadaUnaLista_sePuedenAplicarMultiplesOperacionesExitosamente();
