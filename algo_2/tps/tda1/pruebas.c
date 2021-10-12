@@ -47,9 +47,9 @@ dadaUnaListaVacia_alInsertarUnElementoExitosamente_laListaQuedaConTamanio1() {
     lista = lista_insertar(lista, NULL);
 
     pa2m_afirmar(lista_tamanio(lista) == 1,
-                 "Para lista con 1 elemento el tamanio es 1")
+                 "Para lista con 1 elemento el tamanio es 1");
 
-        lista_destruir(lista);
+    lista_destruir(lista);
 }
 
 void
@@ -409,86 +409,52 @@ dadaUnaListaCon3Elementos_alAccederAlElementoEnLaPosicion1_devuelveElElemento() 
     lista_destruir(lista);
 }
 
-/* Lista: Mixtos */
-
 void
-dadaUnaLista_sePuedenAplicarMultiplesOperacionesExitosamente() {
-    lista_t* lista = lista_crear();
+puedoCrearYDestruirUnaCola()
+{
+    cola_t* cola = cola_crear();
 
-    pa2m_afirmar(lista_vacia(lista), "Lista se crea vacia");
+    pa2m_afirmar(cola != NULL, "Crear lista devuelve la lista");
+    pa2m_afirmar(lista_primero((lista_t*)cola) == NULL, "Nodo inicial apunta a NULL");
+    pa2m_afirmar(lista_ultimo((lista_t*)cola) == NULL, "Nodo final apunta a NULL");
+    pa2m_afirmar(cola_vacia(cola), "Cola se crea vacia");
 
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-
-    pa2m_afirmar(lista_tamanio(lista) == 5, "Se agregan 5 elementos");
-
-    double elemento = 3.14159;
-    lista = lista_insertar_en_posicion(lista, &elemento, 2);
-
-    pa2m_afirmar(*(double*)lista_elemento_en_posicion(lista, 2) == elemento,
-                 "Elemento 3.14159 insertado en la posicion 2");
-
-    lista_quitar(lista);
-    lista_quitar(lista);
-    lista_quitar(lista);
-
-    pa2m_afirmar(
-        *(double*)lista_ultimo(lista) == elemento,
-        "Tras quitar 3 elementos del final, el ultimo elemento es 3.14159");
-
-    lista = lista_insertar_en_posicion(lista, lista_ultimo(lista), 0);
-    pa2m_afirmar(*(double*)lista_primero(lista) == elemento,
-                 "Ultimo elemento insertado en la posicion 0");
-
-    double nuevo_primer_elemento = 2.71828;
-    lista = lista_insertar_en_posicion(lista, &nuevo_primer_elemento, 0);
-
-    pa2m_afirmar(*(double*)lista_primero(lista) == nuevo_primer_elemento,
-                 "Elemento 2.71828 insertado en la posicion 0");
-    pa2m_afirmar(
-        *(double*)lista_elemento_en_posicion(lista, 1) == elemento,
-        "Ultimo elemento insertado en la posicion 0, ahora esta en posicion 1");
-    pa2m_afirmar(lista_tamanio(lista) == 5, "El tamanio de la lista es 5");
-
-    lista = lista_insertar(lista, &elemento);
-    lista = lista_insertar(lista, lista_quitar(lista));
-    pa2m_afirmar(*(double*)lista_ultimo(lista) == elemento,
-                 "Se puede quitar y volver a poner el ultimo elemento");
-
-    lista_destruir(lista);
+    cola_destruir(cola);
 }
 
 void
-stressTest()
+dadaUnaColaVacia_alEncolarUnElementoExitosamente_devuelveLaLista()
 {
-    lista_t* lista = lista_crear();
+    cola_t* cola = cola_crear();
 
-    size_t vector[25];
+    pa2m_afirmar(cola_encolar(cola, NULL) != NULL,
+                 "Encolar devuelve la cola");
 
-    for (size_t i = 1; i <= 25; i++) {
-        vector[i - 1] = i;
-        lista = lista_insertar(lista, &vector[i - 1]);
-    }
+    cola_destruir(cola);
+}
 
-    size_t tamanio = lista_tamanio(lista);
-    for (size_t i = 0; i < tamanio; i++)
-        printf("[%li]", *(size_t*)lista_elemento_en_posicion(lista, i));
-    
-    printf("\n");
+void
+dadaUnaColaNULL_alIntentarEncolarUnElemento_devuelveNULL()
+{
+    cola_t* cola = NULL;
 
-    for (size_t i = 0; i < 10; i++)
-        lista_quitar_de_posicion(lista, 0);
+    pa2m_afirmar(cola_encolar(cola, NULL) == NULL,
+                 "Insertar en lista NULL devuelve NULL");
 
-    tamanio = lista_tamanio(lista);
-    for (size_t i = 0; i < tamanio; i++)
-        printf("[%li]", *(size_t*)lista_elemento_en_posicion(lista, i));
-    
-    printf("\n");
+    cola_destruir(cola);
+}
 
-    lista_destruir(lista);
+void
+dadaUnaColaVacia_alEncolarUnElementoExitosamente_laColaQuedaConTamanio1()
+{
+    cola_t* cola = cola_crear();
+
+    cola = cola_encolar(cola, NULL);
+
+    pa2m_afirmar(cola_tamanio(cola) == 1,
+                 "Para cola con 1 elemento el tamanio es 1");
+
+    cola_destruir(cola);
 }
 
 int
@@ -519,20 +485,26 @@ main() {
     dadaUnaListaCon5Elementos_alQuitarLos5UltimosElementosExitosamente_laListaQuedaVacia();
 
     pa2m_nuevo_grupo("Lista: Eliminacion en Posicion Especifica");
-	dadaUnaListaConVariosElementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento();
-	dadaUnaListaNULL_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
-	dadaUnaListaVacia_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
+    dadaUnaListaConVariosElementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento();
+    dadaUnaListaNULL_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
+    dadaUnaListaVacia_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
     dadaUnaListaConVariosElementos_alQuitarElElementoEnLaPosicion0_seEliminaElPrimerElemento();
     dadaUnaListaCon5Elementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_laListaQuedaConTamanio4();
 
     pa2m_nuevo_grupo("Lista: Acceso Elementos");
-    // dadaUnaListaNULL_alAccederAUnElemento_devuelveNULL();
-    // dadaUnaListaVacia_alAccederAUnElemento_devuelveNULL();
-    // dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL();
-    // dadaUnaListaCon3Elementos_alAccederAlElementoEnLaPosicion1_devuelveElElemento();
+    dadaUnaListaNULL_alAccederAUnElemento_devuelveNULL();
+    dadaUnaListaVacia_alAccederAUnElemento_devuelveNULL();
+    dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL();
+    dadaUnaListaCon3Elementos_alAccederAlElementoEnLaPosicion1_devuelveElElemento();
 
-    pa2m_nuevo_grupo("Lista: Mixtos");
-    // dadaUnaLista_sePuedenAplicarMultiplesOperacionesExitosamente();
+    pa2m_nuevo_grupo("Cola: Creacion");
+    puedoCrearYDestruirUnaCola();
 
-    stressTest();
+    pa2m_nuevo_grupo("Cola: Encolado");
+    dadaUnaColaVacia_alEncolarUnElementoExitosamente_devuelveLaLista();
+    dadaUnaColaNULL_alIntentarEncolarUnElemento_devuelveNULL();
+    dadaUnaColaVacia_alEncolarUnElementoExitosamente_laColaQuedaConTamanio1();
+    // dadaUnaListaCon1Elemento_alPedirElPrimeroYUltimoElemento_devuelveElMismoElemento();
+    // dadaUnaListaVacia_alInsertar10ElementosExitosamente_laListaQuedaConTamanio10();
+    // dadaUnaListaVacia_alInsertarMultiplesElementos_seAgreganExitosamente();
 }

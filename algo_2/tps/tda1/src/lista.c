@@ -196,13 +196,23 @@ lista_destruir(lista_t* lista)
 lista_iterador_t*
 lista_iterador_crear(lista_t* lista)
 {
-    return NULL;
+    lista_iterador_t* iterador = malloc(sizeof(lista_iterador_t));
+    if (!lista || !iterador)
+        return NULL;
+
+    iterador -> lista = lista;
+    iterador -> corriente = lista -> nodo_inicio;
+
+    return iterador;
 }
 
 bool
 lista_iterador_tiene_siguiente(lista_iterador_t* iterador)
 {
-    return false;
+    if (!iterador)
+        return false;
+
+    return iterador -> corriente -> siguiente;
 }
 
 bool
