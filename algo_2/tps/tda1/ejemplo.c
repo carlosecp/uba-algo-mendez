@@ -41,14 +41,14 @@ void probar_operaciones_lista(){
 
     // lista_iterador_destruir(it);
 
-    // int contador=0;
-    // size_t elementos_recorridos = 0;
-    // printf("Imprimo la lista usando el iterador interno: \n");
-    // elementos_recorridos = lista_con_cada_elemento(lista, mostrar_elemento, (void*)&contador);
+    int contador=0;
+    size_t elementos_recorridos = 0;
+    printf("Imprimo la lista usando el iterador interno: \n");
+    elementos_recorridos = lista_con_cada_elemento(lista, mostrar_elemento, (void*)&contador);
 
-    // printf("Recorri %lu elementos con el iterador interno y sume %i elementos\n", elementos_recorridos, contador);
+    printf("Recorri %lu elementos con el iterador interno y sume %i elementos\n", elementos_recorridos, contador);
     
-    // printf("\n");
+    printf("\n");
     lista_destruir(lista);
 }
 
