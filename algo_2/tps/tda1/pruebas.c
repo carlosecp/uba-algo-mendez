@@ -9,12 +9,15 @@
 /* Lista: Creacion */
 
 void
-puedoCrearYDestruirUnaLista() {
+puedoCrearYDestruirUnaLista()
+{
     lista_t* lista = lista_crear();
 
     pa2m_afirmar(lista != NULL, "Crear una lista devuelve la lista");
-    pa2m_afirmar(lista_primero(lista) == NULL, "El nodo inicial de la lista apunta a NULL");
-    pa2m_afirmar(lista_ultimo(lista) == NULL, "El nodo final de la lista apunta a NULL");
+    pa2m_afirmar(lista_primero(lista) == NULL,
+                 "El nodo inicial de la lista apunta a NULL");
+    pa2m_afirmar(lista_ultimo(lista) == NULL,
+                 "El nodo final de la lista apunta a NULL");
     pa2m_afirmar(lista_vacia(lista), "La lista se crea vacia");
 
     lista_destruir(lista);
@@ -23,7 +26,8 @@ puedoCrearYDestruirUnaLista() {
 /* Lista: Insercion */
 
 void
-dadaUnaListaVacia_alInsertarUnElementoExitosamente_devuelveLaLista() {
+dadaUnaListaVacia_alInsertarUnElementoExitosamente_devuelveLaLista()
+{
     lista_t* lista = lista_crear();
 
     pa2m_afirmar(lista_insertar(lista, NULL) != NULL,
@@ -33,7 +37,8 @@ dadaUnaListaVacia_alInsertarUnElementoExitosamente_devuelveLaLista() {
 }
 
 void
-dadaUnaListaNULL_alIntentarInsertarUnElemento_devuelveNULL() {
+dadaUnaListaNULL_alIntentarInsertarUnElemento_devuelveNULL()
+{
     lista_t* lista = NULL;
 
     pa2m_afirmar(lista_insertar(lista, NULL) == NULL,
@@ -41,7 +46,8 @@ dadaUnaListaNULL_alIntentarInsertarUnElemento_devuelveNULL() {
 }
 
 void
-dadaUnaListaVacia_alInsertar10ElementosExitosamente_laListaQuedaConTamanio10() {
+dadaUnaListaVacia_alInsertar10ElementosExitosamente_laListaQuedaConTamanio10()
+{
     lista_t* lista = lista_crear();
 
     lista = lista_insertar(lista, NULL);
@@ -62,7 +68,8 @@ dadaUnaListaVacia_alInsertar10ElementosExitosamente_laListaQuedaConTamanio10() {
 }
 
 void
-dadaUnaListaVacia_alInsertarMultiplesElementosExitosamente_losElementosQuedanEnElOrdenCorrecto() {
+dadaUnaListaVacia_alInsertarMultiplesElementosExitosamente_losElementosQuedanEnElOrdenCorrecto()
+{
     lista_t* lista = lista_crear();
 
     char a = 'a', b = 'b', c = 'c';
@@ -71,11 +78,14 @@ dadaUnaListaVacia_alInsertarMultiplesElementosExitosamente_losElementosQuedanEnE
     lista = lista_insertar(lista, &c);
 
     pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 0) == a,
-                 "El primer elemento insertado, cuyo valor es 'a', queda en la posicion 0");
+                 "El primer elemento insertado, cuyo valor es 'a', queda en la "
+                 "posicion 0");
     pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 1) == b,
-                 "El segundo elemento insertado, cuyo valor es 'b', queda en la posicion 1");
+                 "El segundo elemento insertado, cuyo valor es 'b', queda en "
+                 "la posicion 1");
     pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 2) == c,
-                 "El tercer elemento insertado, cuyo valor es 'c', queda en la posicion 2");
+                 "El tercer elemento insertado, cuyo valor es 'c', queda en la "
+                 "posicion 2");
 
     lista_destruir(lista);
 }
@@ -83,18 +93,20 @@ dadaUnaListaVacia_alInsertarMultiplesElementosExitosamente_losElementosQuedanEnE
 /* Lista: Insercion en Posicion Especifica */
 
 void
-dadaUnaListaNULL_alIntentarInsertarUnElementoEnUnaPosicionEspecifica_devuelveNULL() {
+dadaUnaListaNULL_alIntentarInsertarUnElementoEnUnaPosicionEspecifica_devuelveNULL()
+{
     lista_t* lista = NULL;
 
-    pa2m_afirmar(
-        lista_insertar_en_posicion(lista, NULL, 0) == NULL,
-        "Insertar un elemento en una posicion especifica en una lista NULL devuelve NULL");
+    pa2m_afirmar(lista_insertar_en_posicion(lista, NULL, 0) == NULL,
+                 "Insertar un elemento en una posicion especifica en una lista "
+                 "NULL devuelve NULL");
 
     lista_destruir(lista);
 }
 
 void
-dadaUnaListaConVariosElementos_alInsertarUnElementoEnLaPosicion0Exitosamente_elElementoSeInsertaAlInicio() {
+dadaUnaListaConVariosElementos_alInsertarUnElementoEnLaPosicion0Exitosamente_elElementoSeInsertaAlInicio()
+{
     lista_t* lista = lista_crear();
 
     char a = 'a', b = 'b', c = 'c', d = 'd';
@@ -104,15 +116,18 @@ dadaUnaListaConVariosElementos_alInsertarUnElementoEnLaPosicion0Exitosamente_elE
     lista = lista_insertar_en_posicion(lista, &a, 0);
 
     pa2m_afirmar(*(char*)lista_primero(lista) == a,
-                 "Insertar el elemento 'a' en la posicion 0, ubica el elemento al inicio de la lista");
+                 "Insertar el elemento 'a' en la posicion 0, ubica el elemento "
+                 "al inicio de la lista");
     pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 1) == b,
-                "Tras insertar 'a' en la posicion 0, el elemento 'b', que antes estaba de primero, ahora esta en la posicion 1");
+                 "Tras insertar 'a' en la posicion 0, el elemento 'b', que "
+                 "antes estaba de primero, ahora esta en la posicion 1");
 
     lista_destruir(lista);
 }
 
 void
-dadaUnaLista_alIntentarInsertarUnElementoEnUnaPosicionInvalida_elElementoSeInsertaAlFinal() {
+dadaUnaLista_alIntentarInsertarUnElementoEnUnaPosicionInvalida_elElementoSeInsertaAlFinal()
+{
     lista_t* lista = lista_crear();
 
     lista = lista_insertar(lista, NULL);
@@ -123,13 +138,15 @@ dadaUnaLista_alIntentarInsertarUnElementoEnUnaPosicionInvalida_elElementoSeInser
     lista = lista_insertar_en_posicion(lista, &a, 10);
 
     pa2m_afirmar(*(char*)lista_ultimo(lista) == a,
-                 "Intentar insertar un elemento en una posicion mayor a la posible, lo inserta al final de la lista");
+                 "Intentar insertar un elemento en una posicion mayor a la "
+                 "posible, lo inserta al final de la lista");
 
     lista_destruir(lista);
 }
 
 void
-dadaUnaListaConVariosElementos_alInsertarUnElementoEnUnaPosicionEspecificaExitosamente_losElementosQuedanEnElOrdenCorrecta() {
+dadaUnaListaConVariosElementos_alInsertarUnElementoEnUnaPosicionEspecificaExitosamente_losElementosQuedanEnElOrdenCorrecta()
+{
     lista_t* lista = lista_crear();
 
     char a = 'a', b = 'b', c = 'c', e = 'e', f = 'f';
@@ -143,10 +160,11 @@ dadaUnaListaConVariosElementos_alInsertarUnElementoEnUnaPosicionEspecificaExitos
     lista = lista_insertar_en_posicion(lista, &d, 3);
 
     pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 3) == d,
-                 "El elemento insertado en la posicion 3, cuyo valor es 'd', queda en esa posicion");
-    pa2m_afirmar(
-        *(char*)lista_elemento_en_posicion(lista, 4) == e,
-        "Tras insertar 'd' en la posicion 3, el elemento 'e', que antes estaba en la posicion 3, ahora esta en la posicion 4");
+                 "El elemento insertado en la posicion 3, cuyo valor es 'd', "
+                 "queda en esa posicion");
+    pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 4) == e,
+                 "Tras insertar 'd' en la posicion 3, el elemento 'e', que "
+                 "antes estaba en la posicion 3, ahora esta en la posicion 4");
 
     lista_destruir(lista);
 }
@@ -154,7 +172,8 @@ dadaUnaListaConVariosElementos_alInsertarUnElementoEnUnaPosicionEspecificaExitos
 /* Lista: Eliminacion */
 
 void
-dadaUnaListaNULL_alIntentarQuitarUnElemento_devuelveNULL() {
+dadaUnaListaNULL_alIntentarQuitarUnElemento_devuelveNULL()
+{
     lista_t* lista = NULL;
 
     pa2m_afirmar(lista_quitar(lista) == NULL,
@@ -164,7 +183,8 @@ dadaUnaListaNULL_alIntentarQuitarUnElemento_devuelveNULL() {
 }
 
 void
-dadaUnaListaVacia_alIntentarQuitarUnElemento_devuelveNULL() {
+dadaUnaListaVacia_alIntentarQuitarUnElemento_devuelveNULL()
+{
     lista_t* lista = lista_crear();
 
     pa2m_afirmar(lista_quitar(lista) == NULL,
@@ -174,7 +194,8 @@ dadaUnaListaVacia_alIntentarQuitarUnElemento_devuelveNULL() {
 }
 
 void
-dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElElemento() {
+dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElElemento()
+{
     lista_t* lista = lista_crear();
 
     char a = 'a', b = 'b', c = 'c';
@@ -185,31 +206,36 @@ dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElEl
     pa2m_afirmar(*(char*)lista_quitar(lista) == c,
                  "Quitar un elemento devuelve el elemento");
     pa2m_afirmar(*(char*)lista_ultimo(lista) == b,
-                 "Al quitar un elemento, el elemento que antes estaba de penultimo, ahora es el ultimo");
+                 "Al quitar un elemento, el elemento que antes estaba de "
+                 "penultimo, ahora es el ultimo");
 
     lista_destruir(lista);
 }
 
 void
-dadaUnaListaCon1Elemento_alQuitarElElemento_elNodoInicialYFinalApuntanANULL() {
+dadaUnaListaCon1Elemento_alQuitarElElemento_elNodoInicialYFinalApuntanANULL()
+{
     lista_t* lista = lista_crear();
 
     char a = 'a';
     lista = lista_insertar(lista, &a);
     lista_quitar(lista);
 
-    pa2m_afirmar(lista_primero(lista) == NULL,
-                 "Para una lista con 1 elemento, al quitar el elemento, el nodo "
-                 "inicial apunta a NULL");
-    pa2m_afirmar(lista_ultimo(lista) == NULL,
-                 "Para una lista con 1 elemento, al quitar el elemento, el nodo "
-                 "final apunta a NULL");
+    pa2m_afirmar(
+        lista_primero(lista) == NULL,
+        "Para una lista con 1 elemento, al quitar el elemento, el nodo "
+        "inicial apunta a NULL");
+    pa2m_afirmar(
+        lista_ultimo(lista) == NULL,
+        "Para una lista con 1 elemento, al quitar el elemento, el nodo "
+        "final apunta a NULL");
 
     lista_destruir(lista);
 }
 
 void
-dadaUnaListaCon5Elementos_alQuitarLos2UltimosElementosExitosamente_laListaQuedaConTamanio3() {
+dadaUnaListaCon5Elementos_alQuitarLos2UltimosElementosExitosamente_laListaQuedaConTamanio3()
+{
     lista_t* lista = lista_crear();
 
     char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
@@ -229,7 +255,8 @@ dadaUnaListaCon5Elementos_alQuitarLos2UltimosElementosExitosamente_laListaQuedaC
 }
 
 void
-dadaUnaListaConVariosElementos_alQuitarTodosElementosExitosamente_laListaQuedaVacia() {
+dadaUnaListaConVariosElementos_alQuitarTodosElementosExitosamente_laListaQuedaVacia()
+{
     lista_t* lista = lista_crear();
 
     lista = lista_insertar(lista, NULL);
@@ -252,27 +279,32 @@ dadaUnaListaConVariosElementos_alQuitarTodosElementosExitosamente_laListaQuedaVa
 /* Lista: Eliminacion en Posicion Especifica */
 
 void
-dadaUnaListaNULL_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL() {
+dadaUnaListaNULL_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL()
+{
     lista_t* lista = NULL;
 
     pa2m_afirmar(lista_quitar_de_posicion(lista, 10) == NULL,
-                 "Quitar un elemento en una posicion especifica en una lista NULL, devuelve NULL");
+                 "Quitar un elemento en una posicion especifica en una lista "
+                 "NULL, devuelve NULL");
 
     lista_destruir(lista);
 }
 
 void
-dadaUnaListaVacia_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL() {
+dadaUnaListaVacia_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL()
+{
     lista_t* lista = lista_crear();
 
     pa2m_afirmar(lista_quitar_de_posicion(lista, 10) == NULL,
-                 "Quitar un elemento en una posicion especifica en una lista vacia, devuelve NULL");
+                 "Quitar un elemento en una posicion especifica en una lista "
+                 "vacia, devuelve NULL");
 
     lista_destruir(lista);
 }
 
 void
-dadaUnaListaConVariosElementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento() {
+dadaUnaListaConVariosElementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento()
+{
     lista_t* lista = lista_crear();
 
     char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
@@ -283,7 +315,8 @@ dadaUnaListaConVariosElementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosam
     lista = lista_insertar(lista, &e);
 
     pa2m_afirmar(*(char*)lista_quitar_de_posicion(lista, 2) == c,
-                 "Quitar un elemento en una posicion especifica en una lista devuelve ese elemento");
+                 "Quitar un elemento en una posicion especifica en una lista "
+                 "devuelve ese elemento");
     pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 2) == d,
                  "Al quitar el elemento 'd' de la posicion 2, el elemento que "
                  "le seguia, cuyo valor es 'e', ahora ocupa la posicion 2");
@@ -292,7 +325,8 @@ dadaUnaListaConVariosElementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosam
 }
 
 void
-dadaUnaListaConVariosElementos_alQuitarElElementoEnLaPosicion0Exitosamente_seEliminaElPrimerElemento() {
+dadaUnaListaConVariosElementos_alQuitarElElementoEnLaPosicion0Exitosamente_seEliminaElPrimerElemento()
+{
     lista_t* lista = lista_crear();
 
     char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
@@ -310,7 +344,8 @@ dadaUnaListaConVariosElementos_alQuitarElElementoEnLaPosicion0Exitosamente_seEli
 }
 
 void
-dadaUnaListaCon5Elementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_laListaQuedaConTamanio4() {
+dadaUnaListaCon5Elementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_laListaQuedaConTamanio4()
+{
     lista_t* lista = lista_crear();
 
     char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
@@ -331,7 +366,8 @@ dadaUnaListaCon5Elementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_
 /* Lista: Acceso Elementos */
 
 void
-dadaUnaListaNULL_alAccederAUnElemento_devuelveNULL() {
+dadaUnaListaNULL_alAccederAUnElemento_devuelveNULL()
+{
     lista_t* lista = NULL;
 
     pa2m_afirmar(lista_elemento_en_posicion(lista, 0) == NULL,
@@ -341,7 +377,8 @@ dadaUnaListaNULL_alAccederAUnElemento_devuelveNULL() {
 }
 
 void
-dadaUnaListaVacia_alAccederAUnElemento_devuelveNULL() {
+dadaUnaListaVacia_alAccederAUnElemento_devuelveNULL()
+{
     lista_t* lista = lista_crear();
 
     pa2m_afirmar(lista_elemento_en_posicion(lista, 0) == NULL,
@@ -351,7 +388,8 @@ dadaUnaListaVacia_alAccederAUnElemento_devuelveNULL() {
 }
 
 void
-dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL() {
+dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL()
+{
     lista_t* lista = lista_crear();
 
     pa2m_afirmar(lista_elemento_en_posicion(lista, 5) == NULL,
@@ -361,7 +399,47 @@ dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL() {
 }
 
 void
-dadaUnaListaConVariosElementos_alAccederAlElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento() {
+dadaUnaLista_alAccederAlElementoEnLaPoscion0Exitosamente_devuelveElPrimerElemento()
+{
+    lista_t* lista = lista_crear();
+
+    char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
+    lista = lista_insertar(lista, &a);
+    lista = lista_insertar(lista, &b);
+    lista = lista_insertar(lista, &c);
+    lista = lista_insertar(lista, &d);
+    lista = lista_insertar(lista, &e);
+
+    pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 0) == a,
+                 "Acceder al elemento en la posicion 0 devuelve el primer "
+                 "elemento de la lista");
+
+    lista_destruir(lista);
+}
+
+void
+dadaUnaLista_alAccederAlElementoEnLaPoscionFinalExitosamente_devuelveElUltimoElemento()
+{
+    lista_t* lista = lista_crear();
+
+    char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
+    lista = lista_insertar(lista, &a);
+    lista = lista_insertar(lista, &b);
+    lista = lista_insertar(lista, &c);
+    lista = lista_insertar(lista, &d);
+    lista = lista_insertar(lista, &e);
+
+    pa2m_afirmar(
+        *(char*)lista_elemento_en_posicion(lista, lista_tamanio(lista)) == e,
+        "Acceder al elemento en la posicion igual al tamanio de la lista "
+        "devuelve el ultimo elemento de la lista");
+
+    lista_destruir(lista);
+}
+
+void
+dadaUnaListaConVariosElementos_alAccederAlElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento()
+{
     lista_t* lista = lista_crear();
 
     char a = 'a';
@@ -370,7 +448,8 @@ dadaUnaListaConVariosElementos_alAccederAlElementoEnUnaPosicionEspecificaExitosa
     lista = lista_insertar(lista, NULL);
 
     pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 1) == a,
-                 "Acceder a la posicion de un elemento de la lista, efecticamente devuelve el elemento en esa posicion");
+                 "Acceder a la posicion de un elemento de la lista, "
+                 "efecticamente devuelve el elemento en esa posicion");
 
     lista_destruir(lista);
 }
@@ -378,7 +457,8 @@ dadaUnaListaConVariosElementos_alAccederAlElementoEnUnaPosicionEspecificaExitosa
 /* Cola: Creacion */
 
 void
-puedoCrearYDestruirUnaCola() {
+puedoCrearYDestruirUnaCola()
+{
     cola_t* cola = cola_crear();
 
     pa2m_afirmar(cola != NULL, "Crear una cola devuelve la cola");
@@ -392,7 +472,8 @@ puedoCrearYDestruirUnaCola() {
 /* Cola: Encolar */
 
 void
-dadaUnaColaNULL_alIntentarEncolarUnElemento_devuelveNULL() {
+dadaUnaColaNULL_alIntentarEncolarUnElemento_devuelveNULL()
+{
     cola_t* cola = NULL;
 
     pa2m_afirmar(cola_encolar(cola, NULL) == NULL,
@@ -402,7 +483,8 @@ dadaUnaColaNULL_alIntentarEncolarUnElemento_devuelveNULL() {
 }
 
 void
-dadaUnaColaVacia_alEncolar10ElementosExitosamente_laColaQuedaConTamanio10() {
+dadaUnaColaVacia_alEncolar10ElementosExitosamente_laColaQuedaConTamanio10()
+{
     cola_t* cola = cola_crear();
 
     cola = cola_encolar(cola, NULL);
@@ -423,7 +505,8 @@ dadaUnaColaVacia_alEncolar10ElementosExitosamente_laColaQuedaConTamanio10() {
 }
 
 void
-dadaUnaColaCon1ElementoEnElFrente_alEncolarMultiplesElementosExitosamente_elPrimerElementoSigueEnElFrente() {
+dadaUnaColaCon1ElementoEnElFrente_alEncolarMultiplesElementosExitosamente_elPrimerElementoSigueEnElFrente()
+{
     cola_t* cola = cola_crear();
 
     char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
@@ -443,7 +526,8 @@ dadaUnaColaCon1ElementoEnElFrente_alEncolarMultiplesElementosExitosamente_elPrim
 /* Cola: Desencolar */
 
 void
-dadaUnaColaNULL_alIntentarDesencolarUnElemento_devuelveNULL() {
+dadaUnaColaNULL_alIntentarDesencolarUnElemento_devuelveNULL()
+{
     cola_t* cola = NULL;
 
     pa2m_afirmar(cola_desencolar(cola) == NULL,
@@ -453,7 +537,8 @@ dadaUnaColaNULL_alIntentarDesencolarUnElemento_devuelveNULL() {
 }
 
 void
-dadaUnaColaVacia_alIntentarDesencolarUnElemento_devuelveNULL() {
+dadaUnaColaVacia_alIntentarDesencolarUnElemento_devuelveNULL()
+{
     cola_t* cola = cola_crear();
 
     pa2m_afirmar(cola_desencolar(cola) == NULL,
@@ -463,7 +548,7 @@ dadaUnaColaVacia_alIntentarDesencolarUnElemento_devuelveNULL() {
 }
 
 void
-dadaUnaColaConVariosElementos_alDesencolarUnElemento_devuelveElElemento()
+dadaUnaColaConVariosElementos_alDesencolarUnElementoExitosamente_devuelveElElemento()
 {
     cola_t* cola = cola_crear();
 
@@ -479,7 +564,7 @@ dadaUnaColaConVariosElementos_alDesencolarUnElemento_devuelveElElemento()
 }
 
 void
-dadaUnaColaConVariosElementos_alDesencolarUnElemento_elSegundoElementoEncoladoAhoraEsElFrente()
+dadaUnaColaConVariosElementos_alDesencolarUnElementoExitosamente_elSegundoElementoEncoladoAhoraEsElFrente()
 {
     cola_t* cola = cola_crear();
 
@@ -492,7 +577,25 @@ dadaUnaColaConVariosElementos_alDesencolarUnElemento_elSegundoElementoEncoladoAh
                  "Al desencolar el primer elemento 'a', el segundo elemento "
                  "encolado 'b', pasa a estar en el frente de la cola");
 
+    cola_destruir(cola);
+}
+
+void
+dadaUnaColaCon5Elementos_alDesencolar1ElementoExitosamente_laColaQuedaConTamanio4()
+{
+    cola_t* cola = cola_crear();
+
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
     cola_desencolar(cola);
+
+    pa2m_afirmar(cola_tamanio(cola) == 4,
+                 "Tras desencolar una cola con 5 elementos, el tamanio es 4");
+
+    cola_destruir(cola);
 }
 
 void
@@ -511,8 +614,9 @@ dadaUnaColaConVariosElementos_alDesencolarTodosElementosExitosamente_laColaQueda
     cola_desencolar(cola);
     cola_desencolar(cola);
 
-    pa2m_afirmar(cola_vacia(cola),
-                 "Al desencolar todos los elementos de una cola, esta queda vacia");
+    pa2m_afirmar(
+        cola_vacia(cola),
+        "Al desencolar todos los elementos de una cola, esta queda vacia");
 
     cola_destruir(cola);
 }
@@ -525,7 +629,7 @@ dadaUnaColaNULL_alAccederAlElementoDelFrente_devuelveNULL()
     cola_t* cola = NULL;
 
     pa2m_afirmar(cola_frente(cola) == NULL,
-                "Acceder al frente de una cola NULL devuelve NULL");
+                 "Acceder al frente de una cola NULL devuelve NULL");
 
     cola_destruir(cola);
 }
@@ -536,7 +640,7 @@ dadaUnaColaVacia_alAccederAlElementoDelFrente_devuelveNULL()
     cola_t* cola = cola_crear();
 
     pa2m_afirmar(cola_frente(cola) == NULL,
-                "Acceder al frente de una cola vacia devuelve NULL");
+                 "Acceder al frente de una cola vacia devuelve NULL");
 
     cola_destruir(cola);
 }
@@ -558,17 +662,220 @@ dadaUnaColaConVariosElementos_alAccederAlElementoDelFrente_devuelveElElemento()
     cola_destruir(cola);
 }
 
-void
-dadaUnaColaConVariosElementos_alDesencolarUnElemento_devuelveElElemento();
+/* Pila: Creacion */
 
 void
-dadaUnaColaConVariosElementos_alDesencolarUnElemento_elSegundoElementoEncoladoAhoraEsElFrente();
+puedoCrearYDestruirUnaPila()
+{
+    pila_t* pila = pila_crear();
+
+    pa2m_afirmar(pila != NULL, "Crear una pila devuelve la pila");
+    pa2m_afirmar(pila_tope(pila) == NULL,
+                 "El tope de la pila se crea NULL");
+    pa2m_afirmar(pila_vacia(pila), "La pila se crea vacia");
+
+    pila_destruir(pila);
+}
+
+/* Pila: Apilado */
 
 void
-dadaUnaColaCon1Elemento_alDesencolarUnElemento_laColaQuedaVacia();
+dadaUnaPilaNULL_alIntentarApilarUnElemento_devuelveNULL()
+{
+    pila_t* pila = NULL;
+
+    pa2m_afirmar(pila_apilar(pila, NULL) == NULL,
+                 "Apilar en una pila NULL devuelve NULL");
+
+    pila_destruir(pila);
+}
+
+void
+dadaUnaPilaVacia_alApilar10ElementosExitosamente_laPilaQuedaConTamanio10()
+{
+    pila_t* pila = pila_crear();
+
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+
+    pa2m_afirmar(pila_tamanio(pila) == 10,
+                 "Para una cola con 10 elementos el tamanio es 10");
+
+    pila_destruir(pila);
+}
+
+void
+dadaUnaPilaConVariosElementos_alApilarUnElementoExitosamente_eseElementoPasaASerElTope()
+{
+    pila_t* pila = pila_crear();
+
+    char a = 'a', b = 'b', c = 'c', d = 'd';
+    pila = pila_apilar(pila, &a);
+    pila = pila_apilar(pila, &b);
+    pila = pila_apilar(pila, &c);
+
+    pa2m_afirmar(*(char*)pila_tope(pila) == c,
+                 "Para una pila de varios elementos, al apilar el elemento 'c', "
+                 "ese elemento es ubicado en el tope de la pila");
+
+    pila = pila_apilar(pila, &d);
+    pa2m_afirmar(*(char*)pila_tope(pila) == d,
+                 "Tras apilar el elemento 'd', ese elemento es ubicado en el "
+                 "tope de la pila");
+
+    pila_destruir(pila);
+}
+
+/* Pila: Desapilado */
+
+void
+dadaUnaPilaNULL_alIntentarDesapilarUnElemento_devuelveNULL()
+{
+    pila_t* pila = NULL;
+
+    pa2m_afirmar(pila_desapilar(pila) == NULL,
+                 "Desapilar en una pila NULL, devuelve NULL");
+
+    pila_destruir(pila);
+}
+
+void
+dadaUnaPilaVacia_alIntentarDesapilarUnElemento_devuelveNULL()
+{
+    pila_t* pila = pila_crear();
+
+    pa2m_afirmar(pila_desapilar(pila) == NULL,
+                 "Desapilar en una pila vacia, devuelve NULL");
+
+    pila_destruir(pila);
+}
+
+void
+dadaUnaPilaConVariosElementos_alDesapilarUnElementoExitosamente_devuelveElElemento()
+{
+    pila_t* pila = pila_crear();
+
+    char a = 'a', b = 'b', c = 'c';
+    pila = pila_apilar(pila, &a);
+    pila = pila_apilar(pila, &b);
+    pila = pila_apilar(pila, &c);
+
+    pa2m_afirmar(*(char*)pila_desapilar(pila) == c,
+                 "Desapilar un elemento devuelve el elemento");
+
+    pila_destruir(pila);
+}
+
+void
+dadaUnaPilaConVariosElementos_alDesapilarUnElementoExitosamente_elPenultimoElementoEncoladoAhoraEsElTope()
+{
+    pila_t* pila = pila_crear();
+
+    char a = 'a', b = 'b';
+    pila = pila_apilar(pila, &a);
+    pila = pila_apilar(pila, &b);
+    pila_desapilar(pila);
+
+    pa2m_afirmar(*(char*)pila_tope(pila) == a,
+                 "Al desapilar el ultimo elemento apilado 'b', el penultimo "
+                 "elemento apilado 'a', pasa a estar en el tope de la pila");
+
+    pila_destruir(pila);
+}
+
+void
+dadaUnaPilaCon5Elementos_alDesapilar1ElementoExitosamente_laPilaQuedaConTamanio4()
+{
+    pila_t* pila = pila_crear();
+
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila_desapilar(pila);
+    
+    pa2m_afirmar(pila_tamanio(pila) == 4,
+                 "Tras desapilar una pila con 5 elementos, el tamanio es 4");
+
+    pila_destruir(pila);
+}
+
+void
+dadaUnaPilaConVariosElementos_alDesapilarTodosElementosExitosamente_laPilaQuedaVacia()
+{
+    pila_t* pila = pila_crear();
+
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila = pila_apilar(pila, NULL);
+    pila_desapilar(pila);
+    pila_desapilar(pila);
+    pila_desapilar(pila);
+    pila_desapilar(pila);
+    pila_desapilar(pila);
+
+    pa2m_afirmar(
+        pila_vacia(pila),
+        "Al desapilar todos los elementos de una pila, esta queda vacia");
+
+    pila_destruir(pila);
+}
+
+/* Pila: Acceso Tope */
+
+void
+dadaUnaPilaNULL_alAccederAlElementoDelTope_devuelveNULL()
+{
+    pila_t* pila = NULL;
+
+    pa2m_afirmar(pila_tope(pila) == NULL,
+                 "Acceder al tope de una pila NULL devuelve NULL");
+
+    pila_destruir(pila);
+}
+
+void
+dadaUnaPilaVacia_alAccederAlElementoDelTope_devuelveNULL()
+{
+    pila_t* pila = pila_crear();
+
+    pa2m_afirmar(pila_tope(pila) == NULL,
+                 "Acceder al tope de una pila vacia devuelve NULL");
+
+    pila_destruir(pila);
+}
+
+void
+dadaUnaPilaConVariosElementos_alAccederAlElementoDelTope_devuelveElElemento()
+{
+    pila_t* pila = pila_crear();
+
+    char a = 'a', b = 'b', c = 'c';
+    pila = pila_apilar(pila, &a);
+    pila = pila_apilar(pila, &b);
+    pila = pila_apilar(pila, &c);
+
+    pa2m_afirmar(
+        *(char*)pila_tope(pila) == c,
+        "Acceder al tope de una pila, efectivamente devuelve ese elemento");
+
+    pila_destruir(pila);
+}
 
 int
-main() {
+main()
+{
     pa2m_nuevo_grupo("Lista: Creacion");
     puedoCrearYDestruirUnaLista();
 
@@ -603,6 +910,8 @@ main() {
     dadaUnaListaNULL_alAccederAUnElemento_devuelveNULL();
     dadaUnaListaVacia_alAccederAUnElemento_devuelveNULL();
     dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL();
+    dadaUnaLista_alAccederAlElementoEnLaPoscion0Exitosamente_devuelveElPrimerElemento();
+    dadaUnaLista_alAccederAlElementoEnLaPoscionFinalExitosamente_devuelveElUltimoElemento();
     dadaUnaListaConVariosElementos_alAccederAlElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento();
 
     pa2m_nuevo_grupo("Cola: Creacion");
@@ -616,13 +925,36 @@ main() {
     pa2m_nuevo_grupo("Cola: Desencolado");
     dadaUnaColaNULL_alIntentarDesencolarUnElemento_devuelveNULL();
     dadaUnaColaVacia_alIntentarDesencolarUnElemento_devuelveNULL();
-    dadaUnaColaConVariosElementos_alDesencolarUnElemento_devuelveElElemento();
-    dadaUnaColaConVariosElementos_alDesencolarUnElemento_elSegundoElementoEncoladoAhoraEsElFrente();
+    dadaUnaColaConVariosElementos_alDesencolarUnElementoExitosamente_devuelveElElemento();
+    dadaUnaColaConVariosElementos_alDesencolarUnElementoExitosamente_elSegundoElementoEncoladoAhoraEsElFrente();
+    dadaUnaColaCon5Elementos_alDesencolar1ElementoExitosamente_laColaQuedaConTamanio4();
     dadaUnaColaConVariosElementos_alDesencolarTodosElementosExitosamente_laColaQuedaVacia();
 
     pa2m_nuevo_grupo("Cola: Acceso Frente");
     dadaUnaColaNULL_alAccederAlElementoDelFrente_devuelveNULL();
     dadaUnaColaVacia_alAccederAlElementoDelFrente_devuelveNULL();
     dadaUnaColaConVariosElementos_alAccederAlElementoDelFrente_devuelveElElemento();
-    /* dadaUnaColaConVariosElemento_alAccederAlElementoDelFrente_devuelveElElemento(); */
+
+    pa2m_nuevo_grupo("Pila: Creacion");
+    puedoCrearYDestruirUnaPila();
+
+    pa2m_nuevo_grupo("Pila: Apilado");
+    dadaUnaPilaNULL_alIntentarApilarUnElemento_devuelveNULL();
+    dadaUnaPilaVacia_alApilar10ElementosExitosamente_laPilaQuedaConTamanio10();
+    dadaUnaPilaConVariosElementos_alApilarUnElementoExitosamente_eseElementoPasaASerElTope();
+
+    pa2m_nuevo_grupo("Pila: Desapilado");
+    dadaUnaPilaNULL_alIntentarDesapilarUnElemento_devuelveNULL();
+    dadaUnaPilaVacia_alIntentarDesapilarUnElemento_devuelveNULL();
+    dadaUnaPilaConVariosElementos_alDesapilarUnElementoExitosamente_devuelveElElemento();
+    dadaUnaPilaConVariosElementos_alDesapilarUnElementoExitosamente_elPenultimoElementoEncoladoAhoraEsElTope();
+    dadaUnaPilaCon5Elementos_alDesapilar1ElementoExitosamente_laPilaQuedaConTamanio4();
+    dadaUnaPilaConVariosElementos_alDesapilarTodosElementosExitosamente_laPilaQuedaVacia();
+
+    pa2m_nuevo_grupo("Pila: Acceso Tope");
+    dadaUnaPilaNULL_alAccederAlElementoDelTope_devuelveNULL();
+    dadaUnaPilaVacia_alAccederAlElementoDelTope_devuelveNULL();
+    dadaUnaPilaConVariosElementos_alAccederAlElementoDelTope_devuelveElElemento();
+
+    pa2m_mostrar_reporte();
 }

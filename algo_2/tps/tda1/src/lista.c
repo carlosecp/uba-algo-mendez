@@ -3,6 +3,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include <stdio.h>
+
 lista_t*
 lista_crear()
 {
@@ -82,7 +84,7 @@ lista_quitar_de_posicion(lista_t* lista, size_t posicion)
         free(nodo_incial_actual);
     }
 
-    else if (posicion >= lista_tamanio(lista)) {
+    else if (posicion >= tamanio) {
         nodo_t* nodo_penultimo = nodo_penultimo_aux(lista -> nodo_inicio);
         if (!nodo_penultimo)
             return NULL;
@@ -115,14 +117,13 @@ void*
 lista_elemento_en_posicion(lista_t* lista, size_t posicion)
 {
     size_t tamanio = 0;
-
-    if (!lista || posicion >= (tamanio = lista_tamanio(lista)))
+    if (!lista || posicion > (tamanio = lista_tamanio(lista)))
         return NULL;
 
     if (posicion == 0)
         return lista_primero(lista);
 
-    if (posicion == (tamanio - 1))
+    if (posicion >= tamanio)
         return lista_ultimo(lista);
 
     nodo_t* nodo = nodo_en_posicion(lista -> nodo_inicio, posicion);

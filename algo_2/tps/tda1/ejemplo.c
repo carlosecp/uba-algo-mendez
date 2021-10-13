@@ -30,25 +30,25 @@ void probar_operaciones_lista(){
     
     printf("\n\n");
 
-    printf("Imprimo la lista usando el iterador externo: \n");
-    lista_iterador_t* it = NULL;
+    // printf("Imprimo la lista usando el iterador externo: \n");
+    // lista_iterador_t* it = NULL;
 
-    for(it = lista_iterador_crear(lista);
-        lista_iterador_tiene_siguiente(it);
-        lista_iterador_avanzar(it))
-        printf("%c ", *(char*)lista_iterador_elemento_actual(it));
-    printf("\n\n");
+    // for(it = lista_iterador_crear(lista);
+    //     lista_iterador_tiene_siguiente(it);
+    //     lista_iterador_avanzar(it))
+    //     printf("%c ", *(char*)lista_iterador_elemento_actual(it));
+    // printf("\n\n");
 
-    lista_iterador_destruir(it);
+    // lista_iterador_destruir(it);
 
-    int contador=0;
-    size_t elementos_recorridos = 0;
-    printf("Imprimo la lista usando el iterador interno: \n");
-    elementos_recorridos = lista_con_cada_elemento(lista, mostrar_elemento, (void*)&contador);
+    // int contador=0;
+    // size_t elementos_recorridos = 0;
+    // printf("Imprimo la lista usando el iterador interno: \n");
+    // elementos_recorridos = lista_con_cada_elemento(lista, mostrar_elemento, (void*)&contador);
 
-    printf("Recorri %lu elementos con el iterador interno y sume %i elementos\n", elementos_recorridos, contador);
+    // printf("Recorri %lu elementos con el iterador interno y sume %i elementos\n", elementos_recorridos, contador);
     
-    printf("\n");
+    // printf("\n");
     lista_destruir(lista);
 }
 
