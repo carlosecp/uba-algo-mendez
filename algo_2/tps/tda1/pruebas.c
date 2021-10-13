@@ -53,7 +53,7 @@ dadaUnaListaVacia_alInsertarUnElementoExitosamente_laListaQuedaConTamanio1() {
 }
 
 void
-dadaUnaListaCon1Elemento_alPedirElPrimeroYUltimoElemento_devuelveElMismoElemento() {
+dadaUnaListaCon1Elemento_alPedirElPrimerYUltimoElemento_devuelveElMismoElemento() {
     lista_t* lista = lista_crear();
 
     double elemento = 3.14159;
@@ -89,7 +89,7 @@ dadaUnaListaVacia_alInsertar10ElementosExitosamente_laListaQuedaConTamanio10() {
 }
 
 void
-dadaUnaListaVacia_alInsertarMultiplesElementos_seAgreganExitosamente() {
+dadaUnaListaVacia_alInsertarMultiplesElementosExitosamente_losElementosQuedanEnElOrdenCorrecto() {
     lista_t* lista = lista_crear();
 
     char a = 'a', b = 'b', c = 'c';
@@ -122,7 +122,7 @@ dadaUnaListaNULL_alIntentarInsertarUnElementoEnUnaPosicionEspecifica_devuelveNUL
 }
 
 void
-dadaUnaListaConVariosElementos_alInsertarUnElementoEnLaPosicion0_seAgregaAlInicio() {
+dadaUnaListaConVariosElementos_alInsertarUnElementoEnLaPosicion0Exitosamente_elElementoSeInsertaAlInicio() {
     lista_t* lista = lista_crear();
 
     lista = lista_insertar(lista, NULL);
@@ -139,7 +139,7 @@ dadaUnaListaConVariosElementos_alInsertarUnElementoEnLaPosicion0_seAgregaAlInici
 }
 
 void
-dadaUnaLista_alInsertarUnElementoEnUnaPosicionInvalida_seAgregaAlFinal() {
+dadaUnaLista_alIntentarInsertarUnElementoEnUnaPosicionInvalida_elElementoSeInsertaAlFinal() {
     lista_t* lista = lista_crear();
 
     lista = lista_insertar(lista, NULL);
@@ -156,25 +156,25 @@ dadaUnaLista_alInsertarUnElementoEnUnaPosicionInvalida_seAgregaAlFinal() {
 }
 
 void
-dadaUnaListaCon10Elementos_alInsertarUnElementoEnLaPosicion5_seAgregaExitosamente() {
+dadaUnaListaConVariosElementos_alInsertarUnElementoEnUnaPosicionEspecificaExitosamente_losElementosQuedanEnElOrdenCorrecta() {
     lista_t* lista = lista_crear();
 
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
-    lista = lista_insertar(lista, NULL);
+    char a = 'a', b = 'b', c = 'c', e = 'e', f = 'f';
+    lista = lista_insertar(lista, &a);
+    lista = lista_insertar(lista, &b);
+    lista = lista_insertar(lista, &c);
+    lista = lista_insertar(lista, &e);
+    lista = lista_insertar(lista, &f);
 
-    double elemento = 3.14159;
-    lista = lista_insertar_en_posicion(lista, &elemento, 5);
+    char d = 'd';
+    lista = lista_insertar_en_posicion(lista, &d, 3);
 
-    pa2m_afirmar(*(double*)lista_elemento_en_posicion(lista, 5) == elemento,
-                 "Elemento insertado en posicion 5 es 3.14159");
+    pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 3) == d,
+                 "Elemento insertado en posicion 3 es 'd'");
+    pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 2) == c,
+                 "Elemento que antes estaba en la posicion anterior al insertado sigue siendo 'c'");
+    pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 4) == e,
+                 "Elemento que que le sigue al elemento insertado es igual a 'e'");
 
     lista_destruir(lista);
 }
@@ -261,7 +261,7 @@ dadaUnaListaCon5Elementos_alQuitarLos2UltimosElementosExitosamente_laListaQuedaC
 }
 
 void
-dadaUnaListaCon5Elementos_alQuitarLos5UltimosElementosExitosamente_laListaQuedaVacia() {
+dadaUnaListaConVariosElementos_alQuitarTodosElementosExitosamente_laListaQuedaVacia() {
     lista_t* lista = lista_crear();
 
     lista = lista_insertar(lista, NULL);
@@ -327,7 +327,7 @@ dadaUnaListaVacia_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL
 }
 
 void
-dadaUnaListaConVariosElementos_alQuitarElElementoEnLaPosicion0_seEliminaElPrimerElemento()
+dadaUnaListaConVariosElementos_alQuitarElElementoEnLaPosicion0Exitosamente_seEliminaElPrimerElemento()
 {
     lista_t* lista = lista_crear();
 
@@ -395,7 +395,7 @@ dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL() {
 }
 
 void
-dadaUnaListaCon3Elementos_alAccederAlElementoEnLaPosicion1_devuelveElElemento() {
+dadaUnaListaConVariosElementos_alAccederAlElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento() {
     lista_t* lista = lista_crear();
 
     double elemento = 3.14159;
@@ -409,29 +409,21 @@ dadaUnaListaCon3Elementos_alAccederAlElementoEnLaPosicion1_devuelveElElemento() 
     lista_destruir(lista);
 }
 
+/* Cola: Creacion */
+
 void
 puedoCrearYDestruirUnaCola()
 {
     cola_t* cola = cola_crear();
 
     pa2m_afirmar(cola != NULL, "Crear lista devuelve la lista");
-    pa2m_afirmar(lista_primero((lista_t*)cola) == NULL, "Nodo inicial apunta a NULL");
-    pa2m_afirmar(lista_ultimo((lista_t*)cola) == NULL, "Nodo final apunta a NULL");
+    pa2m_afirmar(cola_frente(cola) == NULL, "El frente de la cola cola se crea NULL");
     pa2m_afirmar(cola_vacia(cola), "Cola se crea vacia");
 
     cola_destruir(cola);
 }
 
-void
-dadaUnaColaVacia_alEncolarUnElementoExitosamente_devuelveLaLista()
-{
-    cola_t* cola = cola_crear();
-
-    pa2m_afirmar(cola_encolar(cola, NULL) != NULL,
-                 "Encolar devuelve la cola");
-
-    cola_destruir(cola);
-}
+/* Cola: Encolar */
 
 void
 dadaUnaColaNULL_alIntentarEncolarUnElemento_devuelveNULL()
@@ -439,23 +431,85 @@ dadaUnaColaNULL_alIntentarEncolarUnElemento_devuelveNULL()
     cola_t* cola = NULL;
 
     pa2m_afirmar(cola_encolar(cola, NULL) == NULL,
-                 "Insertar en lista NULL devuelve NULL");
+                 "Encolar en cola NULL devuelve NULL");
 
     cola_destruir(cola);
 }
 
 void
-dadaUnaColaVacia_alEncolarUnElementoExitosamente_laColaQuedaConTamanio1()
+dadaUnaColaVacia_alEncolar10ElementosExitosamente_laColaQuedaConTamanio10()
 {
     cola_t* cola = cola_crear();
 
     cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
+    cola = cola_encolar(cola, NULL);
 
-    pa2m_afirmar(cola_tamanio(cola) == 1,
-                 "Para cola con 1 elemento el tamanio es 1");
+    pa2m_afirmar(cola_tamanio(cola) == 10,
+                 "Para cola con 10 elementos el tamanio es 10");
 
     cola_destruir(cola);
 }
+
+void
+dadaUnaColaConUnElementoEnElFrente_alEncolarMultiplesElementosExitosamente_todosSeAgreganDetrasDelFrente()
+{
+    cola_t* cola = cola_crear();
+
+    char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
+    cola = cola_encolar(cola, &a);
+    cola = cola_encolar(cola, &b);
+    cola = cola_encolar(cola, &c);
+    cola = cola_encolar(cola, &d);
+    cola = cola_encolar(cola, &e);
+
+    pa2m_afirmar(*(char*)cola_frente(cola) == a,
+                 "Al encolar multiples elementos, el primer elemento se mantiene al frente de la cola");
+
+    cola_destruir(cola);
+}
+
+/* Cola: Desencolar */
+
+void
+dadaUnaColaNULL_alIntentarDesencolarUnElemento_devuelveNULL()
+{
+    cola_t* cola = NULL;
+
+    pa2m_afirmar(cola_desencolar(cola) == NULL,
+                 "Desencolar en cola NULL, devuelve NULL");
+
+    cola_destruir(cola);
+}
+
+void
+dadaUnaColaVacia_alIntentarDesencolarUnElemento_devuelveNULL()
+{
+    cola_t* cola = cola_crear();
+
+    pa2m_afirmar(cola_desencolar(cola) == NULL,
+                 "Desencolar en cola vacia, devuelve NULL");
+
+    cola_destruir(cola);
+}
+
+/* Cola: Acceso Frente */
+
+void
+dadaUnaColaNULL_alAccederAlElementoDelFrente_devuelveNULL();
+
+void
+dadaUnaColaVacia_alAccederAlElementoDelFrente_devuelveNULL();
+
+void
+dadaUnaColaConVariosElemento_alAccederAlElementoDelFrente_devuelveElElemento();
 
 int
 main() {
@@ -463,48 +517,54 @@ main() {
     puedoCrearYDestruirUnaLista();
 
     pa2m_nuevo_grupo("Lista: Insercion");
-    dadaUnaListaVacia_alInsertarUnElementoExitosamente_devuelveLaLista();
     dadaUnaListaNULL_alIntentarInsertarUnElemento_devuelveNULL();
+    dadaUnaListaVacia_alInsertarUnElementoExitosamente_devuelveLaLista();
     dadaUnaListaVacia_alInsertarUnElementoExitosamente_laListaQuedaConTamanio1();
-    dadaUnaListaCon1Elemento_alPedirElPrimeroYUltimoElemento_devuelveElMismoElemento();
+    dadaUnaListaCon1Elemento_alPedirElPrimerYUltimoElemento_devuelveElMismoElemento();
     dadaUnaListaVacia_alInsertar10ElementosExitosamente_laListaQuedaConTamanio10();
-    dadaUnaListaVacia_alInsertarMultiplesElementos_seAgreganExitosamente();
+    dadaUnaListaVacia_alInsertarMultiplesElementosExitosamente_losElementosQuedanEnElOrdenCorrecto();
 
     pa2m_nuevo_grupo("Lista: Insercion en Posicion Especifica");
     dadaUnaListaNULL_alIntentarInsertarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
-    dadaUnaListaConVariosElementos_alInsertarUnElementoEnLaPosicion0_seAgregaAlInicio();
-    dadaUnaLista_alInsertarUnElementoEnUnaPosicionInvalida_seAgregaAlFinal();
-    dadaUnaListaCon10Elementos_alInsertarUnElementoEnLaPosicion5_seAgregaExitosamente();
+    dadaUnaListaConVariosElementos_alInsertarUnElementoEnLaPosicion0Exitosamente_elElementoSeInsertaAlInicio();
+    dadaUnaLista_alIntentarInsertarUnElementoEnUnaPosicionInvalida_elElementoSeInsertaAlFinal();
+    dadaUnaListaConVariosElementos_alInsertarUnElementoEnUnaPosicionEspecificaExitosamente_losElementosQuedanEnElOrdenCorrecta();
 
     pa2m_nuevo_grupo("Lista: Eliminacion");
-    dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElElemento();
     dadaUnaListaNULL_alIntentarQuitarUnElemento_devuelveNULL();
     dadaUnaListaVacia_alIntentarQuitarUnElemento_devuelveNULL();
+    dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElElemento();
     dadaUnaListaCon1Elemento_alQuitarElElemento_elNodoInicialYFinalApuntanANULL();
     dadaUnaListaCon5Elementos_alQuitarLos2UltimosElementosExitosamente_laListaQuedaConTamanio3();
-    dadaUnaListaCon5Elementos_alQuitarLos5UltimosElementosExitosamente_laListaQuedaVacia();
+    dadaUnaListaConVariosElementos_alQuitarTodosElementosExitosamente_laListaQuedaVacia();
 
     pa2m_nuevo_grupo("Lista: Eliminacion en Posicion Especifica");
-    dadaUnaListaConVariosElementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento();
     dadaUnaListaNULL_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
     dadaUnaListaVacia_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
-    dadaUnaListaConVariosElementos_alQuitarElElementoEnLaPosicion0_seEliminaElPrimerElemento();
+    dadaUnaListaConVariosElementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento();
+    dadaUnaListaConVariosElementos_alQuitarElElementoEnLaPosicion0Exitosamente_seEliminaElPrimerElemento();
     dadaUnaListaCon5Elementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_laListaQuedaConTamanio4();
 
     pa2m_nuevo_grupo("Lista: Acceso Elementos");
     dadaUnaListaNULL_alAccederAUnElemento_devuelveNULL();
     dadaUnaListaVacia_alAccederAUnElemento_devuelveNULL();
     dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL();
-    dadaUnaListaCon3Elementos_alAccederAlElementoEnLaPosicion1_devuelveElElemento();
+    dadaUnaListaConVariosElementos_alAccederAlElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento();
 
     pa2m_nuevo_grupo("Cola: Creacion");
     puedoCrearYDestruirUnaCola();
 
     pa2m_nuevo_grupo("Cola: Encolado");
-    dadaUnaColaVacia_alEncolarUnElementoExitosamente_devuelveLaLista();
     dadaUnaColaNULL_alIntentarEncolarUnElemento_devuelveNULL();
-    dadaUnaColaVacia_alEncolarUnElementoExitosamente_laColaQuedaConTamanio1();
-    // dadaUnaListaCon1Elemento_alPedirElPrimeroYUltimoElemento_devuelveElMismoElemento();
-    // dadaUnaListaVacia_alInsertar10ElementosExitosamente_laListaQuedaConTamanio10();
-    // dadaUnaListaVacia_alInsertarMultiplesElementos_seAgreganExitosamente();
+    dadaUnaColaVacia_alEncolar10ElementosExitosamente_laColaQuedaConTamanio10();
+    dadaUnaColaConUnElementoEnElFrente_alEncolarMultiplesElementosExitosamente_todosSeAgreganDetrasDelFrente();
+
+    pa2m_nuevo_grupo("Cola: Desencolado");
+    dadaUnaColaNULL_alIntentarDesencolarUnElemento_devuelveNULL();
+    dadaUnaColaVacia_alIntentarDesencolarUnElemento_devuelveNULL();
+
+    pa2m_nuevo_grupo("Cola: Acceso Frente");
+    /* dadaUnaColaNULL_alAccederAlElementoDelFrente_devuelveNULL(); */
+    /* dadaUnaColaVacia_alAccederAlElementoDelFrente_devuelveNULL(); */
+    /* dadaUnaColaConVariosElemento_alAccederAlElementoDelFrente_devuelveElElemento(); */
 }

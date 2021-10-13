@@ -3,8 +3,6 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-#include <stdio.h>
-
 lista_t*
 lista_crear()
 {
@@ -27,23 +25,19 @@ lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion)
     if (!nodo)
         return NULL;
 
-    // Insertar en una lista vacia
     if (!(lista -> nodo_inicio))
         lista -> nodo_inicio = lista -> nodo_fin = nodo;
 
-    // Insertar en la primera posicion
     else if (posicion == 0) {
         nodo -> siguiente = lista -> nodo_inicio;
         lista -> nodo_inicio = nodo;
     }
 
-    // Insertar en la ultima posicion
     else if (posicion >= lista_tamanio(lista)) {
         lista -> nodo_fin -> siguiente = nodo;
         lista -> nodo_fin = nodo;
     }
 
-    // Insertar en cualquier otra posicion
     else {
         nodo_t* nodo_anterior_al_insertado =
             nodo_anterior_a_posicion_aux(lista -> nodo_inicio, posicion);
@@ -73,7 +67,6 @@ lista_quitar_de_posicion(lista_t* lista, size_t posicion)
     if (!lista || !(tamanio = lista_tamanio(lista)))
         return NULL;
     
-    // Quitar el unico elemento de la lista
     if (tamanio == 1) {
         elemento_quitado = lista_primero(lista);
         free(lista -> nodo_inicio);
@@ -81,7 +74,6 @@ lista_quitar_de_posicion(lista_t* lista, size_t posicion)
         lista -> nodo_inicio = lista -> nodo_fin = NULL;
     }
 
-    // Quitar el primer elemento
     else if (posicion == 0) {
         nodo_t* nodo_incial_actual = lista -> nodo_inicio;
         lista -> nodo_inicio = lista -> nodo_inicio -> siguiente;
@@ -90,7 +82,6 @@ lista_quitar_de_posicion(lista_t* lista, size_t posicion)
         free(nodo_incial_actual);
     }
 
-    // Quitar el ultimo elemento
     else if (posicion >= lista_tamanio(lista)) {
         nodo_t* nodo_penultimo = nodo_penultimo_aux(lista -> nodo_inicio);
         if (!nodo_penultimo)
@@ -103,7 +94,6 @@ lista_quitar_de_posicion(lista_t* lista, size_t posicion)
         lista -> nodo_fin = nodo_penultimo;
     }
 
-    // Quitar cualquier otro elemento
     else {
         nodo_t* nodo_anterior_al_quitado =
             nodo_anterior_a_posicion_aux(lista -> nodo_inicio, posicion);

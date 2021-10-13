@@ -10,11 +10,11 @@ cola_t* cola_encolar(cola_t* cola, void* elemento){
 }
 
 void* cola_desencolar(cola_t* cola){
-    return NULL;
+    return lista_quitar_de_posicion((lista_t*)cola, 0);
 }
 
 void* cola_frente(cola_t* cola){
-    return NULL;
+    return lista_primero((lista_t*)cola);
 }
 
 size_t cola_tamanio(cola_t* cola){
