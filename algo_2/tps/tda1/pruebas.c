@@ -454,6 +454,118 @@ dadaUnaListaConVariosElementos_alAccederAlElementoEnUnaPosicionEspecificaExitosa
     lista_destruir(lista);
 }
 
+/* Lista: Iterador */
+
+void
+puedoCrearYDestruirUnIterador()
+{
+    lista_t* lista = NULL;
+    lista_iterador_t* it = lista_iterador_crear(lista);
+
+    pa2m_afirmar(it == NULL, "Para una lista NULL, el iterador se crea NULL");
+
+    lista_iterador_destruir(it);
+}
+
+void
+dadaUnaListaVacia_puedoCrearYDestruirUnIterador()
+{
+    lista_t* lista = lista_crear();
+    lista_iterador_t* it = lista_iterador_crear(lista);
+
+    pa2m_afirmar(lista_iterador_elemento_actual(it) == NULL,
+                 "Para una lista vacia, el iterador se crea con elemento "
+                 "corriente apuntando a NULL");
+
+    lista_iterador_destruir(it);
+}
+
+void
+dadaUnaListaConVariosElementos_puedoCrearYDestruirUnIterador()
+{
+    lista_t* lista = lista_crear();
+
+    char a = 'a', b = 'b', c = 'c';
+    lista = lista_insertar(lista, &a);
+    lista = lista_insertar(lista, &b);
+    lista = lista_insertar(lista, &c);
+
+    lista_iterador_t* it = lista_iterador_crear(lista);
+
+    pa2m_afirmar(*(char*)lista_iterador_elemento_actual(it) == a,
+                 "Para una lista con varios elementos, el iterador se crea con "
+                 "elemento corriente apuntando al primer elemento de la lista");
+
+    lista_iterador_destruir(it);
+    lista_destruir(lista);
+}
+
+void
+dadaUnaListaConVariosElementos_alIterarConUnIteradorExterno_elIteradorAvanzaSobreLosElementosCorrectamente()
+{
+    lista_t* lista = lista_crear();
+
+    char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
+    lista = lista_insertar(lista, &a);
+    lista = lista_insertar(lista, &b);
+    lista = lista_insertar(lista, &c);
+    lista = lista_insertar(lista, &d);
+    lista = lista_insertar(lista, &e);
+
+    lista_iterador_t* it = lista_iterador_crear(lista);
+
+    bool iterador_avanza = lista_iterador_avanzar(it);
+    pa2m_afirmar(
+        iterador_avanza && (*(char*)lista_iterador_elemento_actual(it) == b),
+        "Para un iterador que esta sobre el primer elemento de la lista 'a', "
+        "al avanzar el iterador, se posiciona sobre el segundo elemento de la "
+        "lista 'b'");
+
+    iterador_avanza = lista_iterador_avanzar(it);
+    pa2m_afirmar(
+        iterador_avanza && (*(char*)lista_iterador_elemento_actual(it) == c),
+        "Para un iterador que esta sobre el segundo elemento de la lista 'b', "
+        "al avanzar el iterador, se posiciona sobre el tercer elemento de la "
+        "lista 'c'");
+    
+    lista_iterador_destruir(it);
+    lista_destruir(lista);
+}
+
+void
+dadaUnaListaConVariosElementos_alIterarConUnIteradorExternoHastaElFinalDeLaListaEIntentarIterador_elIteradorNoAvanza()
+{
+    lista_t* lista = lista_crear();
+
+    char a = 'a', b = 'b', c = 'c', d = 'd', e = 'e';
+    lista = lista_insertar(lista, &a);
+    lista = lista_insertar(lista, &b);
+    lista = lista_insertar(lista, &c);
+    lista = lista_insertar(lista, &d);
+    lista = lista_insertar(lista, &e);
+
+    lista_iterador_t* it = lista_iterador_crear(lista);
+
+    bool iterador_avanza = lista_iterador_avanzar(it);
+    iterador_avanza = lista_iterador_avanzar(it);
+    iterador_avanza = lista_iterador_avanzar(it);
+    iterador_avanza = lista_iterador_avanzar(it);
+    iterador_avanza = lista_iterador_avanzar(it);
+
+    pa2m_afirmar(!iterador_avanza,
+                 "Cuando el iterador llega al final de la lista, al intentar "
+                 "avanzar devuelve false");
+
+    iterador_avanza = lista_iterador_avanzar(it);
+    pa2m_afirmar(*(char*)lista_iterador_elemento_actual(it) == e,
+                 "Cuando el iterador llega al final de la lista y se intenta "
+                 "avanzar, el elemento actual del iterador sigue apuntando al "
+                 "ultimo elemento de la lista");
+
+    lista_iterador_destruir(it);
+    lista_destruir(lista);
+}
+
 /* Cola: Creacion */
 
 void
@@ -876,22 +988,22 @@ dadaUnaPilaConVariosElementos_alAccederAlElementoDelTope_devuelveElElemento()
 int
 main()
 {
-    pa2m_nuevo_grupo("Lista: Creacion");
+    pa2m_nuevo_grupo("Prueba Lista: Creacion");
     puedoCrearYDestruirUnaLista();
 
-    pa2m_nuevo_grupo("Lista: Insercion");
+    pa2m_nuevo_grupo("Prueba Lista: Insercion");
     dadaUnaListaNULL_alIntentarInsertarUnElemento_devuelveNULL();
     dadaUnaListaVacia_alInsertarUnElementoExitosamente_devuelveLaLista();
     dadaUnaListaVacia_alInsertar10ElementosExitosamente_laListaQuedaConTamanio10();
     dadaUnaListaVacia_alInsertarMultiplesElementosExitosamente_losElementosQuedanEnElOrdenCorrecto();
 
-    pa2m_nuevo_grupo("Lista: Insercion en Posicion Especifica");
+    pa2m_nuevo_grupo("Prueba Lista: Insercion en Posicion Especifica");
     dadaUnaListaNULL_alIntentarInsertarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
     dadaUnaListaConVariosElementos_alInsertarUnElementoEnLaPosicion0Exitosamente_elElementoSeInsertaAlInicio();
     dadaUnaLista_alIntentarInsertarUnElementoEnUnaPosicionInvalida_elElementoSeInsertaAlFinal();
     dadaUnaListaConVariosElementos_alInsertarUnElementoEnUnaPosicionEspecificaExitosamente_losElementosQuedanEnElOrdenCorrecta();
 
-    pa2m_nuevo_grupo("Lista: Eliminacion");
+    pa2m_nuevo_grupo("Prueba Lista: Eliminacion");
     dadaUnaListaNULL_alIntentarQuitarUnElemento_devuelveNULL();
     dadaUnaListaVacia_alIntentarQuitarUnElemento_devuelveNULL();
     dadaUnaListaConVariosElementos_alQuitarElUltimoElementoExitosamente_devuelveElElemento();
@@ -899,14 +1011,14 @@ main()
     dadaUnaListaCon5Elementos_alQuitarLos2UltimosElementosExitosamente_laListaQuedaConTamanio3();
     dadaUnaListaConVariosElementos_alQuitarTodosElementosExitosamente_laListaQuedaVacia();
 
-    pa2m_nuevo_grupo("Lista: Eliminacion en Posicion Especifica");
+    pa2m_nuevo_grupo("Prueba Lista: Eliminacion en Posicion Especifica");
     dadaUnaListaNULL_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
     dadaUnaListaVacia_alIntentarQuitarUnElementoEnUnaPosicionEspecifica_devuelveNULL();
     dadaUnaListaConVariosElementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento();
     dadaUnaListaConVariosElementos_alQuitarElElementoEnLaPosicion0Exitosamente_seEliminaElPrimerElemento();
     dadaUnaListaCon5Elementos_alQuitarUnElementoEnUnaPosicionEspecificaExitosamente_laListaQuedaConTamanio4();
 
-    pa2m_nuevo_grupo("Lista: Acceso Elementos");
+    pa2m_nuevo_grupo("Prueba Lista: Acceso Elementos");
     dadaUnaListaNULL_alAccederAUnElemento_devuelveNULL();
     dadaUnaListaVacia_alAccederAUnElemento_devuelveNULL();
     dadaUnaLista_alAccederAUnElementoEnUnaPosicionInvalida_devuelveNULL();
@@ -914,15 +1026,22 @@ main()
     dadaUnaLista_alAccederAlElementoEnLaPoscionFinalExitosamente_devuelveElUltimoElemento();
     dadaUnaListaConVariosElementos_alAccederAlElementoEnUnaPosicionEspecificaExitosamente_devuelveElElemento();
 
-    pa2m_nuevo_grupo("Cola: Creacion");
+    pa2m_nuevo_grupo("Prueba Lista: Iterador");
+    puedoCrearYDestruirUnIterador();
+    dadaUnaListaVacia_puedoCrearYDestruirUnIterador();
+    dadaUnaListaConVariosElementos_puedoCrearYDestruirUnIterador();
+    dadaUnaListaConVariosElementos_alIterarConUnIteradorExterno_elIteradorAvanzaSobreLosElementosCorrectamente();
+    dadaUnaListaConVariosElementos_alIterarConUnIteradorExternoHastaElFinalDeLaListaEIntentarIterador_elIteradorNoAvanza();
+
+    pa2m_nuevo_grupo("Prueba Cola: Creacion");
     puedoCrearYDestruirUnaCola();
 
-    pa2m_nuevo_grupo("Cola: Encolado");
+    pa2m_nuevo_grupo("Prueba Cola: Encolado");
     dadaUnaColaNULL_alIntentarEncolarUnElemento_devuelveNULL();
     dadaUnaColaVacia_alEncolar10ElementosExitosamente_laColaQuedaConTamanio10();
     dadaUnaColaCon1ElementoEnElFrente_alEncolarMultiplesElementosExitosamente_elPrimerElementoSigueEnElFrente();
 
-    pa2m_nuevo_grupo("Cola: Desencolado");
+    pa2m_nuevo_grupo("Prueba Cola: Desencolado");
     dadaUnaColaNULL_alIntentarDesencolarUnElemento_devuelveNULL();
     dadaUnaColaVacia_alIntentarDesencolarUnElemento_devuelveNULL();
     dadaUnaColaConVariosElementos_alDesencolarUnElementoExitosamente_devuelveElElemento();
@@ -930,20 +1049,20 @@ main()
     dadaUnaColaCon5Elementos_alDesencolar1ElementoExitosamente_laColaQuedaConTamanio4();
     dadaUnaColaConVariosElementos_alDesencolarTodosElementosExitosamente_laColaQuedaVacia();
 
-    pa2m_nuevo_grupo("Cola: Acceso Frente");
+    pa2m_nuevo_grupo("Prueba Cola: Acceso Frente");
     dadaUnaColaNULL_alAccederAlElementoDelFrente_devuelveNULL();
     dadaUnaColaVacia_alAccederAlElementoDelFrente_devuelveNULL();
     dadaUnaColaConVariosElementos_alAccederAlElementoDelFrente_devuelveElElemento();
 
-    pa2m_nuevo_grupo("Pila: Creacion");
+    pa2m_nuevo_grupo("Prueba Pila: Creacion");
     puedoCrearYDestruirUnaPila();
 
-    pa2m_nuevo_grupo("Pila: Apilado");
+    pa2m_nuevo_grupo("Prueba Pila: Apilado");
     dadaUnaPilaNULL_alIntentarApilarUnElemento_devuelveNULL();
     dadaUnaPilaVacia_alApilar10ElementosExitosamente_laPilaQuedaConTamanio10();
     dadaUnaPilaConVariosElementos_alApilarUnElementoExitosamente_eseElementoPasaASerElTope();
 
-    pa2m_nuevo_grupo("Pila: Desapilado");
+    pa2m_nuevo_grupo("Prueba Pila: Desapilado");
     dadaUnaPilaNULL_alIntentarDesapilarUnElemento_devuelveNULL();
     dadaUnaPilaVacia_alIntentarDesapilarUnElemento_devuelveNULL();
     dadaUnaPilaConVariosElementos_alDesapilarUnElementoExitosamente_devuelveElElemento();
@@ -951,7 +1070,7 @@ main()
     dadaUnaPilaCon5Elementos_alDesapilar1ElementoExitosamente_laPilaQuedaConTamanio4();
     dadaUnaPilaConVariosElementos_alDesapilarTodosElementosExitosamente_laPilaQuedaVacia();
 
-    pa2m_nuevo_grupo("Pila: Acceso Tope");
+    pa2m_nuevo_grupo("Prueba Pila: Acceso Tope");
     dadaUnaPilaNULL_alAccederAlElementoDelTope_devuelveNULL();
     dadaUnaPilaVacia_alAccederAlElementoDelTope_devuelveNULL();
     dadaUnaPilaConVariosElementos_alAccederAlElementoDelTope_devuelveElElemento();
