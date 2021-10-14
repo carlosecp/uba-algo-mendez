@@ -204,24 +204,20 @@ lista_iterador_crear(lista_t* lista)
 bool
 lista_iterador_tiene_siguiente(lista_iterador_t* iterador)
 {
-    if (!iterador || !iterador -> corriente)
+    if (!iterador)
         return false;
 
-    return iterador -> corriente -> siguiente != NULL;
+    return iterador -> corriente != NULL;
 }
 
 bool
 lista_iterador_avanzar(lista_iterador_t* iterador)
 {
-    if (!iterador)
+    if (!iterador || !iterador -> corriente)
         return false;
 
-    if (lista_iterador_tiene_siguiente(iterador)) {
-        iterador -> corriente = iterador -> corriente -> siguiente;
-        return true;
-    }
-
-    return false;
+    iterador -> corriente = iterador -> corriente -> siguiente;
+    return iterador -> corriente != NULL;
 }
 
 void*
@@ -245,10 +241,13 @@ lista_iterador_destruir(lista_iterador_t* iterador)
 size_t
 lista_con_cada_elemento(lista_t* lista, bool (*funcion)(void*, void*), void* contexto)
 {
+    if (!lista || !funcion)
+        return 0;
+
     size_t elementos_iterados = 0;
     nodo_t* nodo_actual = lista -> nodo_inicio;
 
-    while (nodo_actual && funcion(nodo_actual->elemento, contexto)) {
+    while (nodo_actual && funcion(nodo_actual -> elemento, contexto)) {
         nodo_actual = nodo_actual -> siguiente;
         elementos_iterados++;
     }
