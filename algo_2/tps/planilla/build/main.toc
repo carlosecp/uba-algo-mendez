@@ -5,6 +5,6 @@
 \contentsline {subsubsection}{\numberline {2.1.1}Lista Enlazada}{2}{subsubsection.2.1.1}%
 \contentsline {subsection}{\numberline {2.2}TDA Pila y Cola}{2}{subsection.2.2}%
 \contentsline {section}{\numberline {3}Detalles de implementación}{3}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Detalles de alguna función}{3}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Detalle de otra función}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.1}Inserción de elementos}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Eliminación de elementos}{3}{subsection.3.2}%
 \contentsline {section}{\numberline {4}Diagramas}{3}{section.4}%

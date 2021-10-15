@@ -9,6 +9,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{listings}
 
 % +--- VARIABLES ---+
 \newcommand{\FirstName}{Carlos E.}
@@ -76,19 +77,24 @@ De la estructura de datos lista se pueden derivar otras dos estructuras similare
 
 Las operaciones de pila y cola divergen levemente de las operaciones del tipo lista, aunque para una implementación basada en nodos, estas operaciones pueden ser consideradas casos particulares de las operaciones estándar de una lista enlazada.
 
-La estructura de datos pila consiste en una colección de elementos organizados de manera lineal en las que solo se tiene acceso al elemento que se encuentra en el tope de la pila, es decir, el último elemento agregado. De esta forma, al agregar un elemento a la pila, solamente se puede agregar sobre el tope actual de la misma. De igual manera, solamente se puede quitar el último elemento de la pila. Esto implica que para quitar un elemento en medio de la pila, primero se tienen que quitar todos los elementos que fueron agregados después de ese elemento, o los elementos que ''están'' encima. Este método para agregar y quitar elementos es conocido como \textbf{LIFO} (del inglés ''Last In First Out''), que se traduce como ''ultimo en entrar, primero en salir''. Visto como caso particular de una lista enlazada, el agregar (o ''encolar'') un elemento en una pila equivale a agregar un elemento únicamente al final de la lista, y el quitar (o ''desencolar'') elemento es equivalente a quitar solamente el último elemento de la lista.
+La estructura de datos pila consiste en una colección de elementos organizados de manera lineal en las que solo se tiene acceso al elemento que se encuentra en el tope de la pila, es decir, el último elemento agregado. De esta forma, al agregar un elemento a la pila, solamente se puede agregar sobre el tope actual de la misma. De igual manera, solamente se puede quitar el último elemento de la pila. Esto implica que para quitar un elemento en medio de la pila, primero se tienen que quitar todos los elementos que fueron agregados después de ese elemento, o los elementos que están encima. Este método para agregar y quitar elementos es conocido como \textbf{LIFO} (del inglés ''Last In First Out''), que se traduce como ''ultimo en entrar, primero en salir''. Visto como caso particular de una lista enlazada, el agregar (o ''apilar'') un elemento en una pila equivale a agregar un elemento únicamente al final de la lista, y el quitar (o ''desapilar'') elemento es equivalente a quitar solamente el último elemento de la lista.
+
+Por otra parte, el tipo de dato cola consiste también en una colección lineal de datos en el que solo se tiene permitido agregar (o ''encolar'') elementos al final de la cola, sin embargo, contrario a lo sucede en una pila, en una cola solo se tiene acceso al elemento que está al frente de la cola, es decir, al primer elemento insertado. De esta forma, si se desea sacar un (o ''desencolar'') elemento se tienen que remover el primer elemento de la cola. Este método para agregar y quitar elementos es conocido como \textbf{FIFO} (del inglés ''First In First Out''), que se traduce como ''primero en entrar, primero en salir''.
 
 
 \section{Detalles de implementación}\label{sec:implementacion}
 
-Detalles específicos de la implementación, como compilar, como ejecutar
+La implementación de estas tres estructuras de datos fue escrita en el lenguaje de programación C, siguiendo la especificación del lenguaje detallada en el estándar C99. Los archivos principales se encuentran dentro del directorio \textbf{src} ubicada en la raíz del repositorio. 
+
+Además se incluye un archivo \textbf{pruebas.c} en el que se encuentran diferentes pruebas automatizadas para detectar errores en la ejecución del programa o en la asignación, manejo y liberación de memoria dinámica. Para esto se utiliza \textbf{gcc} como compilador y \textbf{valgrind} como herramienta de análisis de memoria.
+
+
+\subsection{Inserción de elementos}
+Se proveen dos funciones para insertar elementos. La primera de estas funciones, \lstinline{lista_insertar}, se encarga de insertar un elemento al final de la lista y \lstinline{lista_insertar_en_posicion} se encarga de insertar un elemento en la posición especificada por el usuario. Para esta última función, en el caso de que el usuario quisiera agregar un elemento en una posición que no existe en la lista, el elemento se agregará al final de la misma.
 
 
 
-\subsection{Detalles de alguna función}
-Algún detalle importante sobre alguna función.
-
-\subsection{Detalle de otra función}
+\subsection{Eliminación de elementos}
 Algún detalle de otra función.
 
 \section{Diagramas}\label{sec:diagramas}
