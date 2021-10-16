@@ -478,6 +478,7 @@ dadaUnaListaVacia_puedoCrearYDestruirUnIterador()
                  "corriente apuntando a NULL");
 
     lista_iterador_destruir(it);
+    lista_destruir(lista);
 }
 
 void
@@ -557,10 +558,9 @@ dadaUnaListaConVariosElementos_alIterarConUnIteradorExternoHastaElFinalDeLaLista
                  "avanzar devuelve false");
 
     iterador_avanza = lista_iterador_avanzar(it);
-    pa2m_afirmar(*(char*)lista_iterador_elemento_actual(it) == e,
-                 "Cuando el iterador llega al final de la lista y se intenta "
-                 "avanzar, el elemento actual del iterador sigue apuntando al "
-                 "ultimo elemento de la lista");
+    pa2m_afirmar(lista_iterador_elemento_actual(it) == NULL,
+                 "Cuando el iterador llega al final de la lista el elemento "
+                 "actual apunta a NULL");
 
     lista_iterador_destruir(it);
     lista_destruir(lista);

@@ -48,7 +48,7 @@ lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion)
             return NULL;
 
         nodo -> siguiente = nodo_anterior_al_insertado -> siguiente;
-        nodo_anterior_al_insertado->siguiente = nodo;
+        nodo_anterior_al_insertado -> siguiente = nodo;
     }
 
     lista -> cantidad++;
