@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.10.14)  15 OCT 2021 18:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.10.14)  16 OCT 2021 18:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -308,52 +308,105 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has b
 <to be read again> 
                    \relax 
 l.51 \newpage
-              [1] [2]
-<diagrama1.png, id=42, 430.60875pt x 131.74219pt>
-File: diagrama1.png Graphic file (type png)
-<use diagrama1.png>
-Package pdftex.def Info: diagrama1.png  used on input line 104.
-(pdftex.def)             Requested size: 339.67029pt x 103.9224pt.
-<diagrama2.png, id=44, 218.31563pt x 165.61874pt>
-File: diagrama2.png Graphic file (type png)
-<use diagrama2.png>
-Package pdftex.def Info: diagrama2.png  used on input line 111.
-(pdftex.def)             Requested size: 339.67029pt x 257.68185pt.
- [3pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
+              [1] [2] [3] [4]
+<pila_apilado.png, id=59, 743.77875pt x 433.62pt>
+File: pila_apilado.png Graphic file (type png)
+<use pila_apilado.png>
+Package pdftex.def Info: pila_apilado.png  used on input line 149.
+(pdftex.def)             Requested size: 339.67029pt x 198.03183pt.
+<pila_desapilado.png, id=61, 683.55376pt x 433.62pt>
+File: pila_desapilado.png Graphic file (type png)
+<use pila_desapilado.png>
+Package pdftex.def Info: pila_desapilado.png  used on input line 156.
+(pdftex.def)             Requested size: 339.67029pt x 215.47955pt.
+ [5pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.114 
-       <./diagrama1.png>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 116.
- [4pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
+l.159 
+       <./pila_apilado.png>]
+<cola_encolado.png, id=68, 594.22pt x 502.87875pt>
+File: cola_encolado.png Graphic file (type png)
+<use cola_encolado.png>
+Package pdftex.def Info: cola_encolado.png  used on input line 163.
+(pdftex.def)             Requested size: 339.67029pt x 287.4649pt.
+<cola_desencolado.png, id=69, 603.25375pt x 502.87875pt>
+File: cola_desencolado.png Graphic file (type png)
+<use cola_desencolado.png>
+Package pdftex.def Info: cola_desencolado.png  used on input line 170.
+(pdftex.def)             Requested size: 339.67029pt x 283.15251pt.
+ [6pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.116 \end{document}
-                     <./diagrama2.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 116.
+l.173 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.173 
+       <./pila_desapilado.png> <./cola_encolado.png>]
+<lista_general.png, id=79, 370.38374pt x 192.72pt>
+File: lista_general.png Graphic file (type png)
+<use lista_general.png>
+Package pdftex.def Info: lista_general.png  used on input line 177.
+(pdftex.def)             Requested size: 339.67029pt x 176.73993pt.
+<lista_insercion.png, id=80, 442.65375pt x 412.54124pt>
+File: lista_insercion.png Graphic file (type png)
+<use lista_insercion.png>
+Package pdftex.def Info: lista_insercion.png  used on input line 184.
+(pdftex.def)             Requested size: 339.67029pt x 316.58131pt.
+ [7pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.187 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.187 
+       <./cola_desencolado.png> <./lista_general.png>]
+<lista_quitar.png, id=89, 442.65375pt x 734.745pt>
+File: lista_quitar.png Graphic file (type png)
+<use lista_quitar.png>
+Package pdftex.def Info: lista_quitar.png  used on input line 191.
+(pdftex.def)             Requested size: 339.67029pt x 563.83826pt.
+ [8pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.194 
+       <./lista_insercion.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 196.
+ [9pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.196 \end{document}
+                     <./lista_quitar.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 196.
  (/home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/build/main.aux
 LaTeX Info: Redefining \. on input line 25.
 LaTeX Info: Redefining \% on input line 25.
 )
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 116.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 116.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 116.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 196.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 196.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 196.
  ) 
 Here is how much of TeX's memory you used:
- 8498 strings out of 481239
- 124656 string characters out of 5920376
- 395665 words of memory out of 5000000
- 23615 multiletter control sequences out of 15000+600000
- 539419 words of font info for 35 fonts, out of 8000000 for 9000
+ 8557 strings out of 481239
+ 125630 string characters out of 5920376
+ 397866 words of memory out of 5000000
+ 23651 multiletter control sequences out of 15000+600000
+ 539754 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 34i,11n,45p,1121b,986s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texmf/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx2488.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1440.pfb>
-Output written on /home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/build/main.pdf (5 pages, 298834 bytes).
+ 34i,11n,45p,1121b,1011s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texmf/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx2488.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1440.pfb>
+Output written on /home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/build/main.pdf (10 pages, 343228 bytes).
 PDF statistics:
- 111 PDF objects out of 1000 (max. 8388607)
- 92 compressed objects within 1 object stream
- 17 named destinations out of 1000 (max. 500000)
- 88 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 166 PDF objects out of 1000 (max. 8388607)
+ 131 compressed objects within 2 object streams
+ 34 named destinations out of 1000 (max. 500000)
+ 121 words of extra memory for PDF output out of 10000 (max. 10000000)
 
