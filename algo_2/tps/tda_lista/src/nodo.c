@@ -19,7 +19,7 @@ nodo_en_posicion(nodo_t* nodo_inicial, size_t posicion)
 		return NULL;
 
 	nodo_t* nodo = nodo_inicial;
-	for (size_t i = 0; i < posicion; i++)
+	for (size_t i = 0; !nodo || i < posicion; i++)
 		nodo = nodo -> siguiente;
 	
 	return nodo;
