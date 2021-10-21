@@ -87,6 +87,7 @@ dadoUnABB_alInsertarVariosElementos_seInsertanEnLasPosicionesCorrectas() {
 	abb_t* arbol = abb_crear(comparador);
 	int elem_1 = 100, elem_2 = 20, elem_3 = 200, elem_4 = 10, elem_5 = 30,
 		elem_6 = 150, elem_7 = 300;
+	// int elem_1 = 100, elem_2 = 20, elem_3 = 200;
 	arbol = abb_insertar(arbol, &elem_1);
 	arbol = abb_insertar(arbol, &elem_2);
 	arbol = abb_insertar(arbol, &elem_3);
@@ -97,16 +98,23 @@ dadoUnABB_alInsertarVariosElementos_seInsertanEnLasPosicionesCorrectas() {
 
 	const size_t max_elementos = 7;
 	void* elementos_preorden[max_elementos];
-	abb_recorrer(arbol, PREORDEN, elementos_preorden, 7);
+	abb_recorrer(arbol, PREORDEN, elementos_preorden, max_elementos);
 	for (size_t i = 0; i < max_elementos; i++)
 		printf("Elemento: %i\n", *(int*)elementos_preorden[i]);
 
 	printf("\n");
 
 	void* elementos_inorden[max_elementos];
-	abb_recorrer(arbol, INORDEN, elementos_inorden, 7);
+	abb_recorrer(arbol, INORDEN, elementos_inorden, max_elementos);
 	for (size_t i = 0; i < max_elementos; i++)
 		printf("Elemento: %i\n", *(int*)elementos_inorden[i]);
+
+	printf("\n");
+
+	void* elementos_postorden[max_elementos];
+	abb_recorrer(arbol, POSTORDEN, elementos_postorden, max_elementos);
+	for (size_t i = 0; i < max_elementos; i++)
+		printf("Elemento: %i\n", *(int*)elementos_postorden[i]);
 
 	abb_destruir(arbol);
 }

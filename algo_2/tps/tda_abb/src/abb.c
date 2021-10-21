@@ -153,15 +153,16 @@ abb_buscar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador compar
 size_t
 abb_recorrer_preorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array)
 {
-	if (!raiz || !tamanio_array)
+	if (!raiz)
 		return 0;
 
-	size_t cantidad_recorridos = 1;
-	*array = raiz -> elemento;
-	cantidad_recorridos += abb_recorrer_preorden_aux(raiz -> izquierda, array + cantidad_recorridos, tamanio_array);
-	cantidad_recorridos += abb_recorrer_preorden_aux(raiz -> derecha, array + cantidad_recorridos, tamanio_array);
+	size_t cantidad = 0;
+	array[cantidad++] = raiz -> elemento;
+
+	cantidad += abb_recorrer_preorden_aux(raiz -> izquierda, array + cantidad, tamanio_array);
+	cantidad += abb_recorrer_preorden_aux(raiz -> derecha, array + cantidad, tamanio_array);
 	
-	return cantidad_recorridos;
+	return cantidad;
 }
 
 size_t
@@ -170,18 +171,29 @@ abb_recorrer_inorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array)
 	if (!raiz)
 		return 0;
 	
-	size_t cantidad_recorridos = 1;
-	cantidad_recorridos += abb_recorrer_inorden_aux(raiz -> izquierda, array + cantidad_recorridos, tamanio_array);
-	*array = raiz -> elemento;
-	cantidad_recorridos += abb_recorrer_inorden_aux(raiz -> derecha, array + cantidad_recorridos, tamanio_array);
+	size_t cantidad = 0;
+	cantidad += abb_recorrer_inorden_aux(raiz -> izquierda, array + cantidad, tamanio_array);
 
-	return cantidad_recorridos;
+	array[cantidad++] = raiz -> elemento;
+
+	cantidad += abb_recorrer_inorden_aux(raiz -> derecha, array + cantidad, tamanio_array);
+
+	return cantidad;
 }
 
 size_t
 abb_recorrer_postorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array)
 {
-	return 0;
+	if (!raiz)
+		return 0;
+
+	size_t cantidad = 0;
+	cantidad += abb_recorrer_postorden_aux(raiz -> izquierda, array + cantidad, tamanio_array);
+	cantidad += abb_recorrer_postorden_aux(raiz -> derecha, array + cantidad, tamanio_array);
+
+	array[cantidad++] = raiz -> elemento;
+
+	return cantidad;
 }
 
 void
