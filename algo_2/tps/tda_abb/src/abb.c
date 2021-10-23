@@ -6,6 +6,8 @@
 #include <stdlib.h>
 
 nodo_abb_t* abb_insertar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador);
+nodo_abb_t* abb_quitar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador);
+nodo_abb_t* abb_encontrar_predecesor_inmediato_aux();
 void* abb_buscar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador);
 size_t abb_recorrer_preorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array);
 size_t abb_recorrer_inorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array);
@@ -40,7 +42,14 @@ abb_insertar(abb_t* arbol, void* elemento)
 void*
 abb_quitar(abb_t* arbol, void* elemento)
 {
-    return NULL;
+	if (!arbol)
+		return NULL;
+
+	nodo_abb_t* nodo_quitado = abb_quitar_recursivo_aux(arbol -> nodo_raiz, elemento, arbol -> comparador);
+	if (!nodo_quitado)
+		return NULL;
+
+	return nodo_quitado -> elemento;
 }
 
 void*
@@ -92,20 +101,19 @@ abb_con_cada_elemento(abb_t* arbol, abb_recorrido recorrido, bool (*funcion)(voi
 size_t
 abb_recorrer(abb_t* arbol, abb_recorrido recorrido, void** array, size_t tamanio_array)
 {
-	switch (recorrido) {
+	if (!arbol || !array)
+		return 0;
 
-		case PREORDEN:
-			return abb_recorrer_preorden_aux(arbol -> nodo_raiz, array, tamanio_array);
+	if (recorrido == PREORDEN)
+		return abb_recorrer_preorden_aux(arbol -> nodo_raiz, array, tamanio_array);
 
-		case INORDEN:
-			return abb_recorrer_inorden_aux(arbol -> nodo_raiz, array, tamanio_array);
+	if (recorrido == INORDEN)
+		return abb_recorrer_inorden_aux(arbol -> nodo_raiz, array, tamanio_array);
 		
-		case POSTORDEN:
-			return abb_recorrer_postorden_aux(arbol -> nodo_raiz, array, tamanio_array);
+	if (recorrido == POSTORDEN)
+		return abb_recorrer_postorden_aux(arbol -> nodo_raiz, array, tamanio_array);
 		
-		default:
-			return 0;
-	}
+	return 0;
 }
 
 nodo_abb_t*
@@ -133,6 +141,42 @@ abb_insertar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comp
 	return raiz;
 }
 
+nodo_abb_t*
+abb_quitar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador)
+{
+	if (!raiz)
+		return NULL;
+
+	int comparacion = comparador(elemento, raiz -> elemento);
+	
+	if (comparacion == 0) {
+		if (raiz -> izquierda && raiz -> derecha) {
+			// nodo_abb_t* predecesor_inmediato = abb_encontrar_predecesor_inmediato_aux();
+			printf("Que bonito");
+		}
+
+		else {
+			nodo_abb_t* hijo = raiz -> derecha ? raiz -> derecha : raiz -> izquierda;
+			free(raiz);
+			return hijo;
+		}
+	}
+
+	else if (comparacion < 0)
+		raiz -> izquierda = abb_quitar_recursivo_aux(raiz -> izquierda, elemento, comparador);
+
+	else
+		raiz -> derecha = abb_quitar_recursivo_aux(raiz -> derecha, elemento, comparador);
+
+	return raiz;
+}
+
+nodo_abb_t*
+abb_encontrar_predecesor_inmediato_aux()
+{
+	return NULL;
+}
+
 void*
 abb_buscar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador)
 {
@@ -153,14 +197,13 @@ abb_buscar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador compar
 size_t
 abb_recorrer_preorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array)
 {
-	if (!raiz)
+	if (!raiz || !tamanio_array)
 		return 0;
 
 	size_t cantidad = 0;
 	array[cantidad++] = raiz -> elemento;
-
-	cantidad += abb_recorrer_preorden_aux(raiz -> izquierda, array + cantidad, tamanio_array);
-	cantidad += abb_recorrer_preorden_aux(raiz -> derecha, array + cantidad, tamanio_array);
+	cantidad += abb_recorrer_preorden_aux(raiz -> izquierda, array + cantidad, tamanio_array - cantidad);
+	cantidad += abb_recorrer_preorden_aux(raiz -> derecha, array + cantidad, tamanio_array - cantidad);
 	
 	return cantidad;
 }
@@ -173,9 +216,7 @@ abb_recorrer_inorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array)
 	
 	size_t cantidad = 0;
 	cantidad += abb_recorrer_inorden_aux(raiz -> izquierda, array + cantidad, tamanio_array);
-
 	array[cantidad++] = raiz -> elemento;
-
 	cantidad += abb_recorrer_inorden_aux(raiz -> derecha, array + cantidad, tamanio_array);
 
 	return cantidad;
