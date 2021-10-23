@@ -217,6 +217,25 @@ dadoUnABBConDiezElementos_alRecorrerQuinceElementos_seRecorrenSolamenteDiezEleme
 }
 
 void
+dadoUnABB_alQuitarUnElementoEnUnNodoHoja_seDevuelveEseElemento()
+{
+	abb_t* arbol = abb_crear(comparador);
+	int elem_1 = 30, elem_2 = 18, elem_3 = 14, elem_4 = 15, elem_5 = 21;
+
+	arbol = abb_insertar(arbol, &elem_1);
+	arbol = abb_insertar(arbol, &elem_2);
+	arbol = abb_insertar(arbol, &elem_3);
+	arbol = abb_insertar(arbol, &elem_4);
+	arbol = abb_insertar(arbol, &elem_5);
+
+	void* elemento_quitado = abb_quitar(arbol, &elem_3);
+
+	pa2m_afirmar(*(int*)elemento_quitado == elem_3, "Al quitar un elemento, se devuelve ese elemento");
+
+	abb_destruir(arbol);
+}
+
+void
 dadoUnABBNULL_alQuitarUnElemento_seDevuelveNULL()
 {
 	abb_t* arbol = NULL;
@@ -243,6 +262,36 @@ dadoUnABBVacio_alQuitarUnElemento_seDevuelveNULL()
 	abb_destruir(arbol);
 }
 
+void
+dadoUnABB_alQuitarUnElementoEnUnNodoConUnHijo_seDevuelveEseElemento()
+{
+}
+
+void
+dadoUnABB_alQuitarUnElementoEnUnNodoConDosHijos_seDevuelveEseElemento()
+{
+}
+
+void
+dadoUnABB_alQuitarUnElementoEnUnNodoConUnHijo_elABBSigueSiendoUnABB()
+{
+}
+
+void
+dadoUnABB_alQuitarUnElementoEnUnNodoConDosHijos_elABBSigueSiendoUnABB()
+{
+}
+
+void
+dadoUnABBConCincoElementos_alQuitarUnElemento_elTamanioDelABBEsCuatro()
+{
+}
+
+void
+dadoUnABBConVariosElementos_alQuitarTodosLosElementos_elABBQuedaVacio()
+{
+}
+
 int
 main() {
     pa2m_nuevo_grupo("Pruebas de ABB: Creacion");
@@ -265,8 +314,12 @@ main() {
 	dadoUnABBConDiezElementos_alRecorrerQuinceElementos_seRecorrenSolamenteDiezElementos();
 
 	pa2m_nuevo_grupo("Pruebas de ABB: Quitar");
-	dadoUnABBNULL_alQuitarUnElemento_seDevuelveNULL();
-	dadoUnABBVacio_alQuitarUnElemento_seDevuelveNULL();
+	dadoUnABB_alQuitarUnElementoEnUnNodoHoja_seDevuelveEseElemento();
+	// dadoUnABBNULL_alQuitarUnElemento_seDevuelveNULL();
+	// dadoUnABBVacio_alQuitarUnElemento_seDevuelveNULL();
+
+	// dadoUnABBConCincoElementos_alQuitarUnElemento_elTamanioDelABBEsCuatro();
+	// dadoUnABBConVariosElementos_alQuitarTodosLosElementos_elABBQuedaVacio();
 
     return pa2m_mostrar_reporte();
 }

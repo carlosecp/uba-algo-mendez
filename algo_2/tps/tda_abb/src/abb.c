@@ -1,12 +1,13 @@
 #include "abb.h"
 
 #include <stdio.h>
+#include <string.h>
 
 #include <stddef.h>
 #include <stdlib.h>
 
 nodo_abb_t* abb_insertar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador);
-nodo_abb_t* abb_quitar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador);
+nodo_abb_t* abb_quitar_recursivo_aux(nodo_abb_t* raiz, void* elemento, void** elemento_quitado, abb_comparador comparador);
 nodo_abb_t* abb_encontrar_predecesor_inmediato_aux();
 void* abb_buscar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador);
 size_t abb_recorrer_preorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array);
@@ -45,11 +46,10 @@ abb_quitar(abb_t* arbol, void* elemento)
 	if (!arbol)
 		return NULL;
 
-	nodo_abb_t* nodo_quitado = abb_quitar_recursivo_aux(arbol -> nodo_raiz, elemento, arbol -> comparador);
-	if (!nodo_quitado)
-		return NULL;
+	void* elemento_quitado = NULL;
+	arbol -> nodo_raiz = abb_quitar_recursivo_aux(arbol -> nodo_raiz, elemento, &elemento_quitado, arbol -> comparador);
 
-	return nodo_quitado -> elemento;
+	return elemento_quitado;
 }
 
 void*
@@ -142,31 +142,32 @@ abb_insertar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comp
 }
 
 nodo_abb_t*
-abb_quitar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador)
+abb_quitar_recursivo_aux(nodo_abb_t* raiz, void* elemento, void** elemento_quitado, abb_comparador comparador)
 {
-	if (!raiz)
+	if (!raiz || !comparador)
 		return NULL;
 
 	int comparacion = comparador(elemento, raiz -> elemento);
-	
-	if (comparacion == 0) {
+	if (comparacion == 0)
+	{
 		if (raiz -> izquierda && raiz -> derecha) {
-			// nodo_abb_t* predecesor_inmediato = abb_encontrar_predecesor_inmediato_aux();
-			printf("Que bonito");
 		}
-
-		else {
+		else
+		{
 			nodo_abb_t* hijo = raiz -> derecha ? raiz -> derecha : raiz -> izquierda;
+			*elemento_quitado = raiz -> elemento;
 			free(raiz);
 			return hijo;
 		}
 	}
-
 	else if (comparacion < 0)
-		raiz -> izquierda = abb_quitar_recursivo_aux(raiz -> izquierda, elemento, comparador);
-
+	{
+		raiz -> izquierda = abb_quitar_recursivo_aux(raiz -> izquierda, elemento, elemento_quitado, comparador);
+	}
 	else
-		raiz -> derecha = abb_quitar_recursivo_aux(raiz -> derecha, elemento, comparador);
+	{
+		raiz -> derecha = abb_quitar_recursivo_aux(raiz -> derecha, elemento, elemento_quitado, comparador);
+	}
 
 	return raiz;
 }
