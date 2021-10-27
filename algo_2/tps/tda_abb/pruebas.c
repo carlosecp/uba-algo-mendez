@@ -332,6 +332,24 @@ dadoUnABB_alQuitarTodosLosElementos_seQuitanExitosamente()
 void
 dadoUnABB_alQuitarUnElementoEnUnNodoConUnHijo_elABBSigueSiendoUnABB()
 {
+	abb_t* arbol = abb_crear(comparador);
+	int elem_1 = 8, elem_2 = 4, elem_3 = 6, elem_4 = 2, elem_5 = 3,
+		elem_6 = 1, elem_7 = 12, elem_8 = 9, elem_9 = 13, elem_10 = 7;
+
+	arbol = abb_insertar(arbol, &elem_1);
+	arbol = abb_insertar(arbol, &elem_2);
+	arbol = abb_insertar(arbol, &elem_3);
+	arbol = abb_insertar(arbol, &elem_4);
+	arbol = abb_insertar(arbol, &elem_5);
+	arbol = abb_insertar(arbol, &elem_6);
+	arbol = abb_insertar(arbol, &elem_7);
+	arbol = abb_insertar(arbol, &elem_8);
+	arbol = abb_insertar(arbol, &elem_9);
+	arbol = abb_insertar(arbol, &elem_10);
+
+	abb_quitar(arbol, &elem_10);
+
+	abb_destruir(arbol);
 }
 
 void
