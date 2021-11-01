@@ -3,38 +3,54 @@
 #include "pa2mm.h"
 #include "string.h"
 
-/* Notas:
- * La sintaxis `typedef int (*abb_comparador)(void*, void*);`
- * Quiere decir que: el tipo abb_comparador, es una funcion que toma dos
- * punteros a void y retorna int. abb_comparador es el nombre del tipo.
- */
+// Auxiliares para pruebas
 
-int
-comparador(void* _elem_1, void* _elem_2)
-{
-	int elem_1 = *(int*)_elem_1;
-	int elem_2 = *(int*)_elem_2;
+typedef struct estudiante_fiuba {
+	unsigned padron;
+	char* nombre;
+} estudiante_fiuba_t;
 
-	if (elem_1 == elem_2)
-		return 0;
-
-	return elem_1 < elem_2 ? -1 : 1;
+estudiante_fiuba_t*
+crear_estudiante_fiuba(unsigned padron, char* nombre) {
+	estudiante_fiuba_t* est = malloc(sizeof(estudiante_fiuba_t));
+	est -> padron = padron;
+	est -> nombre = nombre;
+	return est;
 }
 
-void
-dadoUnComparadorValido_puedoCrearYDestruirUnABB()
+void  
+destruir_estudiante_fiuba(void* _est) {
+	free(_est);
+}
+
+int
+comparador_estudiantes_fiuba(void* _est_1, void* _est_2)
 {
-	abb_t* arbol = abb_crear(comparador);
+	estudiante_fiuba_t* est_1 = _est_1;
+	estudiante_fiuba_t* est_2 = _est_2;
+
+	if (est_1 -> padron == est_2 -> padron)
+		return 0;
+
+	return est_1 -> padron < est_2 -> padron ? -1 : 1;
+}
+
+// Pruebas: Creacion y Destruccion
+
+void
+puedoCrearYDestruirUnABB()
+{
+	abb_t* arbol = abb_crear(comparador_estudiantes_fiuba);
 
 	pa2m_afirmar(arbol -> nodo_raiz == NULL, "Para un arbol nuevo, la raiz es NULL");
-	pa2m_afirmar(arbol -> comparador == comparador, "Para un arbol nuevo, el comparador es el correcto");
+	pa2m_afirmar(arbol -> comparador == comparador_estudiantes_fiuba, "Para un arbol nuevo, el comparador es el correcto");
 	pa2m_afirmar(abb_vacio(arbol), "Un arbol se crea vacio");
 
 	abb_destruir(arbol);
 }
 
 void
-dadoUnComparadorNULL_noPuedoCrearyDestruirUnABB() {
+dadoUnComparadorNULL_noPuedoCrearUnABB() {
 	abb_t* arbol = abb_crear(NULL);
 
 	pa2m_afirmar(arbol == NULL, "No puedo crear un arbol con un comparador NULL");
@@ -43,197 +59,90 @@ dadoUnComparadorNULL_noPuedoCrearyDestruirUnABB() {
 }
 
 void
+dadoUnABB_puedoDestruirTodosLosElementos() {
+    abb_t* arbol = abb_crear(comparador_estudiantes_fiuba);
+
+	estudiante_fiuba_t* est_0 = crear_estudiante_fiuba(103372, "Alejandro Schamun");
+	estudiante_fiuba_t* est_1 = crear_estudiante_fiuba(104942, "Cami Fiorotto");
+	estudiante_fiuba_t* est_2 = crear_estudiante_fiuba(104898, "Carolina Aramay");
+	estudiante_fiuba_t* est_3 = crear_estudiante_fiuba(106818, "Facundo Sanso");
+	estudiante_fiuba_t* est_4 = crear_estudiante_fiuba(107057, "Joaquin Dopazo");
+	estudiante_fiuba_t* est_5 = crear_estudiante_fiuba(108031, "Julian Calderon");
+	estudiante_fiuba_t* est_6 = crear_estudiante_fiuba(108229, "Julian Stiefkens");
+	estudiante_fiuba_t* est_7 = crear_estudiante_fiuba(104961, "Manuel Sanchez");
+	estudiante_fiuba_t* est_8 = crear_estudiante_fiuba(108665, "Nicolas Celano");
+	estudiante_fiuba_t* est_9 = crear_estudiante_fiuba(107180, "Nicolas Tonizzo");
+
+	arbol = abb_insertar(arbol, est_0);
+	arbol = abb_insertar(arbol, est_1);
+	arbol = abb_insertar(arbol, est_2);
+	arbol = abb_insertar(arbol, est_3);
+	arbol = abb_insertar(arbol, est_4);
+	arbol = abb_insertar(arbol, est_5);
+	arbol = abb_insertar(arbol, est_6);
+	arbol = abb_insertar(arbol, est_7);
+	arbol = abb_insertar(arbol, est_8);
+	arbol = abb_insertar(arbol, est_9);
+
+    abb_destruir_todo(arbol, destruir_estudiante_fiuba);
+}
+
+// Pruebas: Insertar
+
+void
 dadoUnABB_alInsetarUnElemento_seDevuelveElABB() {
-    abb_t* arbol = abb_crear(comparador);
+	abb_t* arbol = abb_crear(comparador_estudiantes_fiuba);
 
-    pa2m_afirmar(abb_insertar(arbol, NULL), "Al insertar un elemento en el arbol, se devuelve el arbol");
-
-    abb_destruir(arbol);
+	abb_destruir(arbol);
 }
 
 void
 dadoUnABBNULL_alInsertarUnElemento_seDevuelveNULL() {
-	abb_t* arbol = NULL;
-	
-	pa2m_afirmar(abb_insertar(NULL, NULL) == NULL, "Al insertar un elemento en un arbol NULL, se devuelve NULL");
-
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABBVacio_alInsertarElPrimerElemento_eseElementoPasaASerLaRaiz()
 {
-	abb_t* arbol = abb_crear(comparador);
-	double pi = 3.14159;
-	arbol = abb_insertar(arbol, &pi);
-
-	pa2m_afirmar(*(double*)(arbol -> nodo_raiz -> elemento) == pi, "Al insertar el primer elemento en un arbol vacio, ese elemento pasa a ser la raiz");
-
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABB_alInsertarVariosElementos_seInsertanTodosLosElementos()
 {
-	abb_t* arbol = abb_crear(comparador);
-	int elem_1 = 100, elem_2 = 20, elem_3 = 200, elem_4 = 10, elem_5 = 30;
-
-	arbol = abb_insertar(arbol, &elem_1);
-	arbol = abb_insertar(arbol, &elem_2);
-	arbol = abb_insertar(arbol, &elem_3);
-	arbol = abb_insertar(arbol, &elem_4);
-	arbol = abb_insertar(arbol, &elem_5);
-
-	pa2m_afirmar(*(int*)abb_buscar(arbol, &elem_1) == elem_1, "El elemento 100 se inserto en el arbol");
-	pa2m_afirmar(*(int*)abb_buscar(arbol, &elem_2) == elem_2, "El elemento 20 se inserto en el arbol");
-	pa2m_afirmar(*(int*)abb_buscar(arbol, &elem_3) == elem_3, "El elemento 200 se inserto en el arbol");
-	pa2m_afirmar(*(int*)abb_buscar(arbol, &elem_4) == elem_4, "El elemento 10 se inserto en el arbol");
-	pa2m_afirmar(*(int*)abb_buscar(arbol, &elem_5) == elem_5, "El elemento 30 se inserto en el arbol");
-
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABBNULL_alRecorrerElABB_seRecorrenCeroElementos()
 {
-	abb_t* arbol = NULL;
-
-	void* recorridos[10];
-	size_t cantidad_recorridos = abb_recorrer(arbol, PREORDEN, recorridos, 10);
-
-	pa2m_afirmar(cantidad_recorridos == 0, "Al recorrer un ABB NULL, se recorren 0 elementos");
-
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABBVacio_alRecorrerElABB_seRecorrenCeroElementos()
 {
-	abb_t* arbol = abb_crear(comparador);
-
-	void* recorridos[10];
-	size_t cantidad_recorridos = abb_recorrer(arbol, PREORDEN, recorridos, 10);
-
-	pa2m_afirmar(cantidad_recorridos == 0, "Al recorrer un ABB vacio, se recorren 0 elementos");
-
-	abb_destruir(arbol);
 }
 
 void
 dadaUnABBConVariosElementosYUnVectorNULL_alRecorrerElABB_seRecorrenCeroElementos()
 {
-	abb_t* arbol = abb_crear(comparador);
-	int elem_1 = 100, elem_2 = 20, elem_3 = 200, elem_4 = 10, elem_5 = 30;
-
-	arbol = abb_insertar(arbol, &elem_1);
-	arbol = abb_insertar(arbol, &elem_2);
-	arbol = abb_insertar(arbol, &elem_3);
-	arbol = abb_insertar(arbol, &elem_4);
-	arbol = abb_insertar(arbol, &elem_5);
-
-	size_t cantidad_recorridos = abb_recorrer(arbol, PREORDEN, NULL, 5);
-
-	pa2m_afirmar(cantidad_recorridos == 0, "Al recorrer un ABB con un vector NULL, se recorren 0 elementos");
-
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABBConVariosElementos_alRecorrerElABB_seRecorrenLaCantidadDeElementosCorrecta()
 {
-	abb_t* arbol = abb_crear(comparador);
-	int elem_1 = 30, elem_2 = 18, elem_3 = 14, elem_4 = 15, elem_5 = 21,
-		elem_6 = 19, elem_7 = 92, elem_8 = 71, elem_9 = 55, elem_10 = 79;
-
-	arbol = abb_insertar(arbol, &elem_1);
-	arbol = abb_insertar(arbol, &elem_2);
-	arbol = abb_insertar(arbol, &elem_3);
-	arbol = abb_insertar(arbol, &elem_4);
-	arbol = abb_insertar(arbol, &elem_5);
-	arbol = abb_insertar(arbol, &elem_6);
-	arbol = abb_insertar(arbol, &elem_7);
-	arbol = abb_insertar(arbol, &elem_8);
-	arbol = abb_insertar(arbol, &elem_9);
-	arbol = abb_insertar(arbol, &elem_10);
-
-	void* recorridos[10];
-	size_t cantidad_recorridos = abb_recorrer(arbol, PREORDEN, recorridos, 10);
-
-	pa2m_afirmar(cantidad_recorridos == 10, "Para un ABB de 10 elementos, se pueden recorrer todos los elementos");
-
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABBConDiezElementos_alRecorrerCincoElementosDelABB_seRecorrenSolamenteCincoElementos()
 {
-	abb_t* arbol = abb_crear(comparador);
-	int elem_1 = 30, elem_2 = 18, elem_3 = 14, elem_4 = 15, elem_5 = 21,
-		elem_6 = 19, elem_7 = 92, elem_8 = 71, elem_9 = 55, elem_10 = 79;
-
-	arbol = abb_insertar(arbol, &elem_1);
-	arbol = abb_insertar(arbol, &elem_2);
-	arbol = abb_insertar(arbol, &elem_3);
-	arbol = abb_insertar(arbol, &elem_4);
-	arbol = abb_insertar(arbol, &elem_5);
-	arbol = abb_insertar(arbol, &elem_6);
-	arbol = abb_insertar(arbol, &elem_7);
-	arbol = abb_insertar(arbol, &elem_8);
-	arbol = abb_insertar(arbol, &elem_9);
-	arbol = abb_insertar(arbol, &elem_10);	
-
-	void* recorridos[10];
-	size_t cantidad_recorridos = abb_recorrer(arbol, PREORDEN, recorridos, 5);
-
-	pa2m_afirmar(cantidad_recorridos == 5, "Para un ABB de 10 elementos, se pueden recorrer solo 5 elementos");
-
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABBConDiezElementos_alRecorrerQuinceElementos_seRecorrenSolamenteDiezElementos()
 {
-	abb_t* arbol = abb_crear(comparador);
-	int elem_1 = 30, elem_2 = 18, elem_3 = 14, elem_4 = 15, elem_5 = 21,
-		elem_6 = 19, elem_7 = 92, elem_8 = 71, elem_9 = 55, elem_10 = 79;
-
-	arbol = abb_insertar(arbol, &elem_1);
-	arbol = abb_insertar(arbol, &elem_2);
-	arbol = abb_insertar(arbol, &elem_3);
-	arbol = abb_insertar(arbol, &elem_4);
-	arbol = abb_insertar(arbol, &elem_5);
-	arbol = abb_insertar(arbol, &elem_6);
-	arbol = abb_insertar(arbol, &elem_7);
-	arbol = abb_insertar(arbol, &elem_8);
-	arbol = abb_insertar(arbol, &elem_9);
-	arbol = abb_insertar(arbol, &elem_10);	
-
-	void* recorridos[10];
-	size_t cantidad_recorridos = abb_recorrer(arbol, PREORDEN, recorridos, 15);
-
-	pa2m_afirmar(cantidad_recorridos == 10, "Para un ABB de 10 elementos, si se intentan recorrer 15 elementos, solo se recorren 10");
-
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABB_alQuitarUnElementoEnUnNodoHoja_seDevuelveEseElemento()
 {
-	abb_t* arbol = abb_crear(comparador);
-	int elem_1 = 30, elem_2 = 18, elem_3 = 14, elem_4 = 15, elem_5 = 21;
-
-	arbol = abb_insertar(arbol, &elem_1);
-	arbol = abb_insertar(arbol, &elem_2);
-	arbol = abb_insertar(arbol, &elem_3);
-	arbol = abb_insertar(arbol, &elem_4);
-	arbol = abb_insertar(arbol, &elem_5);
-
-	void* elemento_quitado = abb_quitar(arbol, &elem_4);
-
-	pa2m_afirmar(*(int*)elemento_quitado == elem_4, "Al quitar el elemento con llave 15, se devuelve ese elemento");
-	pa2m_afirmar(abb_buscar(arbol, elemento_quitado) == NULL, "Al buscar un elemento quitado, no se encuentra el elemento");
-
-	abb_destruir(arbol);
 }
 
 void
@@ -244,112 +153,26 @@ dadoUnABB_alQuitarUnElementoEnUnNodoConUnHijo_seDevuelveEseElemento()
 void
 dadoUnABB_alQuitarUnElementoEnUnNodoConDosHijos_seDevuelveEseElemento()
 {
-	abb_t* arbol = abb_crear(comparador);
-	int elem_1 = 8, elem_2 = 4, elem_3 = 6, elem_4 = 2, elem_5 = 3,
-		elem_6 = 1, elem_7 = 12, elem_8 = 9, elem_9 = 13;
-
-	arbol = abb_insertar(arbol, &elem_1);
-	arbol = abb_insertar(arbol, &elem_2);
-	arbol = abb_insertar(arbol, &elem_3);
-	arbol = abb_insertar(arbol, &elem_4);
-	arbol = abb_insertar(arbol, &elem_5);
-	arbol = abb_insertar(arbol, &elem_6);
-	arbol = abb_insertar(arbol, &elem_7);
-	arbol = abb_insertar(arbol, &elem_8);
-	arbol = abb_insertar(arbol, &elem_9);
-
-	void* elemento_quitado = abb_quitar(arbol, &elem_1);
-
-	pa2m_afirmar(*(int*)elemento_quitado == elem_1, "Al quitar el elemento con llave 18, que tiene dos hijos, se devuelve ese elemento");
-
-	void* recorridos[8];
-	abb_recorrer(arbol, INORDEN, recorridos, 8);
-	for (size_t i = 0; i < 8; i++)
-		printf("Elemento: %i\n", *(int*)recorridos[i]);
-
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABBNULL_alQuitarUnElemento_seDevuelveNULL()
 {
-	abb_t* arbol = NULL;
-	int elem_1 = 10;
-
-	arbol = abb_insertar(arbol, &elem_1);
-
-	void* elemento_quitado = abb_quitar(arbol, &elem_1);
-
-	pa2m_afirmar(elemento_quitado == NULL, "Al quitar un elemento en un arbol NULL, se devuelve NULL");
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABBVacio_alQuitarUnElemento_seDevuelveNULL()
 {
-	abb_t* arbol = abb_crear(comparador);
-	int elem_1 = 10;
-
-	void* elemento_quitado = abb_quitar(arbol, &elem_1);
-
-	pa2m_afirmar(elemento_quitado == NULL, "Al quitar un elemento en un arbol vacio, se devuelve NULL");
-
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABB_alQuitarTodosLosElementos_seQuitanExitosamente()
 {
-	abb_t* arbol = abb_crear(comparador);
-	int elem_1 = 8, elem_2 = 4, elem_3 = 6, elem_4 = 2, elem_5 = 3,
-		elem_6 = 1, elem_7 = 12, elem_8 = 9, elem_9 = 13;
-
-	arbol = abb_insertar(arbol, &elem_1);
-	arbol = abb_insertar(arbol, &elem_2);
-	arbol = abb_insertar(arbol, &elem_3);
-	arbol = abb_insertar(arbol, &elem_4);
-	arbol = abb_insertar(arbol, &elem_5);
-	arbol = abb_insertar(arbol, &elem_6);
-	arbol = abb_insertar(arbol, &elem_7);
-	arbol = abb_insertar(arbol, &elem_8);
-	arbol = abb_insertar(arbol, &elem_9);
-
-	abb_quitar(arbol, &elem_1);
-	abb_quitar(arbol, &elem_2);
-	abb_quitar(arbol, &elem_3);
-	abb_quitar(arbol, &elem_4);
-	abb_quitar(arbol, &elem_5);
-	abb_quitar(arbol, &elem_6);
-	abb_quitar(arbol, &elem_7);
-	abb_quitar(arbol, &elem_8);
-	abb_quitar(arbol, &elem_9);
-
-	pa2m_afirmar(arbol -> nodo_raiz == NULL, "La raiz es NULL");
-
-	abb_destruir(arbol);
 }
 
 void
 dadoUnABB_alQuitarUnElementoEnUnNodoConUnHijo_elABBSigueSiendoUnABB()
 {
-	abb_t* arbol = abb_crear(comparador);
-	int elem_1 = 8, elem_2 = 4, elem_3 = 6, elem_4 = 2, elem_5 = 3,
-		elem_6 = 1, elem_7 = 12, elem_8 = 9, elem_9 = 13, elem_10 = 7;
-
-	arbol = abb_insertar(arbol, &elem_1);
-	arbol = abb_insertar(arbol, &elem_2);
-	arbol = abb_insertar(arbol, &elem_3);
-	arbol = abb_insertar(arbol, &elem_4);
-	arbol = abb_insertar(arbol, &elem_5);
-	arbol = abb_insertar(arbol, &elem_6);
-	arbol = abb_insertar(arbol, &elem_7);
-	arbol = abb_insertar(arbol, &elem_8);
-	arbol = abb_insertar(arbol, &elem_9);
-	arbol = abb_insertar(arbol, &elem_10);
-
-	abb_quitar(arbol, &elem_10);
-
-	abb_destruir(arbol);
 }
 
 void
@@ -369,35 +192,16 @@ dadoUnABBConVariosElementos_alQuitarTodosLosElementos_elABBQuedaVacio()
 
 int
 main() {
-    pa2m_nuevo_grupo("Pruebas de ABB: Creacion");
-    dadoUnComparadorValido_puedoCrearYDestruirUnABB();
-    dadoUnComparadorNULL_noPuedoCrearyDestruirUnABB();
-    // TODO: Hacer la prueba de destruir todo
+    pa2m_nuevo_grupo("Pruebas: Creacion y Destruccion");
+	puedoCrearYDestruirUnABB();
+	dadoUnComparadorNULL_noPuedoCrearUnABB();
+	dadoUnABB_puedoDestruirTodosLosElementos();
 
-    pa2m_nuevo_grupo("Pruebas de ABB: Insertar");
-    dadoUnABB_alInsetarUnElemento_seDevuelveElABB();
-    dadoUnABBNULL_alInsertarUnElemento_seDevuelveNULL();
-    dadoUnABBVacio_alInsertarElPrimerElemento_eseElementoPasaASerLaRaiz();
-    dadoUnABB_alInsertarVariosElementos_seInsertanTodosLosElementos();
+    pa2m_nuevo_grupo("Pruebas: Insertar");
 
-	pa2m_nuevo_grupo("Pruebas de ABB: Recorrer");
-	dadoUnABBNULL_alRecorrerElABB_seRecorrenCeroElementos();
-	dadoUnABBVacio_alRecorrerElABB_seRecorrenCeroElementos();
-	dadaUnABBConVariosElementosYUnVectorNULL_alRecorrerElABB_seRecorrenCeroElementos();
-	dadoUnABBConVariosElementos_alRecorrerElABB_seRecorrenLaCantidadDeElementosCorrecta();
-	dadoUnABBConDiezElementos_alRecorrerCincoElementosDelABB_seRecorrenSolamenteCincoElementos();
-	dadoUnABBConDiezElementos_alRecorrerQuinceElementos_seRecorrenSolamenteDiezElementos();
+	pa2m_nuevo_grupo("Pruebas: Recorrer");
 
-	pa2m_nuevo_grupo("Pruebas de ABB: Quitar");
-	dadoUnABB_alQuitarUnElementoEnUnNodoHoja_seDevuelveEseElemento();
-	dadoUnABB_alQuitarUnElementoEnUnNodoConUnHijo_seDevuelveEseElemento();
-	dadoUnABB_alQuitarUnElementoEnUnNodoConDosHijos_seDevuelveEseElemento();
-	dadoUnABBNULL_alQuitarUnElemento_seDevuelveNULL();
-	dadoUnABBVacio_alQuitarUnElemento_seDevuelveNULL();
-	dadoUnABB_alQuitarTodosLosElementos_seQuitanExitosamente();
-
-	// dadoUnABBConCincoElementos_alQuitarUnElemento_elTamanioDelABBEsCuatro();
-	// dadoUnABBConVariosElementos_alQuitarTodosLosElementos_elABBQuedaVacio();
+	pa2m_nuevo_grupo("Pruebas: Quitar");
 
     return pa2m_mostrar_reporte();
 }
