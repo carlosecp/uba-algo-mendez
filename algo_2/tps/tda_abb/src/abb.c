@@ -6,15 +6,18 @@
 
 #include "auxiliares.h"
 
+#define ERROR NULL
+#define VACIO 0
+
 abb_t*
 abb_crear(abb_comparador comparador)
 {
     if (!comparador)
-        return NULL;
+        return ERROR;
 
     abb_t* arbol = calloc(1, sizeof(abb_t));
     if (!arbol)
-        return NULL;
+        return ERROR;
 
     arbol -> comparador = comparador;
     return arbol;
@@ -24,9 +27,13 @@ abb_t*
 abb_insertar(abb_t* arbol, void* elemento)
 {
     if (!arbol)
-        return NULL;
+        return ERROR;
 
-    arbol -> nodo_raiz = abb_insertar_recursivo_aux(arbol -> nodo_raiz, elemento, arbol -> comparador);
+    bool insercion_exitosa = false;
+    arbol->nodo_raiz = abb_insertar_recursivo_aux(arbol->nodo_raiz, elemento, arbol->comparador, &insercion_exitosa);
+
+	if (insercion_exitosa)
+		arbol -> tamanio++;
 
     return arbol;
 }
@@ -35,7 +42,7 @@ void*
 abb_quitar(abb_t* arbol, void* elemento)
 {
     if (!arbol)
-        return NULL;
+        return ERROR;
 
     void* elemento_quitado = NULL;
     arbol -> nodo_raiz = abb_quitar_recursivo_aux(arbol -> nodo_raiz, elemento, &elemento_quitado, arbol -> comparador);
@@ -47,7 +54,7 @@ void*
 abb_buscar(abb_t* arbol, void* elemento)
 {
     if (!arbol)
-        return NULL;
+        return ERROR;
 
     return abb_buscar_recursivo_aux(arbol -> nodo_raiz, elemento, arbol -> comparador);
 }
@@ -65,7 +72,7 @@ size_t
 abb_tamanio(abb_t* arbol)
 {
     if (!arbol)
-        return 0;
+        return VACIO;
 
     return arbol -> tamanio;
 }

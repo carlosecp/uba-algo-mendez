@@ -1,7 +1,7 @@
 #include "auxiliares.h"
 
 nodo_abb_t*
-abb_insertar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador)
+abb_insertar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador, bool *insercion_exitosa)
 {
     if (!raiz) {
         nodo_abb_t* nuevo_nodo = calloc(1, sizeof(nodo_abb_t));
@@ -9,6 +9,8 @@ abb_insertar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comp
             return NULL;
 
         nuevo_nodo -> elemento = elemento;
+		*insercion_exitosa = true;
+
         return nuevo_nodo;
     }
 
@@ -18,9 +20,9 @@ abb_insertar_recursivo_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comp
     int comparacion = comparador(elemento, raiz -> elemento);
 
     if (comparacion <= 0)
-        raiz -> izquierda = abb_insertar_recursivo_aux(raiz -> izquierda, elemento, comparador);
+        raiz -> izquierda = abb_insertar_recursivo_aux(raiz -> izquierda, elemento, comparador, insercion_exitosa);
     else
-        raiz -> derecha = abb_insertar_recursivo_aux(raiz -> derecha, elemento, comparador);
+        raiz -> derecha = abb_insertar_recursivo_aux(raiz -> derecha, elemento, comparador, insercion_exitosa);
 
     return raiz;
 }
