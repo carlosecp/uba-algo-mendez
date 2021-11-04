@@ -4,10 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <stdbool.h>
 #include "auxiliares.h"
-
-#define ERROR NULL
-#define VACIO 0
 
 abb_t*
 abb_crear(abb_comparador comparador)
@@ -30,7 +28,7 @@ abb_insertar(abb_t* arbol, void* elemento)
         return ERROR;
 
     bool insercion_exitosa = false;
-    arbol->nodo_raiz = abb_insertar_recursivo_aux(arbol->nodo_raiz, elemento, arbol->comparador, &insercion_exitosa);
+    arbol -> nodo_raiz = abb_insertar_recursivo_aux(arbol -> nodo_raiz, elemento, arbol -> comparador, &insercion_exitosa);
 
 	if (insercion_exitosa)
 		arbol -> tamanio++;
@@ -45,7 +43,12 @@ abb_quitar(abb_t* arbol, void* elemento)
         return ERROR;
 
     void* elemento_quitado = NULL;
-    arbol -> nodo_raiz = abb_quitar_recursivo_aux(arbol -> nodo_raiz, elemento, &elemento_quitado, arbol -> comparador);
+
+	bool quitado_exitoso = false;
+    arbol -> nodo_raiz = abb_quitar_recursivo_aux(arbol -> nodo_raiz, elemento, &elemento_quitado, arbol -> comparador, &quitado_exitoso);
+
+	if (quitado_exitoso)
+		arbol -> tamanio--;
 
     return elemento_quitado;
 }
@@ -96,19 +99,21 @@ abb_destruir_todo(abb_t* arbol, void (*destructor)(void*))
 size_t
 abb_con_cada_elemento(abb_t* arbol, abb_recorrido recorrido, bool (*funcion)(void*, void*), void* aux)
 {
-    if (!arbol || !funcion)
-        return 0;
- 
-    if (recorrido == PREORDEN)
-		return abb_con_cada_elemento_preorden_aux(arbol -> nodo_raiz, funcion, aux);
+	if (!arbol || !funcion)
+		return 0;
 
-    if (recorrido == INORDEN)
-		return abb_con_cada_elemento_inorden_aux(arbol -> nodo_raiz, funcion, aux);
+	bool continuar = true;
 
-    if (recorrido == POSTORDEN)
-		return abb_con_cada_elemento_postorden_aux(arbol -> nodo_raiz, funcion, aux);
+	if (recorrido == PREORDEN)
+		return abb_con_cada_elemento_preorden_aux(arbol -> nodo_raiz, funcion, aux, &continuar);
 
-    return 0;
+	if (recorrido == INORDEN)
+		return abb_con_cada_elemento_inorden_aux(arbol -> nodo_raiz, funcion, aux, &continuar);
+
+	if (recorrido == POSTORDEN)
+		return abb_con_cada_elemento_postorden_aux(arbol -> nodo_raiz, funcion, aux, &continuar);
+
+	return 0;
 }
 
 size_t
