@@ -118,9 +118,9 @@ abb_recorrer_inorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array)
         return 0;
 
     size_t cantidad = 0;
-    cantidad += abb_recorrer_inorden_aux(raiz -> izquierda, array + cantidad, tamanio_array);
+    cantidad += abb_recorrer_inorden_aux(raiz -> izquierda, array + cantidad, tamanio_array - cantidad);
     array[cantidad++] = raiz -> elemento;
-    cantidad += abb_recorrer_inorden_aux(raiz -> derecha, array + cantidad, tamanio_array);
+    cantidad += abb_recorrer_inorden_aux(raiz -> derecha, array + cantidad, tamanio_array - cantidad);
 
     return cantidad;
 }
@@ -132,66 +132,57 @@ abb_recorrer_postorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array)
         return 0;
 
     size_t cantidad = 0;
-    cantidad += abb_recorrer_postorden_aux(raiz -> izquierda, array + cantidad, tamanio_array);
-    cantidad += abb_recorrer_postorden_aux(raiz -> derecha, array + cantidad, tamanio_array);
+    cantidad += abb_recorrer_postorden_aux(raiz -> izquierda, array + cantidad, tamanio_array - cantidad);
+    cantidad += abb_recorrer_postorden_aux(raiz -> derecha, array + cantidad, tamanio_array - cantidad);
 
-    array[cantidad++] = raiz -> elemento;
+	if (tamanio_array - cantidad)
+		array[cantidad++] = raiz -> elemento;
 
     return cantidad;
 }
 
 size_t
-abb_con_cada_elemento_preorden_aux(nodo_abb_t* raiz, bool (*funcion)(void*, void*), void* aux, bool* continuar)
+abb_con_cada_elemento_preorden_aux(nodo_abb_t* raiz, bool (*funcion)(void*, void*), void* aux)
 {
-	if (!raiz || !funcion || !continuar || !(*continuar))
+	if (!raiz || !funcion)
 		return 0;
 
-	if (!(*continuar = funcion(raiz -> elemento, aux))) {
-		printf("No continuar\n");
-		return 1;
-	}
-
 	size_t cantidad = 1;
-	cantidad += abb_con_cada_elemento_preorden_aux(raiz -> izquierda, funcion, aux, continuar);
-	cantidad += abb_con_cada_elemento_preorden_aux(raiz -> derecha, funcion, aux, continuar);
+	cantidad += abb_con_cada_elemento_preorden_aux(raiz -> izquierda, funcion, aux);
+	cantidad += abb_con_cada_elemento_preorden_aux(raiz -> derecha, funcion, aux);
 
 	return cantidad;
 }
 
 size_t
-abb_con_cada_elemento_inorden_aux(nodo_abb_t* raiz, bool (*funcion)(void*, void*), void* aux, bool* continuar)
+abb_con_cada_elemento_inorden_aux(nodo_abb_t* raiz, bool (*funcion)(void*, void*), void* aux)
 {
-	if (!raiz || !funcion || !continuar || !(*continuar))
+	if (!raiz || !funcion)
 		return 0;
 
 	size_t cantidad = 1;
-	cantidad += abb_con_cada_elemento_inorden_aux(raiz -> izquierda, funcion, aux, continuar);
+	cantidad += abb_con_cada_elemento_inorden_aux(raiz -> izquierda, funcion, aux);
 
-	*continuar = funcion(raiz -> elemento, aux);
-	if (!*continuar) {
-		printf("No continuar\n");
+	if (!funcion(raiz -> elemento, aux))
 		return 1;
-	}
 
-	cantidad += abb_con_cada_elemento_inorden_aux(raiz -> derecha, funcion, aux, continuar);
+	cantidad += abb_con_cada_elemento_inorden_aux(raiz -> derecha, funcion, aux);
 
 	return cantidad;
 }
 
 size_t
-abb_con_cada_elemento_postorden_aux(nodo_abb_t* raiz, bool (*funcion)(void*, void*), void* aux, bool* continuar)
+abb_con_cada_elemento_postorden_aux(nodo_abb_t* raiz, bool (*funcion)(void*, void*), void* aux)
 {
-	if (!raiz || !funcion || !continuar || !(*continuar))
+	if (!raiz || !funcion)
 		return 0;
 
 	size_t cantidad = 1;
-	cantidad += abb_con_cada_elemento_postorden_aux(raiz -> izquierda, funcion, aux, continuar);
-	cantidad += abb_con_cada_elemento_postorden_aux(raiz -> derecha, funcion, aux, continuar);
+	cantidad += abb_con_cada_elemento_postorden_aux(raiz -> izquierda, funcion, aux);
+	cantidad += abb_con_cada_elemento_postorden_aux(raiz -> derecha, funcion, aux);
 
-	if (!(*continuar = funcion(raiz -> elemento, aux))) {
-		printf("No continuar\n");
+	if (!funcion(raiz -> elemento, aux))
 		return 1;
-	}
 
 	return cantidad;
 }

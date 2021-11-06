@@ -20,16 +20,13 @@ crear_estudiante_fiuba(unsigned padron, char* nombre) {
 
 bool
 a_cada_estudiante_fiuba(void* _est, void* aux) {
-	// estudiante_fiuba_t* est = _est;
-	// printf("Estudiante: {%i %s}\n", est -> padron, est -> nombre);
 	return true;
 }
 
 bool
-a_cada_estudiante_hasta_padron_10(void* _est, void* aux) {
+a_cada_estudiante_hasta_padron_22(void* _est, void* aux) {
 	estudiante_fiuba_t* est = _est;
-	printf("Estudiante: {%i %s}\n", est -> padron, est -> nombre);
-	return !(est -> padron == 10);
+	return !(est -> padron == 22);
 }
 
 void  
@@ -299,7 +296,7 @@ dadoUnABB_alRecorrerUnaCantidadMenorAlTamanioDelABB_seRecorrenSoloEsosElementos(
 	size_t MAX_RECORRIDOS = 5;
 
 	void* recorridos[MAX_ELEMENTOS];
-	size_t cantidad_recorridos = abb_recorrer(arbol, PREORDEN, recorridos, MAX_RECORRIDOS);
+	size_t cantidad_recorridos = abb_recorrer(arbol, POSTORDEN, recorridos, MAX_RECORRIDOS);
 
 	pa2m_afirmar(cantidad_recorridos == MAX_RECORRIDOS, "Al recorrer solo 5 elementos de un ABB de 10 elementos, la cantidad de elementos recorridos es 5");
 
@@ -478,16 +475,17 @@ dadoUnABB_alAplicarUnaFuncionQueRetornaFalseAUnElemento_elRecorridoSeDetieneEnLa
     arbol = abb_insertar(arbol, est_8);
     arbol = abb_insertar(arbol, est_9);
 
-	const size_t MAX_RECORRIDOS = 10;
+	size_t cantidad_recorridos = abb_con_cada_elemento(arbol, PREORDEN, a_cada_estudiante_hasta_padron_22, NULL);
+	pa2m_afirmar(cantidad_recorridos == 6, "Al aplicar una funcion en un recorrido PREORDEN, la cantidad de elementos a los que se les aplica la funcion es igual al total de elementos");
+	printf("Cantidad recorridos [PREORDEN]: %li\n", cantidad_recorridos);
 
-	size_t cantidad_recorridos = abb_con_cada_elemento(arbol, PREORDEN, a_cada_estudiante_hasta_padron_10, NULL);
-	pa2m_afirmar(cantidad_recorridos == MAX_RECORRIDOS, "Al aplicar una funcion en un recorrido PREORDEN, la cantidad de elementos a los que se les aplica la funcion es igual al total de elementos");
+	cantidad_recorridos = abb_con_cada_elemento(arbol, INORDEN, a_cada_estudiante_hasta_padron_22, NULL);
+	pa2m_afirmar(cantidad_recorridos == 5, "Al aplicar una funcion en un recorrido INORDEN, la cantidad de elementos a los que se les aplica la funcion es igual al total de elementos");
+	printf("Cantidad recorridos [INORDEN]: %li\n", cantidad_recorridos);
 
-	cantidad_recorridos = abb_con_cada_elemento(arbol, INORDEN, a_cada_estudiante_hasta_padron_10, NULL);
-	pa2m_afirmar(cantidad_recorridos == MAX_RECORRIDOS, "Al aplicar una funcion en un recorrido INORDEN, la cantidad de elementos a los que se les aplica la funcion es igual al total de elementos");
-
-	cantidad_recorridos = abb_con_cada_elemento(arbol, POSTORDEN, a_cada_estudiante_hasta_padron_10, NULL);
-	pa2m_afirmar(cantidad_recorridos == MAX_RECORRIDOS, "Al aplicar una funcion en un recorrido POSTORDEN, la cantidad de elementos a los que se les aplica la funcion es igual al total de elementos");
+	cantidad_recorridos = abb_con_cada_elemento(arbol, POSTORDEN, a_cada_estudiante_hasta_padron_22, NULL);
+	pa2m_afirmar(cantidad_recorridos == 4, "Al aplicar una funcion en un recorrido POSTORDEN, la cantidad de elementos a los que se les aplica la funcion es igual al total de elementos");
+	printf("Cantidad recorridos [POSTORDEN]: %li\n", cantidad_recorridos);
 
 	abb_destruir_todo(arbol, destructor_estudiante_fiuba);
 }
@@ -648,20 +646,20 @@ dadoUnABB_alQuitarUnElementoEnUnNodoConDosHijos_seQuitaCorrectamente() {
 
 	abb_quitar(arbol, est_2);
 
-	// const size_t MAX_ELEMENTOS = 10;
-	// size_t MAX_RECORRIDOS = MAX_ELEMENTOS;
-// 
-	// void* recorridos[MAX_ELEMENTOS];
-	// abb_recorrer(arbol, PREORDEN, recorridos, MAX_RECORRIDOS);
-// 
-    // bool recorrido_correcto =
-        // (recorridos[0] == est_0) && (recorridos[1] == est_1) &&
-        // (recorridos[2] == est_3) && (recorridos[3] == est_7) &&
-        // (recorridos[4] == est_8) && (recorridos[5] == est_4) &&
-        // (recorridos[6] == est_5) && (recorridos[7] == est_9) &&
-		// (recorridos[8] == est_6);
-// 
-	// pa2m_afirmar(recorrido_correcto, "Al quitar un elemento de un nodo con 2 hijos, se elimina correctamente y el ABB sigue siendo un ABB");
+	const size_t MAX_ELEMENTOS = 10;
+	size_t MAX_RECORRIDOS = MAX_ELEMENTOS;
+ 
+	void* recorridos[MAX_ELEMENTOS];
+	abb_recorrer(arbol, PREORDEN, recorridos, MAX_RECORRIDOS);
+ 
+    bool recorrido_correcto =
+        (recorridos[0] == est_0) && (recorridos[1] == est_1) &&
+        (recorridos[2] == est_3) && (recorridos[3] == est_7) &&
+        (recorridos[4] == est_8) && (recorridos[5] == est_4) &&
+        (recorridos[6] == est_5) && (recorridos[7] == est_9) &&
+		(recorridos[8] == est_6);
+ 
+	pa2m_afirmar(recorrido_correcto, "Al quitar un elemento de un nodo con 2 hijos, se elimina correctamente y el ABB sigue siendo un ABB");
 
 	destructor_estudiante_fiuba(est_2);
 	abb_destruir_todo(arbol, destructor_estudiante_fiuba);
@@ -695,20 +693,20 @@ dadoUnABB_alQuitarElElementoEnElNodoRaiz_seQuitaCorrectamente() {
 
 	abb_quitar(arbol, est_5);
 
-	// const size_t MAX_ELEMENTOS = 10;
-	// size_t MAX_RECORRIDOS = MAX_ELEMENTOS;
+	const size_t MAX_ELEMENTOS = 10;
+	size_t MAX_RECORRIDOS = MAX_ELEMENTOS;
 
-	// void* recorridos[MAX_ELEMENTOS];
-	// abb_recorrer(arbol, PREORDEN, recorridos, MAX_RECORRIDOS);
+	void* recorridos[MAX_ELEMENTOS];
+	abb_recorrer(arbol, PREORDEN, recorridos, MAX_RECORRIDOS);
 
-//     bool recorrido_correcto =
-//         (recorridos[0] == est_0) && (recorridos[1] == est_1) &&
-//         (recorridos[2] == est_3) && (recorridos[3] == est_7) &&
-//         (recorridos[4] == est_8) && (recorridos[5] == est_4) &&
-//         (recorridos[6] == est_2) && (recorridos[7] == est_9) &&
-// 		(recorridos[8] == est_6);
-// 
-// 	pa2m_afirmar(recorrido_correcto, "Al quitar un elemento de un nodo con 1 hijo, se elimina correctamente y el ABB sigue siendo un ABB");
+	bool recorrido_correcto =
+		(recorridos[0] == est_0) && (recorridos[1] == est_1) &&
+		(recorridos[2] == est_3) && (recorridos[3] == est_7) &&
+		(recorridos[4] == est_8) && (recorridos[5] == est_4) &&
+		(recorridos[6] == est_2) && (recorridos[7] == est_9) &&
+		(recorridos[8] == est_6);
+
+	pa2m_afirmar(recorrido_correcto, "Al quitar un elemento de un nodo con 1 hijo, se elimina correctamente y el ABB sigue siendo un ABB");
 
 	destructor_estudiante_fiuba(est_5);
 	abb_destruir_todo(arbol, destructor_estudiante_fiuba);
@@ -744,7 +742,7 @@ main() {
 	pa2m_nuevo_grupo("Pruebas: Con Cada Elemento");
 	dadoUnABBNULL_alAplicarUnaFuncionACadaElemento_seRecorrenCeroElementos();
 	dadoUnABB_alAplicarUnaFuncionACadaElemento_seAplicaCorrectamente();
-	// dadoUnABB_alAplicarUnaFuncionQueRetornaFalseAUnElemento_elRecorridoSeDetieneEnLaCantidadDeRecorridosCorrecta();
+	dadoUnABB_alAplicarUnaFuncionQueRetornaFalseAUnElemento_elRecorridoSeDetieneEnLaCantidadDeRecorridosCorrecta();
 
 	pa2m_nuevo_grupo("Pruebas: Quitar");
 	dadoUnABBNULL_alQuitarUnElemento_seRetornaNULL();
