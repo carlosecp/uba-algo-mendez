@@ -37,7 +37,8 @@ abb_quitar_recursivo_aux(nodo_abb_t* raiz, void* elemento, void** elemento_quita
     int comparacion = comparador(elemento, raiz -> elemento);
     if (comparacion == 0) {
         if (raiz -> izquierda && raiz -> derecha) {
-            nodo_abb_t* predecesor_inmediato = abb_maximo(&(raiz -> izquierda));
+            nodo_abb_t* predecesor_inmediato = abb_extraer_maximo(&(raiz -> izquierda));
+
             predecesor_inmediato -> izquierda = raiz -> izquierda;
             predecesor_inmediato -> derecha = raiz -> derecha;
 
@@ -67,18 +68,18 @@ abb_quitar_recursivo_aux(nodo_abb_t* raiz, void* elemento, void** elemento_quita
 }
 
 nodo_abb_t*
-abb_maximo(nodo_abb_t** raiz)
+abb_extraer_maximo(nodo_abb_t** raiz)
 {
     if (!(*raiz))
         return NULL;
 
     if (!((*raiz) -> derecha)) {
         nodo_abb_t* nodo_maximo = *raiz;
-        *raiz = NULL;
+        *raiz = (*raiz) -> izquierda;
         return nodo_maximo;
     }
 
-    return abb_maximo(&((*raiz) -> derecha));
+    return abb_extraer_maximo(&((*raiz) -> derecha));
 }
 
 void*
