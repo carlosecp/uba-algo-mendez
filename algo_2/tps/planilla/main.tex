@@ -225,6 +225,9 @@ en tres casos particulares:
 			eliminar y se libera de la memoria.
 \end{itemize}
 
+Al finalizar la eliminación del nodo se retorna la referencia al elemento que
+estaba almacenado en este.
+
 Para reutilizar un poco mejor el código, en esta implimentación tanto la
 eliminación de un nodo hoja como la eliminación de un nodo con un solo hijo se
 hacen de la misma forma. Estos dos casos pueden ser agrupados en uno solo para
@@ -239,15 +242,44 @@ que como no existe, vale \lstinline{NULL}, es decir que al eliminar el nodo
 deseado, el padre de este va a quedar con una referencia a \lstinline{NULL},
 que es equivalente a directamente eliminar el nodo hoja deseado.
 
+Cabe destacar que al igual que la operación de insertar, la función encargada
+de la eliminación de elementos también utiliza una función auxiliar recursiva,
+en este caso esa función es \lstinline{abb_quitar_recursivo_aux}. A su vez esta
+función utiliza un segundo auxiliar llamado \lstinline{abb_extraer_maximo},
+utilizada para extrear el sucesor inmediato en el caso de eliminación de nodos
+con dos hijos.
+
 
 											\subsection{Búsqueda de un elemento}
 
-
+La operación de búsqueda consiste en una función llamada \lstinline{abb_buscar}
+que a su vez utiliza una función auxiliar recursiva llamada
+\lstinline{abb_buscar_recursivo_aux}. Esta función toma el elemento raíz del
+árbol y a partir de ahí inicia a comparar los valores de cada nodo con el
+valor buscado, utilizando la misma función de comparación con la que se
+insertaron los elementos. En caso de que el valor buscado sea menor al valor
+del nodo actual, se continúa el recorrido en la rama izquierda, en caso en que
+el valor buscado sea mayor al valor del nodo actual, la búsqueda se continúa en
+la derecha, y si los valores son iguales, significa que se encontró el elemento
+buscado. En este último caso se retorna el valor almacenado.
 
 
 											\subsection{Iterador}
 
+Existen dos funciones utilizadas para recorrer el ABB. La primera función,
+llamada \lstinline{abb_recorrer}, solamente se encarga de recorrer todos los
+elementos del árbol en el orden especificado. Para esto se utilizan
+diferentes funciones auxiliares recursivas que van avanzando a través de los
+nodos del árbol en según el tipo de recorrido que corresponda. A medida se van
+recorriendo cada uno de los elementos, estos van siendo agregados a un vector
+externo en el orden esperado de cada uno de los recorridos.
 
+La segunda de estas funciones, \lstinline{abb_con_cada_elemento} es utilizada
+para aplicar una función sobre cada uno de los elementos del árbol, hasta que se
+llegue al final del mismo o hasta que la función falle o llegue a un elemento
+específico, en cuyo caso esta retorna \lstinline{false}.
+
+Ambas funciones retornan solamente la cantidad de elementos recorridos.
 
 
 											\subsection{Getters}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/Arch Linux) (preloaded format=pdflatex 2021.11.7)  7 NOV 2021 19:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/Arch Linux) (preloaded format=pdflatex 2021.11.7)  7 NOV 2021 19:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -393,94 +393,100 @@ la-ma-da [][][].
  []
 
 [3]
+Overfull \hbox (44.29816pt too wide) in paragraph at lines 242--248
+[][][]\T1/cmr/m/n/10 . A su vez es-ta fun-ción uti-li-za un se-gun-do au-xi-lia
+r lla-ma-do [][][],
+ []
+
 <pila_apilado.png, id=68, 743.77875pt x 433.62pt>
 File: pila_apilado.png Graphic file (type png)
 <use pila_apilado.png>
-Package pdftex.def Info: pila_apilado.png  used on input line 248.
+Package pdftex.def Info: pila_apilado.png  used on input line 273.
 (pdftex.def)             Requested size: 339.67029pt x 198.03183pt.
-<pila_desapilado.png, id=70, 683.55376pt x 433.62pt>
+[4]
+<pila_desapilado.png, id=74, 683.55376pt x 433.62pt>
 File: pila_desapilado.png Graphic file (type png)
 <use pila_desapilado.png>
-Package pdftex.def Info: pila_desapilado.png  used on input line 255.
+Package pdftex.def Info: pila_desapilado.png  used on input line 280.
 (pdftex.def)             Requested size: 339.67029pt x 215.47955pt.
- [4pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
+<cola_encolado.png, id=75, 594.22pt x 502.87875pt>
+File: cola_encolado.png Graphic file (type png)
+<use cola_encolado.png>
+Package pdftex.def Info: cola_encolado.png  used on input line 287.
+(pdftex.def)             Requested size: 339.67029pt x 287.4649pt.
+ [5pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.258 
-       </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/pila_apilado.png>]
-<cola_encolado.png, id=77, 594.22pt x 502.87875pt>
-File: cola_encolado.png Graphic file (type png)
-<use cola_encolado.png>
-Package pdftex.def Info: cola_encolado.png  used on input line 262.
-(pdftex.def)             Requested size: 339.67029pt x 287.4649pt.
-<cola_desencolado.png, id=78, 603.25375pt x 502.87875pt>
+l.290 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.
+2}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.290 
+       </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/pila_apilado.png> 
+</home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/pila_desapilado.png>]
+<cola_desencolado.png, id=84, 603.25375pt x 502.87875pt>
 File: cola_desencolado.png Graphic file (type png)
 <use cola_desencolado.png>
-Package pdftex.def Info: cola_desencolado.png  used on input line 269.
+Package pdftex.def Info: cola_desencolado.png  used on input line 294.
 (pdftex.def)             Requested size: 339.67029pt x 283.15251pt.
-[5pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.272 
-      pdfTeX warning (ext4): destination with the same identifier (name{figure.
-3}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.272 
-       </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/pila_desapilado.pn
-g> </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/cola_encolado.png>]
-<lista_general.png, id=87, 370.38374pt x 192.72pt>
+<lista_general.png, id=85, 370.38374pt x 192.72pt>
 File: lista_general.png Graphic file (type png)
 <use lista_general.png>
-Package pdftex.def Info: lista_general.png  used on input line 276.
+Package pdftex.def Info: lista_general.png  used on input line 301.
 (pdftex.def)             Requested size: 339.67029pt x 176.73993pt.
-<lista_insercion.png, id=88, 442.65375pt x 412.54124pt>
+
+[6pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.304 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.
+4}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.304 
+       </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/cola_encolado.png>
+ </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/cola_desencolado.png>]
+<lista_insercion.png, id=95, 442.65375pt x 412.54124pt>
 File: lista_insercion.png Graphic file (type png)
 <use lista_insercion.png>
-Package pdftex.def Info: lista_insercion.png  used on input line 283.
+Package pdftex.def Info: lista_insercion.png  used on input line 308.
 (pdftex.def)             Requested size: 339.67029pt x 316.58131pt.
-
-[6pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.286 
-      pdfTeX warning (ext4): destination with the same identifier (name{figure.
-5}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.286 
-       </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/cola_desencolado.p
-ng> </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/lista_general.png>]
-<lista_quitar.png, id=98, 442.65375pt x 734.745pt>
+<lista_quitar.png, id=96, 442.65375pt x 734.745pt>
 File: lista_quitar.png Graphic file (type png)
 <use lista_quitar.png>
-Package pdftex.def Info: lista_quitar.png  used on input line 290.
+Package pdftex.def Info: lista_quitar.png  used on input line 315.
 (pdftex.def)             Requested size: 339.67029pt x 563.83826pt.
 
-[7pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) 
+[7pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.293 
-       </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/lista_insercion.pn
-g>] [8pdfTeX warning (ext4): destination with the same identifier (name{figure.
-7}) has been already used, duplicate ignored
+l.318 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.
+6}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.295 \end{document}
+l.318 
+       </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/lista_general.png>
+ </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/lista_insercion.png>]
+[8pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.320 \end{document}
                      </home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/list
 a_quitar.png>] (/home/itscarlosecp/Documents/UBA/algo_2/tps/planilla/main.aux
 LaTeX Info: Redefining \. on input line 26.
 LaTeX Info: Redefining \% on input line 26.
 ) ) 
 Here is how much of TeX's memory you used:
- 11448 strings out of 478994
- 163544 string characters out of 5864751
+ 11454 strings out of 478994
+ 163666 string characters out of 5864751
  677939 words of memory out of 5000000
- 28741 multiletter control sequences out of 15000+600000
+ 28747 multiletter control sequences out of 15000+600000
  410846 words of font info for 39 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  71i,11n,74p,533b,1135s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -491,7 +497,7 @@ ts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf-dist/fonts/type1/public
 440.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/s
 hare/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf-dist
 /fonts/type1/public/cm-super/sfrm1440.pfb>
-Output written on main.pdf (9 pages, 333503 bytes).
+Output written on main.pdf (9 pages, 334985 bytes).
 PDF statistics:
  185 PDF objects out of 1000 (max. 8388607)
  151 compressed objects within 2 object streams
