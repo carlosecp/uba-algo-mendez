@@ -2,6 +2,10 @@ VALGRIND_FLAGS=--leak-check=full --track-origins=yes --show-reachable=yes --erro
 CFLAGS =-g -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror -O0
 CC = gcc
 
+zip: all
+	zip tda_abb.zip *
+	zip tda_abb.zip ./**/*
+
 all: clean valgrind-pruebas
 
 ejemplo: ejemplo.c src/*

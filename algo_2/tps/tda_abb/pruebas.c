@@ -476,16 +476,13 @@ dadoUnABB_alAplicarUnaFuncionQueRetornaFalseAUnElemento_elRecorridoSeDetieneEnLa
     arbol = abb_insertar(arbol, est_9);
 
 	size_t cantidad_recorridos = abb_con_cada_elemento(arbol, PREORDEN, a_cada_estudiante_hasta_padron_22, NULL);
-	pa2m_afirmar(cantidad_recorridos == 6, "Al aplicar una funcion en un recorrido PREORDEN, la cantidad de elementos a los que se les aplica la funcion es igual al total de elementos");
-	printf("Cantidad recorridos [PREORDEN]: %li\n", cantidad_recorridos);
+	pa2m_afirmar(cantidad_recorridos == 6, "Al aplicar una funcion en un recorrido PREORDEN hasta cierto elemento, el recorrido se detiene en la cantidad de elementos correcta");
 
 	cantidad_recorridos = abb_con_cada_elemento(arbol, INORDEN, a_cada_estudiante_hasta_padron_22, NULL);
-	pa2m_afirmar(cantidad_recorridos == 5, "Al aplicar una funcion en un recorrido INORDEN, la cantidad de elementos a los que se les aplica la funcion es igual al total de elementos");
-	printf("Cantidad recorridos [INORDEN]: %li\n", cantidad_recorridos);
+	pa2m_afirmar(cantidad_recorridos == 5, "Al aplicar una funcion en un recorrido INORDEN hasta cierto elemento, el recorrido se detiene en la cantidad de elementos correcta");
 
 	cantidad_recorridos = abb_con_cada_elemento(arbol, POSTORDEN, a_cada_estudiante_hasta_padron_22, NULL);
-	pa2m_afirmar(cantidad_recorridos == 4, "Al aplicar una funcion en un recorrido POSTORDEN, la cantidad de elementos a los que se les aplica la funcion es igual al total de elementos");
-	printf("Cantidad recorridos [POSTORDEN]: %li\n", cantidad_recorridos);
+	pa2m_afirmar(cantidad_recorridos == 4, "Al aplicar una funcion en un recorrido POSTORDEN hasta cierto elemento, el recorrido se detiene en la cantidad de elementos correcta");
 
 	abb_destruir_todo(arbol, destructor_estudiante_fiuba);
 }

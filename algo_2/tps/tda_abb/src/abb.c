@@ -102,14 +102,16 @@ abb_con_cada_elemento(abb_t* arbol, abb_recorrido recorrido, bool (*funcion)(voi
 	if (!arbol || !funcion)
 		return 0;
 
+	bool continuar_recorrido = true;
+
 	if (recorrido == PREORDEN)
-		return abb_con_cada_elemento_preorden_aux(arbol -> nodo_raiz, funcion, aux);
+		return abb_con_cada_elemento_preorden_aux(arbol -> nodo_raiz, funcion, aux, &continuar_recorrido);
 
 	if (recorrido == INORDEN)
-		return abb_con_cada_elemento_inorden_aux(arbol -> nodo_raiz, funcion, aux);
+		return abb_con_cada_elemento_inorden_aux(arbol -> nodo_raiz, funcion, aux, &continuar_recorrido);
 
 	if (recorrido == POSTORDEN)
-		return abb_con_cada_elemento_postorden_aux(arbol -> nodo_raiz, funcion, aux);
+		return abb_con_cada_elemento_postorden_aux(arbol -> nodo_raiz, funcion, aux, &continuar_recorrido);
 
 	return 0;
 }
