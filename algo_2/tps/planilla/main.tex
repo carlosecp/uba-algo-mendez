@@ -96,6 +96,12 @@ solo hijo). Para facilitar la diferenciación entre los hijos de un nodo, se les
 suele llamar ''nodo izquierdo'' y ''nodo derecho'' respectivamente, en función
 de la ubicación relativa de cada uno de los nodos con su nodo padre.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{arbol_eneario.png}
+\caption{\label{fig:seq01}Ejemplo de árbol n-ario.}
+\end{figure}
+
 
 									 \subsubsection{Árbol Binario de Búsqueda (ABB)}
 
@@ -119,6 +125,12 @@ Esto facilita la navegación o \textbf{recorrido} del árbol, ya que al saber si
 el elemento buscado es menor o mayor que el nodo actual, se puede determinar
 en qué dirección seguir el recorrido y descartar todas aquellas ramas que no
 satisfagan la comparación.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{arbol_binario.png}
+\caption{\label{fig:seq02}Ejemplo de árbol binario.}
+\end{figure}
 
 
 				 \section{Detalles de implementación}\label{sec:implementacion}
@@ -153,7 +165,7 @@ typedef struct abb{
 
 Esta estructura no es meramente recursiva, ya que además de contener
 referencias a otros nodos (en este caso únicamente a la raíz del árbol),
-almacena el tamanio actual del árbol (la cantidad de nodos que contiene) y una
+almacena el tamaño actual del árbol (la cantidad de nodos que contiene) y una
 función \lstinline{comparador} que establece el criterio de comparación
 utilizado para el árbol.
 
@@ -191,6 +203,36 @@ solamente se hace la validación de los argumentos y se verifica que el nuevo
 elemento haya sido insertado con éxito. En caso afirmativo, se incrementa la
 cantidad de elementos del árbol y finalmente se retorna el nuevo árbol.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{insercion_1.png}
+\caption{\label{fig:seq03}Inserción del elemento de valor 22.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{insercion_2.png}
+\caption{\label{fig:seq04}Comparo el valor del elemento con el valor de la raíz.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{insercion_3.png}
+\caption{\label{fig:seq05}Avanzo hacia el sub-árbol izquierdo ya que el valor del elemento es menor.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{insercion_4.png}
+\caption{\label{fig:seq06}Vuelvo a comparar los valores de los elementos.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{insercion_5.png}
+\caption{\label{fig:seq07}Creo un nuevo hijo izquierdo e inserto el nuevo valor.}
+\end{figure}
+
 
 										 \subsection{Eliminación de elementos}
 
@@ -204,7 +246,7 @@ en tres casos particulares:
 	\item \textbf{Nodo hoja:} En el caso en el que el elemento que
 			se quiere eliminar esté ubicado en un nodo hoja, el procedimiento para
 			remover este elemento simplemente consiste en extraer el elemento que
-			continene ese nodo (para no perder la referencia al elemento) y después
+			contiene ese nodo (para no perder la referencia al elemento) y después
 			la liberación del nodo de la memoria.
 		\item \textbf{Nodo con un hijo:} En este caso se tiene que identificar si
 			nodo actual tiene hijo izquierdo o derecho. Luego se enlaza el hijo
@@ -228,7 +270,7 @@ en tres casos particulares:
 Al finalizar la eliminación del nodo se retorna la referencia al elemento que
 estaba almacenado en este.
 
-Para reutilizar un poco mejor el código, en esta implimentación tanto la
+Para reutilizar un poco mejor el código, en esta implementación tanto la
 eliminación de un nodo hoja como la eliminación de un nodo con un solo hijo se
 hacen de la misma forma. Estos dos casos pueden ser agrupados en uno solo para
 nodos que tienen como máximo un nodo. Al encontrar el nodo a eliminar, se sabe
@@ -245,9 +287,52 @@ que es equivalente a directamente eliminar el nodo hoja deseado.
 Cabe destacar que al igual que la operación de insertar, la función encargada
 de la eliminación de elementos también utiliza una función auxiliar recursiva,
 en este caso esa función es \lstinline{abb_quitar_recursivo_aux}. A su vez esta
-función utiliza un segundo auxiliar llamado \lstinline{abb_extraer_maximo},
-utilizada para extrear el sucesor inmediato en el caso de eliminación de nodos
+función utiliza un segundo auxiliar \lstinline{abb_extraer_maximo},
+utilizado para extraer el sucesor inmediato en el caso de eliminación de nodos
 con dos hijos.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{eliminacion_1.png}
+\caption{\label{fig:seq08}Inicio a buscar el elemento a eliminar desde la raíz.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{eliminacion_2.png}
+\caption{\label{fig:seq09}Comparo el valor del elemento con el valor de la raíz.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{eliminacion_3.png}
+\caption{\label{fig:seq10}Avanzo hacia el sub-árbol izquierdo ya que el valor del elemento es menor.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{eliminacion_4.png}
+\caption{\label{fig:seq11}Encuentro el elemento a eliminar.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{eliminacion_5.png}
+\caption{\label{fig:seq12}Encuentro el sucesor inmediato al elemento a eliminar.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{eliminacion_6.png}
+\caption{\label{fig:seq13}Reemplazo el nodo a eliminar por el sucesor inmediato.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{eliminacion_7.png}
+\caption{\label{fig:seq14}Guardo una referencia al elemento dentro del nodo a eliminar y libero el nodo.}
+\end{figure}
+
 
 
 											\subsection{Búsqueda de un elemento}
@@ -264,7 +349,7 @@ la derecha, y si los valores son iguales, significa que se encontró el elemento
 buscado. En este último caso se retorna el valor almacenado.
 
 
-											\subsection{Iterador}
+														 \subsection{Iterador}
 
 Existen dos funciones utilizadas para recorrer el ABB. La primera función,
 llamada \lstinline{abb_recorrer}, solamente se encarga de recorrer todos los
@@ -282,64 +367,24 @@ específico, en cuyo caso esta retorna \lstinline{false}.
 Ambas funciones retornan solamente la cantidad de elementos recorridos.
 
 
-											\subsection{Getters}
+															\subsection{Getters}
 
-
+Finalmente se proveen una seria de getters para obtener información sobre el
+estado actual del ABB, como por ejemplo, la función \lstinline{abb_vacio}, que 
+retorna \lstinline{true} o \lstinline{false} si el ABB está vacío o no, o la
+función \lstinline{abb_tamanio} que retorna la cantidad actual de elementos
+en el ABB.
 
 
 											\subsection{Destrucción del ABB}
 
-
-
-\section{Diagramas}\label{sec:diagramas}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{pila_apilado.png}
-\caption{\label{fig:seq01}Apilado en pila.}
-\end{figure}
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{pila_desapilado.png}
-\caption{\label{fig:seq02}Desapilado en pila.}
-\end{figure}
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{cola_encolado.png}
-\caption{\label{fig:seq03}Encolado en cola.}
-\end{figure}
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{cola_desencolado.png}
-\caption{\label{fig:seq04}Desencolado en cola.}
-\end{figure}
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{lista_general.png}
-\caption{\label{fig:seq05}Implementación de lista enlazada.}
-\end{figure}
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{lista_insercion.png}
-\caption{\label{fig:seq06}Insertado en lista.}
-\end{figure}
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{lista_quitar.png}
-\caption{\label{fig:seq07}Eliminación en lista.}
-\end{figure}
+Cuando se deja de utilizar el ABB, este se libera de la memoria. Para esto
+existen dos otras dos funciones encargadas de la destrucción del árbol. La
+primera de estas funciones, llamada \lstinline{abb_destruir_todo}, toma un
+destructor (una función encargada de liberar de la memoria cada uno de los
+elementos dentro del árbol) y recorre recursivamente el árbol con un recorrido
+postorden, para ir liberando de la memoria cada nodo hasta
+luego de haber destruido sus hijos.
 
 
 \end{document}
