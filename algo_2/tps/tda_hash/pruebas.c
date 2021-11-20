@@ -9,16 +9,29 @@ struct hash {
 	hash_destruir_dato_t destruir_elemento;
 };
 
-void destruir_dato(void* elemento) {
-	return;
+typedef struct {
+	size_t padron;
+	char* nombre;
+} estudiante_t;
+
+estudiante_t* crear_estudiante(size_t padron, char* nombre) {
+	estudiante_t* est = malloc(sizeof(estudiante_t));
+	est->padron = padron;
+	est->nombre = nombre;
+	return est;
+}
+
+void destruir_estudiante(void* _est) {
+	free(_est);
 }
 
 void imprimir_casilla(casilla_t* casilla) {
 	if (!casilla)
 		return;
 
-	printf(" %s ", (char*)(casilla->elemento));
-	imprimir_casilla(casilla -> siguiente);
+	estudiante_t est = *(estudiante_t*)casilla->elemento;
+	printf(" {%s: {%s, %li}} ", casilla->clave, est.nombre, est.padron);
+	imprimir_casilla(casilla->siguiente);
 }
 
 void imprimir_hash(hash_t* hash) {
@@ -46,23 +59,25 @@ void dadoUnHashNULL_alInsertarUnElemento_seRetornaError() {
 }
 
 void dadaUnaClaveNULL_alInsertarUnElemento_seRetornaError() {
-	hash_t* hash = hash_crear(destruir_dato, 3);
+	hash_t* hash = hash_crear(destruir_estudiante, 3);
 	pa2m_afirmar(hash_insertar(hash, NULL, NULL)==-1, "Al insertar con una clave NULL se retorna error");
 	hash_destruir(hash);
 }
 
 void dadoUnHash_alInsertarUnElemento_seInsertaCorrectamente() {
-	hash_t* hash = hash_crear(destruir_dato, 10);
+	hash_t* hash = hash_crear(destruir_estudiante, 10);
 
-	char e0[] = "elemento1";
-	char e1[] = "elemento2";
-	char e2[] = "elemento3";
+	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
+	estudiante_t* est1 = crear_estudiante(20, "Cami Fiorotto");
+	estudiante_t* est2 = crear_estudiante(36, "Carolina Aramay");
+	estudiante_t* est3 = crear_estudiante(10, "Facundo Sanso");
+	estudiante_t* est4 = crear_estudiante(22, "Joaquin Dopazo");
 
-	hash_insertar(hash, "a", e0);
-	hash_insertar(hash, "dd", e1);
-	hash_insertar(hash, "carlos", e2);
-
-	imprimir_hash(hash);
+	pa2m_afirmar(hash_insertar(hash, "primero", est0)==0, "Al insertar elemento 'primero' correctamente se retorna 1");
+	pa2m_afirmar(hash_insertar(hash, "segundo", est1)==0, "Al insertar elemento 'segundo' correctamente se retorna 1");
+	pa2m_afirmar(hash_insertar(hash, "tercero", est2)==0, "Al insertar elemento 'tercero' correctamente se retorna 1");
+	pa2m_afirmar(hash_insertar(hash, "cuarto",  est3)==0, "Al insertar elemento 'cuarto' correctamente se retorna 1");
+	pa2m_afirmar(hash_insertar(hash, "quinto",  est4)==0, "Al insertar elemento 'quinto' correctamente se retorna 1");
 
 	hash_destruir(hash);
 }

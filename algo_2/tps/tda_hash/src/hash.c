@@ -57,8 +57,12 @@ int hash_insertar(hash_t* hash, const char* clave, void* elemento) {
 
 	indice_clave %= hash->cantidad_casillas;
 
+	printf("Hash: %i\n", indice_clave);
+
 	hash->casillas[indice_clave] =
 		casilla_insertar(hash->casillas[indice_clave], clave, elemento);
+
+	hash->cantidad_elementos++;
 
 	return 0;
 }
@@ -73,6 +77,9 @@ size_t hash_cantidad(hash_t* hash) {
 void hash_destruir(hash_t* hash) {
 	if (!hash)
 		return;
+
+	for (size_t i = 0; i < hash->cantidad_casillas; i++)
+		casilla_destruir(hash->casillas[i], hash->destruir_elemento);
 
 	free(hash->casillas);
 	free(hash);
