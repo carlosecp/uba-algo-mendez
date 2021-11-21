@@ -1,86 +1,99 @@
 #include "hash.h"
 #include "casilla.h"
-#include <stdlib.h>
 
 #include <stdio.h>
-
-#define ERROR -1
+#include <stdlib.h>
 
 struct hash {
-	casilla_t** casillas;
-	size_t cantidad_casillas;
-	size_t cantidad_elementos;
-	hash_destruir_dato_t destruir_elemento;
+    casilla_t** casillas;
+    size_t cantidad_casillas;
+    size_t cantidad_elementos;
+    hash_destruir_dato_t destruir_elemento;
 };
 
 hash_t* hash_crear(hash_destruir_dato_t destruir_elemento, size_t capacidad_inicial) {
-	if (!destruir_elemento)
-		return NULL;
+    hash_t* hash = malloc(sizeof(hash_t));
 
-	hash_t* hash = malloc(sizeof(hash_t));
+    if (!hash)
+        return NULL;
 
-	if (!hash)
-		return NULL;
+    hash->cantidad_casillas = capacidad_inicial >= 3 ? capacidad_inicial : 3;
+    hash->cantidad_elementos = 0;
+    hash->destruir_elemento = destruir_elemento;
 
-	hash->cantidad_casillas  = capacidad_inicial >= 3 ? capacidad_inicial : 3;
-	hash->cantidad_elementos = 0;
-	hash->destruir_elemento  = destruir_elemento;
+    hash->casillas = calloc(hash->cantidad_casillas, sizeof(casilla_t*));
+    if (!(hash->casillas)) {
+        free(hash);
+        return NULL;
+    }
 
-	hash->casillas = calloc(hash->cantidad_casillas, sizeof(casilla_t*));
-	if (!(hash->casillas)) {
-		free(hash);
-		return NULL;
-	}
-
-	return hash;
+    return hash;
 }
 
 int generar_valor_hash(const char* clave) {
-	if (!clave)
-		return ERROR;
+    if (!clave)
+        return ERROR;
 
-	size_t indice_hash = 0;
+    size_t indice_hash = 0;
 
-	while (*clave)
+    while (*clave)
 		indice_hash += *(clave++);
 
-	return indice_hash;
+    return indice_hash;
 }
 
 int hash_insertar(hash_t* hash, const char* clave, void* elemento) {
-	if (!hash || !clave)
-		return ERROR;
+    if (!hash || !clave)
+        return ERROR;
 
-	int indice_clave = generar_valor_hash(clave);
-	if (indice_clave == ERROR)
-		return ERROR;
+    int indice_clave = generar_valor_hash(clave);
+    if (indice_clave == ERROR)
+        return ERROR;
 
-	indice_clave %= hash->cantidad_casillas;
+    indice_clave %= hash->cantidad_casillas;
 
-	printf("Hash: %i\n", indice_clave);
+    hash->casillas[indice_clave] = casilla_insertar(hash->casillas[indice_clave], clave, elemento, &(hash->cantidad_elementos));
 
-	hash->casillas[indice_clave] =
-		casilla_insertar(hash->casillas[indice_clave], clave, elemento);
-
-	hash->cantidad_elementos++;
-
-	return 0;
+    return EXITO;
 }
+
+int hash_quitar(hash_t* hash, const char* clave) {
+    if (!hash || !clave)
+        return ERROR;
+
+    int indice_clave = generar_valor_hash(clave);
+    if (indice_clave == ERROR)
+        return ERROR;
+
+    indice_clave %= hash->cantidad_casillas;
+
+    return casilla_quitar(&(hash->casillas[indice_clave]), clave, hash->destruir_elemento, &(hash->cantidad_elementos));
+}
+
+void* hash_obtener(hash_t* hash, const char* clave) { return NULL; }
+
+bool hash_contiene(hash_t* hash, const char* clave) { return false; }
 
 size_t hash_cantidad(hash_t* hash) {
-	if (!hash)
-		return 0;
+    if (!hash)
+        return 0;
 
-	return hash->cantidad_elementos;
+    return hash->cantidad_elementos;
 }
 
-void hash_destruir(hash_t* hash) {
-	if (!hash)
-		return;
+void hash_destruir(hash_t* hash)
+{
+    if (!hash)
+        return;
 
-	for (size_t i = 0; i < hash->cantidad_casillas; i++)
-		casilla_destruir(hash->casillas[i], hash->destruir_elemento);
+    for (size_t i = 0; i < hash->cantidad_casillas; i++)
+        casilla_destruir(hash->casillas[i], hash->destruir_elemento);
 
-	free(hash->casillas);
-	free(hash);
+    free(hash->casillas);
+    free(hash);
+}
+
+size_t hash_con_cada_clave(hash_t* hash, bool (*funcion)(hash_t* hash, const char* clave, void* aux), void* aux)
+{
+    return 0;
 }
