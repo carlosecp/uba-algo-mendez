@@ -56,7 +56,7 @@ void imprimir_hash(hash_t* hash) {
 void dadoUnDestructorYUnValorInicialValido_alCrearUnHash_seRetornaUnHashCon0Elementos() {
 	hash_t* hash = hash_crear(destruir_estudiante, 3);
 	pa2m_afirmar(hash != NULL, "Al crear un hash con un destructor y valor inicial valido, se retorna un hash no NULL");
-	pa2m_afirmar(hash_cantidad(hash) == 0, "Al crear un hash, la cantidad de elementos es 0");
+	pa2m_afirmar(hash_cantidad(hash) == 0, "Al crear un hash la cantidad de elementos es 0");
 	hash_destruir(hash);
 }
 
@@ -70,7 +70,7 @@ void dadoUnHashNULL_alInsertarUnElemento_seRetornaError() {
 
 void dadaUnaClaveNULL_alInsertarUnElemento_seRetornaError() {
 	hash_t* hash = hash_crear(destruir_estudiante, 3);
-	pa2m_afirmar(hash_insertar(hash, NULL, NULL) == ERROR, "Al insertar con una clave NULL se retorna ERROR (-1)");
+	pa2m_afirmar(hash_insertar(hash, NULL, NULL) == ERROR, "Al insertar un elemento con clave NULL se retorna ERROR (-1)");
 	hash_destruir(hash);
 }
 
@@ -103,8 +103,8 @@ void dadoUnHash_alInsertarUnElementoConUnaClaveRepetida_seInsertaCorrectamente()
 
 	hash_insertar(hash, "primero", est0);
 
-	pa2m_afirmar(hash_insertar(hash, "primero", est1) == EXITO, "Al insertar un elemento con clave repetida correctamente se retorna EXITO (0)");
-	pa2m_afirmar(hash_cantidad(hash) == 1, "Al insertar un elemento con clave repetida, la cantidad de elementos en el hash se mantiene igual");
+	pa2m_afirmar(hash_insertar(hash, "primero", est1) == EXITO, "Al insertar un elemento con clave repetida se retorna EXITO (0)");
+	pa2m_afirmar(hash_cantidad(hash) == 1, "Al insertar un elemento con clave repetida la cantidad de elementos en el hash se mantiene igual");
 
 	hash_destruir(hash);
 }
@@ -113,13 +113,13 @@ void dadoUnHash_alInsertarUnElementoConUnaClaveRepetida_seInsertaCorrectamente()
 
 void dadoUnHashNULL_alQuitarUnElemento_seRetornaError() {
 	hash_t* hash = NULL;
-	pa2m_afirmar(hash_quitar(hash, "clave"), "Al quitar un elemento de un hash NULL se devuelve -1");
+	pa2m_afirmar(hash_quitar(hash, "clave"), "Al quitar en un hash NULL se devuelve ERROR (-1)");
 	hash_destruir(hash);
 }
 
 void dadaUnaClaveNULL_alQuitarUnElemento_seRetornaError() {
 	hash_t* hash = hash_crear(destruir_estudiante, 3);
-	pa2m_afirmar(hash_quitar(hash, NULL) == ERROR, "Al quitar con una clave NULL se retorna ERROR (-1)");
+	pa2m_afirmar(hash_quitar(hash, NULL) == ERROR, "Al quitar un elemento con clave NULL se retorna ERROR (-1)");
 	hash_destruir(hash);
 }
 
@@ -137,8 +137,8 @@ void dadoUnHash_alQuitarVariosElementos_seQuitanCorrectamente() {
 
 	pa2m_afirmar(hash_quitar(hash, "primero") == EXITO, "Al quitar un elemento correctamente se retorna EXITO (0)");
 	pa2m_afirmar(hash_cantidad(hash) == 0, "Al quitar un elemento la cantidad de elementos disminuye");
-	pa2m_afirmar(hash_quitar(hash, "no_existe") == ERROR, "Al intentar quitar un elemento con una clave que no existe, se retorna ERROR (-1)");
-	pa2m_afirmar(hash_cantidad(hash) == 0, "Al intentar quitar un elemento con una clave que no existe, la cantidad no se disminuye");
+	pa2m_afirmar(hash_quitar(hash, "no_existe") == ERROR, "Al quitar un elemento con clave que no existe se retorna ERROR (-1)");
+	pa2m_afirmar(hash_cantidad(hash) == 0, "Al quitar un elemento con clave que no existe la cantidad no se disminuye");
 
 	hash_insertar(hash, "segundo", est1);
 	hash_insertar(hash, "tercero", est2);
@@ -159,15 +159,27 @@ void dadoUnHash_alQuitarVariosElementos_seQuitanCorrectamente() {
 
 						  /* Pruebas Hash: Obtener */
 
-void dadoUnHashNULL_alObtenerUnElemento_seRetornaFalse() {
+void dadoUnHashNULL_alObtenerUnElemento_seRetornaNULL() {
 	hash_t* hash = NULL;
-	pa2m_afirmar(hash_obtener(hash, "no_existe") == false, "");
+	pa2m_afirmar(hash_obtener(hash, "no_existe") == false, "Al obtener un elemento en un hash NULl se retorna NULL");
 	hash_destruir(hash);
 }
 
-void dadaUnaClaveNULL_alObtenerUnElemento_seRetornaError() {
+void dadaUnaClaveNULL_alObtenerUnElemento_seRetornaNULL() {
 	hash_t* hash = hash_crear(destruir_estudiante, 3);
-	pa2m_afirmar(hash_obtener(hash, NULL) == false, "");
+	pa2m_afirmar(hash_obtener(hash, "no_existe") == false, "Al obtener un elemento con clave NULL se retorna NULL");
+	hash_destruir(hash);
+}
+
+void dadoUnHash_alObtenerUnElemento_seObtieneCorrectamente() {
+	hash_t* hash = hash_crear(destruir_estudiante, 3);
+
+	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
+	hash_insertar(hash, "primero", est0);
+
+	pa2m_afirmar(hash_obtener(hash, "primero") == est0, "Al obtener un elemento por su clave se retorna el elemento correcto");
+	pa2m_afirmar(hash_obtener(hash, "no_existe") == NULL, "Al obtener un elemento que no existe se retorna NULL");
+
 	hash_destruir(hash);
 }
 
@@ -185,6 +197,11 @@ int main() {
 	dadoUnHashNULL_alQuitarUnElemento_seRetornaError();
 	dadaUnaClaveNULL_alQuitarUnElemento_seRetornaError();
 	dadoUnHash_alQuitarVariosElementos_seQuitanCorrectamente();
+
+	pa2m_nuevo_grupo("Pruebas Hash: Obtener");
+	dadoUnHashNULL_alObtenerUnElemento_seRetornaNULL();
+	dadaUnaClaveNULL_alObtenerUnElemento_seRetornaNULL();
+	dadoUnHash_alObtenerUnElemento_seObtieneCorrectamente();
 
     return pa2m_mostrar_reporte();
 }
