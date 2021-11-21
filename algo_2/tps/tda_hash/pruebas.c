@@ -183,6 +183,32 @@ void dadoUnHash_alObtenerUnElemento_seObtieneCorrectamente() {
 	hash_destruir(hash);
 }
 
+						  /* Pruebas Hash: Contiene */
+
+void dadoUnHashNULL_alVerificarSiContieneUnElemento_seRetornaNULL() {
+	hash_t* hash = NULL;
+	pa2m_afirmar(hash_contiene(hash, "no_existe") == false, "Al verificar si un hash NULL contiene un elemento se retorna NULL");
+	hash_destruir(hash);
+}
+
+void dadaUnaClaveNULL_alVerificarSiElHashContieneUnElemento_seRetornaNULL() {
+	hash_t* hash = hash_crear(destruir_estudiante, 3);
+	pa2m_afirmar(hash_contiene(hash, "no_existe") == false, "Al verificar si un hash contiene un elemento con clave NULL se retorna NULL");
+	hash_destruir(hash);
+}
+
+void dadoUnHash_alVerificarSiContieneUnElemento_seObtieneCorrectamente() {
+	hash_t* hash = hash_crear(destruir_estudiante, 3);
+
+	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
+	hash_insertar(hash, "primero", est0);
+
+	pa2m_afirmar(hash_obtener(hash, "primero") == est0, "Al verificar si un hash contiene un elemento insertado previamente se true");
+	pa2m_afirmar(hash_obtener(hash, "no_existe") == NULL, "Al verificar si un hash contiene un elemento que no existe se retorna NULL");
+
+	hash_destruir(hash);
+}
+
 int main() {
 	pa2m_nuevo_grupo("Pruebas Hash: Creacion");
 	dadoUnDestructorYUnValorInicialValido_alCrearUnHash_seRetornaUnHashCon0Elementos();
@@ -202,6 +228,11 @@ int main() {
 	dadoUnHashNULL_alObtenerUnElemento_seRetornaNULL();
 	dadaUnaClaveNULL_alObtenerUnElemento_seRetornaNULL();
 	dadoUnHash_alObtenerUnElemento_seObtieneCorrectamente();
+
+	pa2m_nuevo_grupo("Pruebas Hash: Contiene");
+	dadoUnHashNULL_alVerificarSiContieneUnElemento_seRetornaNULL();
+	dadaUnaClaveNULL_alVerificarSiElHashContieneUnElemento_seRetornaNULL();
+	dadoUnHash_alVerificarSiContieneUnElemento_seObtieneCorrectamente();
 
     return pa2m_mostrar_reporte();
 }
