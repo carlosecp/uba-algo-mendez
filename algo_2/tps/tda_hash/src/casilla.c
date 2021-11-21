@@ -61,6 +61,16 @@ int casilla_quitar(casilla_t** casilla, const char* clave, hash_destruir_dato_t 
     return ERROR;
 }
 
+void* casilla_obtener(casilla_t* casilla, const char* clave) {
+	if (!casilla || !clave)
+		return NULL;
+
+	if (strcmp(casilla->clave, clave) == 0)
+		return casilla->elemento;
+
+	return casilla_obtener(casilla->siguiente, clave);
+}
+
 void casilla_destruir(casilla_t* casilla, hash_destruir_dato_t destruir_elemento) {
     if (!casilla)
         return;

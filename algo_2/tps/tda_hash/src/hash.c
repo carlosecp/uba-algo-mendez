@@ -30,7 +30,7 @@ hash_t* hash_crear(hash_destruir_dato_t destruir_elemento, size_t capacidad_inic
     return hash;
 }
 
-int generar_valor_hash(const char* clave) {
+int generar_indice_hash(const char* clave) {
     if (!clave)
         return ERROR;
 
@@ -46,12 +46,11 @@ int hash_insertar(hash_t* hash, const char* clave, void* elemento) {
     if (!hash || !clave)
         return ERROR;
 
-    int indice_clave = generar_valor_hash(clave);
+    int indice_clave = generar_indice_hash(clave);
     if (indice_clave == ERROR)
         return ERROR;
 
     indice_clave %= hash->cantidad_casillas;
-
     hash->casillas[indice_clave] = casilla_insertar(hash->casillas[indice_clave], clave, elemento, &(hash->cantidad_elementos));
 
     return EXITO;
@@ -61,18 +60,38 @@ int hash_quitar(hash_t* hash, const char* clave) {
     if (!hash || !clave)
         return ERROR;
 
-    int indice_clave = generar_valor_hash(clave);
+    int indice_clave = generar_indice_hash(clave);
     if (indice_clave == ERROR)
         return ERROR;
 
     indice_clave %= hash->cantidad_casillas;
-
     return casilla_quitar(&(hash->casillas[indice_clave]), clave, hash->destruir_elemento, &(hash->cantidad_elementos));
 }
 
-void* hash_obtener(hash_t* hash, const char* clave) { return NULL; }
+void* hash_obtener(hash_t* hash, const char* clave) {
+	if (!hash || !clave)
+		return NULL;
 
-bool hash_contiene(hash_t* hash, const char* clave) { return false; }
+    int indice_clave = generar_indice_hash(clave);
+    if (indice_clave == ERROR)
+        return NULL;
+
+    indice_clave %= hash->cantidad_casillas;
+	return casilla_obtener(hash->casillas[indice_clave], clave);
+}
+
+bool hash_contiene(hash_t* hash, const char* clave) {
+	if (!hash || !clave)
+		return false;
+
+	int indice_clave = generar_indice_hash(clave);
+	if (indice_clave == ERROR)
+		return false;
+
+    indice_clave %= hash->cantidad_casillas;
+	void* elemento = casilla_obtener(hash->casillas[indice_clave], clave);
+	return elemento ? true : false;
+}
 
 size_t hash_cantidad(hash_t* hash) {
     if (!hash)

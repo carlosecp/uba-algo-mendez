@@ -157,6 +157,20 @@ void dadoUnHash_alQuitarVariosElementos_seQuitanCorrectamente() {
 	hash_destruir(hash);
 }
 
+						  /* Pruebas Hash: Obtener */
+
+void dadoUnHashNULL_alObtenerUnElemento_seRetornaFalse() {
+	hash_t* hash = NULL;
+	pa2m_afirmar(hash_obtener(hash, "no_existe") == false, "");
+	hash_destruir(hash);
+}
+
+void dadaUnaClaveNULL_alObtenerUnElemento_seRetornaError() {
+	hash_t* hash = hash_crear(destruir_estudiante, 3);
+	pa2m_afirmar(hash_obtener(hash, NULL) == false, "");
+	hash_destruir(hash);
+}
+
 int main() {
 	pa2m_nuevo_grupo("Pruebas Hash: Creacion");
 	dadoUnDestructorYUnValorInicialValido_alCrearUnHash_seRetornaUnHashCon0Elementos();
