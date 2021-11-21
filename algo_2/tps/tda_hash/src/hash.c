@@ -1,8 +1,9 @@
 #include "hash.h"
-#include "casilla.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "casilla.h"
 
 struct hash {
     casilla_t** casillas;
@@ -36,8 +37,7 @@ int generar_indice_hash(const char* clave) {
 
     size_t indice_hash = 0;
 
-    while (*clave)
-		indice_hash += *(clave++);
+    while (*clave) indice_hash += *(clave++);
 
     return indice_hash;
 }
@@ -69,28 +69,28 @@ int hash_quitar(hash_t* hash, const char* clave) {
 }
 
 void* hash_obtener(hash_t* hash, const char* clave) {
-	if (!hash || !clave)
-		return NULL;
+    if (!hash || !clave)
+        return NULL;
 
     int indice_clave = generar_indice_hash(clave);
     if (indice_clave == ERROR)
         return NULL;
 
     indice_clave %= hash->cantidad_casillas;
-	return casilla_obtener(hash->casillas[indice_clave], clave);
+    return casilla_obtener(hash->casillas[indice_clave], clave);
 }
 
 bool hash_contiene(hash_t* hash, const char* clave) {
-	if (!hash || !clave)
-		return false;
+    if (!hash || !clave)
+        return false;
 
-	int indice_clave = generar_indice_hash(clave);
-	if (indice_clave == ERROR)
-		return false;
+    int indice_clave = generar_indice_hash(clave);
+    if (indice_clave == ERROR)
+        return false;
 
     indice_clave %= hash->cantidad_casillas;
-	void* elemento = casilla_obtener(hash->casillas[indice_clave], clave);
-	return elemento ? true : false;
+    void* elemento = casilla_obtener(hash->casillas[indice_clave], clave);
+    return elemento ? true : false;
 }
 
 size_t hash_cantidad(hash_t* hash) {
@@ -100,8 +100,7 @@ size_t hash_cantidad(hash_t* hash) {
     return hash->cantidad_elementos;
 }
 
-void hash_destruir(hash_t* hash)
-{
+void hash_destruir(hash_t* hash) {
     if (!hash)
         return;
 
@@ -112,7 +111,12 @@ void hash_destruir(hash_t* hash)
     free(hash);
 }
 
-size_t hash_con_cada_clave(hash_t* hash, bool (*funcion)(hash_t* hash, const char* clave, void* aux), void* aux)
-{
+size_t hash_con_cada_clave(hash_t* hash, bool (*funcion)(hash_t* hash, const char* clave, void* aux), void* aux) {
+    if (!hash)
+        return 0;
+
+    for (size_t i = 0; i < hash->cantidad_casillas; i++)
+        casilla_con_cada_clave(hash->casillas[i], hash, funcion, aux);
+
     return 0;
 }

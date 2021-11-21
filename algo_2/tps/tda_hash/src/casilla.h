@@ -21,4 +21,6 @@ void* casilla_obtener(casilla_t* casilla, const char* clave);
 
 void casilla_destruir(casilla_t* casilla, hash_destruir_dato_t destructor);
 
+void casilla_con_cada_clave(casilla_t* casilla, hash_t* hash, bool (*funcion)(hash_t* hash, const char* clave, void* aux), void* aux);
+
 #endif
