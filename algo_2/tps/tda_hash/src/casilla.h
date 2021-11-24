@@ -23,7 +23,7 @@ void casilla_destruir(casilla_t* casilla, hash_destruir_dato_t destructor);
 
 void casilla_con_cada_clave(casilla_t* casilla, hash_t* hash, bool (*funcion)(hash_t* hash, const char* clave, void* aux), void* aux, size_t* cantidad_recorridos);
 
-void casilla_copiar_casillas(casilla_t* origen, hash_t* destino);
+void casilla_copiar_casillas(casilla_t* origen, casilla_t** destino);
 
 // BORRAR
 

@@ -98,11 +98,11 @@ void casilla_con_cada_clave(casilla_t* casilla, hash_t* hash, bool (*funcion)(ha
         casilla_con_cada_clave(casilla->siguiente, hash, funcion, aux, cantidad_recorridos);
 }
 
-void casilla_copiar_casillas(casilla_t* origen, hash_t* destino) {
+void casilla_copiar_casillas(casilla_t* origen, casilla_t** destino) {
 	if (!origen || !destino)
 		return;
 
-	hash_insertar(destino, origen->clave, origen->elemento);
+	*(destino++) = origen;
 
 	casilla_copiar_casillas(origen->siguiente, destino);
 }
