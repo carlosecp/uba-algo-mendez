@@ -7,7 +7,7 @@
 #include "hash.h"
 
 casilla_t* casilla_crear() {
-	return NULL;
+    return NULL;
 }
 
 casilla_t* casilla_insertar(casilla_t* casilla, const char* clave, void* elemento, size_t* cantidad_elementos) {
@@ -82,12 +82,16 @@ void casilla_destruir(casilla_t* casilla, hash_destruir_dato_t destruir_elemento
     casilla_destruir(siguiente, destruir_elemento);
 }
 
-void casilla_con_cada_clave(casilla_t* casilla, hash_t* hash, bool (*funcion)(hash_t*, const char*, void*), void* aux) {
-    if (!casilla)
+void casilla_con_cada_clave(casilla_t* casilla, hash_t* hash, bool (*funcion)(hash_t*, const char*, void*), void* aux, size_t* cantidad_recorridos) {
+    if (!casilla || !cantidad_recorridos)
         return;
 
-    if (funcion)
-        funcion(hash, casilla->elemento, aux);
+    (*cantidad_recorridos)++;
 
-    casilla_con_cada_clave(casilla->siguiente, hash, funcion, aux);
+    bool continuar_recorrido = true;
+    if (funcion)
+        continuar_recorrido = funcion(hash, casilla->elemento, aux);
+
+    if (continuar_recorrido)
+        casilla_con_cada_clave(casilla->siguiente, hash, funcion, aux, cantidad_recorridos);
 }

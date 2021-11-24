@@ -1,6 +1,7 @@
 #include "pa2mm.h"
 #include "src/hash.h"
 #include "./src/casilla.h"
+#include <string.h>
 
 #define EXITO 0
 #define ERROR -1
@@ -28,6 +29,15 @@ estudiante_t* crear_estudiante(size_t padron, char* nombre) {
 
 void destruir_estudiante(void* est) {
 	free(est);
+}
+
+bool reprobar_estudiante(hash_t* hash, const char* clave, void* aux) {
+	printf("clave: %s\n", clave);
+	return true;
+}
+
+bool reprobar_hasta_segundo_estudiante(hash_t* hash, const char* clave, void* aux) {
+	return !strcmp(clave, "segundo");
 }
 
 void imprimir_casilla(casilla_t* casilla) {
@@ -64,7 +74,7 @@ void dadoUnDestructorNULL_alDestruirUnHash_seDestruyeCorrectamenteSinDestruirLos
 	hash_t* hash = hash_crear(NULL, 5);
 
 	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
-	hash_insertar(hash, "clave1", est0);
+	hash_insertar(hash, "primero", est0);
 	hash_destruir(hash);
 
 	pa2m_afirmar(est0 != NULL, "Al destruir un hash con un destructor NULL, solo se destruye el hash, no los elementos");
@@ -77,7 +87,7 @@ void dadoUnDestructorNULL_alDestruirUnHash_seDestruyeCorrectamenteSinDestruirLos
 
 void dadoUnHashNULL_alInsertarUnElemento_seRetornaError() {
 	hash_t* hash = NULL;
-	pa2m_afirmar(hash_insertar(hash, "clave", NULL) == ERROR, "Al insertar en un hash NULl se retorna ERROR (-1)");
+	pa2m_afirmar(hash_insertar(hash, "primero", NULL) == ERROR, "Al insertar en un hash NULl se retorna ERROR (-1)");
 	hash_destruir(hash);
 }
 
@@ -174,7 +184,7 @@ void dadoUnHash_alQuitarVariosElementos_seQuitanCorrectamente() {
 
 void dadoUnHashNULL_alObtenerUnElemento_seRetornaNULL() {
 	hash_t* hash = NULL;
-	pa2m_afirmar(hash_obtener(hash, "no_existe") == false, "Al obtener un elemento en un hash NULl se retorna NULL");
+	pa2m_afirmar(hash_obtener(hash, "no_existe") == false, "Al obtener un elemento en un hash NULL se retorna NULL");
 	hash_destruir(hash);
 }
 
@@ -216,36 +226,68 @@ void dadoUnHash_alVerificarSiContieneUnElemento_seObtieneCorrectamente() {
 	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
 	hash_insertar(hash, "primero", est0);
 
-	pa2m_afirmar(hash_obtener(hash, "primero") == est0, "Al verificar si un hash contiene un elemento insertado previamente se true");
+	pa2m_afirmar(hash_obtener(hash, "primero") == est0, "Al verificar si un hash contiene un elemento insertado previamente se retorna true");
 	pa2m_afirmar(hash_obtener(hash, "no_existe") == NULL, "Al verificar si un hash contiene un elemento que no existe se retorna NULL");
 
 	hash_destruir(hash);
 }
 
-void dummy() {
-	hash_t* hash = hash_crear(destruir_estudiante, 3);
+						  /* Pruebas Hash: Contiene */
 
-	estudiante_t* est_0 = crear_estudiante(25, "Alejandro Schamun");
-	estudiante_t* est_1 = crear_estudiante(20, "Cami Fiorotto");
-	estudiante_t* est_2 = crear_estudiante(36, "Carolina Aramay");
-	estudiante_t* est_3 = crear_estudiante(10, "Facundo Sanso");
-	estudiante_t* est_4 = crear_estudiante(22, "Joaquin Dopazo");
-	estudiante_t* est_5 = crear_estudiante(30, "Julian Calderon");
-	estudiante_t* est_6 = crear_estudiante(40, "Julian Stiefkens");
-	estudiante_t* est_7 = crear_estudiante(5, "Manuel Sanchez");
-	estudiante_t* est_8 = crear_estudiante(12, "Nicolas Celano");
-	estudiante_t* est_9 = crear_estudiante(28, "Nicolas Tonizzo");
+void dadoUnHashNULL_alRecorrerLosElementos_seRetorna0() {
+	hash_t* hash = NULL;
+	pa2m_afirmar(hash_con_cada_clave(hash, reprobar_estudiante, NULL) == 0, "Al recorrer un hash NULL se retorna 0");
+	hash_destruir(hash);
+}
 
-	hash_insertar(hash, "clave1", est_0);
-	hash_insertar(hash, "clave2", est_1);
-	hash_insertar(hash, "clave3", est_2);
-	hash_insertar(hash, "clave4", est_3);
-	hash_insertar(hash, "clave5", est_4);
-	hash_insertar(hash, "clave6", est_5);
-	hash_insertar(hash, "clave7", est_6);
-	hash_insertar(hash, "clave8", est_7);
-	hash_insertar(hash, "clave9", est_8);
-	hash_insertar(hash, "clave10", est_9);
+void dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada() {
+	hash_t* hash = hash_crear(destruir_estudiante, 5);
+
+	pa2m_afirmar(hash_con_cada_clave(hash, reprobar_estudiante, NULL) == 0, "Al recorrer un hash vacio se recorren 0 elementos");
+
+	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
+	estudiante_t* est1 = crear_estudiante(20, "Cami Fiorotto");
+	estudiante_t* est2 = crear_estudiante(36, "Carolina Aramay");
+	estudiante_t* est3 = crear_estudiante(10, "Facundo Sanso");
+	estudiante_t* est4 = crear_estudiante(22, "Joaquin Dopazo");
+	estudiante_t* est5 = crear_estudiante(30, "Julian Calderon");
+	estudiante_t* est6 = crear_estudiante(40, "Julian Stiefkens");
+	estudiante_t* est7 = crear_estudiante(5, "Manuel Sanchez");
+	estudiante_t* est8 = crear_estudiante(12, "Nicolas Celano");
+	estudiante_t* est9 = crear_estudiante(28, "Nicolas Tonizzo");
+
+	hash_insertar(hash, "primero", est0);
+	hash_insertar(hash, "segundo", est1);
+	hash_insertar(hash, "tercero", est2);
+	hash_insertar(hash, "cuarto",  est3);
+	hash_insertar(hash, "quinto",  est4);
+	hash_insertar(hash, "sexto",   est5);
+	hash_insertar(hash, "septimo", est6);
+	hash_insertar(hash, "octavo",  est7);
+	hash_insertar(hash, "noveno",  est8);
+	hash_insertar(hash, "decimo",  est9);
+
+	pa2m_afirmar(hash_con_cada_clave(hash, reprobar_hasta_segundo_estudiante, NULL) == 5, "Al recorrer un hash hasta llegar a cierta clave e interrumpir el recorrido, se recorren la cantidad de elementos correctos");
+
+	hash_destruir(hash);
+}
+
+void dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElementos() {
+	hash_t* hash = hash_crear(destruir_estudiante, 5);
+
+	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
+	estudiante_t* est1 = crear_estudiante(20, "Cami Fiorotto");
+	estudiante_t* est2 = crear_estudiante(36, "Carolina Aramay");
+	estudiante_t* est3 = crear_estudiante(10, "Facundo Sanso");
+	estudiante_t* est4 = crear_estudiante(22, "Joaquin Dopazo");
+
+	hash_insertar(hash, "primero", est0);
+	hash_insertar(hash, "segundo", est1);
+	hash_insertar(hash, "tercero", est2);
+	hash_insertar(hash, "cuarto",  est3);
+	hash_insertar(hash, "quinto",  est4);
+
+	pa2m_afirmar(hash_con_cada_clave(hash, NULL, NULL) == 5, "Al recorrer un hash con una funcion NULL se recorren todos los elementos");
 
 	hash_destruir(hash);
 }
@@ -275,7 +317,11 @@ int main() {
 	dadoUnHashNULL_alVerificarSiContieneUnElemento_seRetornaNULL();
 	dadaUnaClaveNULL_alVerificarSiElHashContieneUnElemento_seRetornaNULL();
 	dadoUnHash_alVerificarSiContieneUnElemento_seObtieneCorrectamente();
-	dummy();
+
+	pa2m_nuevo_grupo("Pruebas Hash: Recorrido");
+	dadoUnHashNULL_alRecorrerLosElementos_seRetorna0();
+	dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada();
+	dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElementos();
 
     return pa2m_mostrar_reporte();
 }

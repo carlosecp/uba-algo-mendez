@@ -115,8 +115,9 @@ size_t hash_con_cada_clave(hash_t* hash, bool (*funcion)(hash_t* hash, const cha
     if (!hash)
         return 0;
 
+    size_t cantidad_recorridos = 0;
     for (size_t i = 0; i < hash->cantidad_casillas; i++)
-        casilla_con_cada_clave(hash->casillas[i], hash, funcion, aux);
+        casilla_con_cada_clave(hash->casillas[i], hash, funcion, aux, &cantidad_recorridos);
 
-    return 0;
+    return cantidad_recorridos;
 }
