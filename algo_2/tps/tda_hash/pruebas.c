@@ -41,13 +41,13 @@ void imprimir_casilla(casilla_t* casilla) {
 
 void imprimir_hash(hash_t* hash) {
 	for (size_t i = 0; i < hash->cantidad_casillas; i++) {
+		printf("\t%li\t", i);
 		if (hash->casillas[i] == NULL) {
-			printf("\t%li\t---\n", i);
+			printf("---");
 		} else {
-			printf("\t%li\t", i);
 			imprimir_casilla(hash->casillas[i]);
-			printf("\n");
 		}
+		printf("\n");
 	}
 }
 
@@ -58,6 +58,19 @@ void dadoUnDestructorYUnValorInicialValido_alCrearUnHash_seRetornaUnHashCon0Elem
 	pa2m_afirmar(hash != NULL, "Al crear un hash con un destructor y valor inicial valido, se retorna un hash no NULL");
 	pa2m_afirmar(hash_cantidad(hash) == 0, "Al crear un hash la cantidad de elementos es 0");
 	hash_destruir(hash);
+}
+
+void dadoUnDestructorNULL_alDestruirUnHash_seDestruyeCorrectamenteSinDestruirLosElementos() {
+	hash_t* hash = hash_crear(NULL, 5);
+
+	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
+	hash_insertar(hash, "clave1", est0);
+	hash_destruir(hash);
+
+	pa2m_afirmar(est0 != NULL, "Al destruir un hash con un destructor NULL, solo se destruye el hash, no los elementos");
+
+	if (est0)
+		destruir_estudiante(est0);
 }
 
 						  /* Pruebas Hash: Insertar */
@@ -209,9 +222,38 @@ void dadoUnHash_alVerificarSiContieneUnElemento_seObtieneCorrectamente() {
 	hash_destruir(hash);
 }
 
+void dummy() {
+	hash_t* hash = hash_crear(destruir_estudiante, 3);
+
+	estudiante_t* est_0 = crear_estudiante(25, "Alejandro Schamun");
+	estudiante_t* est_1 = crear_estudiante(20, "Cami Fiorotto");
+	estudiante_t* est_2 = crear_estudiante(36, "Carolina Aramay");
+	estudiante_t* est_3 = crear_estudiante(10, "Facundo Sanso");
+	estudiante_t* est_4 = crear_estudiante(22, "Joaquin Dopazo");
+	estudiante_t* est_5 = crear_estudiante(30, "Julian Calderon");
+	estudiante_t* est_6 = crear_estudiante(40, "Julian Stiefkens");
+	estudiante_t* est_7 = crear_estudiante(5, "Manuel Sanchez");
+	estudiante_t* est_8 = crear_estudiante(12, "Nicolas Celano");
+	estudiante_t* est_9 = crear_estudiante(28, "Nicolas Tonizzo");
+
+	hash_insertar(hash, "clave1", est_0);
+	hash_insertar(hash, "clave2", est_1);
+	hash_insertar(hash, "clave3", est_2);
+	hash_insertar(hash, "clave4", est_3);
+	hash_insertar(hash, "clave5", est_4);
+	hash_insertar(hash, "clave6", est_5);
+	hash_insertar(hash, "clave7", est_6);
+	hash_insertar(hash, "clave8", est_7);
+	hash_insertar(hash, "clave9", est_8);
+	hash_insertar(hash, "clave10", est_9);
+
+	hash_destruir(hash);
+}
+
 int main() {
 	pa2m_nuevo_grupo("Pruebas Hash: Creacion");
 	dadoUnDestructorYUnValorInicialValido_alCrearUnHash_seRetornaUnHashCon0Elementos();
+	dadoUnDestructorNULL_alDestruirUnHash_seDestruyeCorrectamenteSinDestruirLosElementos();
 	
 	pa2m_nuevo_grupo("Pruebas Hash: Insertar");
 	dadoUnHashNULL_alInsertarUnElemento_seRetornaError();
@@ -233,6 +275,7 @@ int main() {
 	dadoUnHashNULL_alVerificarSiContieneUnElemento_seRetornaNULL();
 	dadaUnaClaveNULL_alVerificarSiElHashContieneUnElemento_seRetornaNULL();
 	dadoUnHash_alVerificarSiContieneUnElemento_seObtieneCorrectamente();
+	dummy();
 
     return pa2m_mostrar_reporte();
 }

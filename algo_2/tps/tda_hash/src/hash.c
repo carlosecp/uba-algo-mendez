@@ -5,6 +5,8 @@
 
 #include "casilla.h"
 
+#define CAPACIDAD_MINIMA 3
+
 struct hash {
     casilla_t** casillas;
     size_t cantidad_casillas;
@@ -14,11 +16,10 @@ struct hash {
 
 hash_t* hash_crear(hash_destruir_dato_t destruir_elemento, size_t capacidad_inicial) {
     hash_t* hash = malloc(sizeof(hash_t));
-
     if (!hash)
         return NULL;
 
-    hash->cantidad_casillas = capacidad_inicial >= 3 ? capacidad_inicial : 3;
+    hash->cantidad_casillas = capacidad_inicial >= CAPACIDAD_MINIMA ? capacidad_inicial : CAPACIDAD_MINIMA;
     hash->cantidad_elementos = 0;
     hash->destruir_elemento = destruir_elemento;
 
@@ -52,7 +53,6 @@ int hash_insertar(hash_t* hash, const char* clave, void* elemento) {
 
     indice_clave %= hash->cantidad_casillas;
     hash->casillas[indice_clave] = casilla_insertar(hash->casillas[indice_clave], clave, elemento, &(hash->cantidad_elementos));
-
     return EXITO;
 }
 
