@@ -9,12 +9,12 @@
 #define UMBRAL_REHASH 0.75
 #define MULTIPLICADOR_CANTIDAD_REHASH 2;
 
-struct hash {
-    casilla_t** casillas;
-    size_t cantidad_casillas;
-    size_t cantidad_elementos;
-    hash_destruir_dato_t destruir_elemento;
-};
+// struct hash {
+    // casilla_t** casillas;
+    // size_t cantidad_casillas;
+    // size_t cantidad_elementos;
+    // hash_destruir_dato_t destruir_elemento;
+// };
 
 hash_t* hash_crear(hash_destruir_dato_t destruir_elemento, size_t capacidad_inicial) {
     hash_t* hash = malloc(sizeof(hash_t));
@@ -50,6 +50,9 @@ hash_t* rehash(hash_t* hash) {
 	if (!nuevo_hash)
 		return NULL;
 
+	for (size_t i = 0; i < hash->cantidad_casillas; i++)
+		casilla_copiar_casillas(hash->casillas[i], nuevo_hash);
+
 	return nuevo_hash;
 }
 
@@ -58,8 +61,8 @@ int calcular_indice_hash(const char* clave) {
         return ERROR;
 
     size_t indice_hash = 0;
-
-    while (*clave) indice_hash += *(clave++);
+    while (*clave)
+		indice_hash += *(clave++);
 
     return indice_hash;
 }
@@ -73,7 +76,11 @@ int hash_insertar(hash_t* hash, const char* clave, void* elemento) {
 		return ERROR;
 
 	if (factor_de_carga >= UMBRAL_REHASH) {
-		rehash(hash);
+		hash_t* nuevo_hash = rehash(hash);
+		imprimir_hash(nuevo_hash);
+		printf("=========================\n");
+		nuevo_hash->destruir_elemento = NULL;
+		hash_destruir(nuevo_hash);
 	}
 
     int indice_clave = calcular_indice_hash(clave);

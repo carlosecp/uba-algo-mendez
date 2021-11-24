@@ -6,19 +6,19 @@
 #define EXITO 0
 #define ERROR -1
 
-struct hash {
-	casilla_t** casillas;
-	size_t cantidad_casillas;
-	size_t cantidad_elementos;
-	hash_destruir_dato_t destruir_elemento;
-};
+// struct hash {
+	// casilla_t** casillas;
+	// size_t cantidad_casillas;
+	// size_t cantidad_elementos;
+	// hash_destruir_dato_t destruir_elemento;
+// };
 
 						 /* Auxiliares para pruebas */
 
-typedef struct {
-	size_t padron;
-	char* nombre;
-} estudiante_t;
+// typedef struct {
+	// size_t padron;
+	// char* nombre;
+// } estudiante_t;
 
 estudiante_t* crear_estudiante(size_t padron, char* nombre) {
 	estudiante_t* est = malloc(sizeof(estudiante_t));
@@ -38,27 +38,6 @@ bool reprobar_estudiante(hash_t* hash, const char* clave, void* aux) {
 
 bool reprobar_hasta_segundo_estudiante(hash_t* hash, const char* clave, void* aux) {
 	return !strcmp(clave, "segundo");
-}
-
-void imprimir_casilla(casilla_t* casilla) {
-	if (!casilla)
-		return;
-
-	estudiante_t est = *(estudiante_t*)casilla->elemento;
-	printf(" {%s: {%s, %li}} ", casilla->clave, est.nombre, est.padron);
-	imprimir_casilla(casilla->siguiente);
-}
-
-void imprimir_hash(hash_t* hash) {
-	for (size_t i = 0; i < hash->cantidad_casillas; i++) {
-		printf("\t%li\t", i);
-		if (hash->casillas[i] == NULL) {
-			printf("---");
-		} else {
-			imprimir_casilla(hash->casillas[i]);
-		}
-		printf("\n");
-	}
 }
 
 						  /* Pruebas Hash: Creacion */
@@ -128,6 +107,63 @@ void dadoUnHash_alInsertarUnElementoConUnaClaveRepetida_seInsertaCorrectamente()
 
 	pa2m_afirmar(hash_insertar(hash, "primero", est1) == EXITO, "Al insertar un elemento con clave repetida se retorna EXITO (0)");
 	pa2m_afirmar(hash_cantidad(hash) == 1, "Al insertar un elemento con clave repetida la cantidad de elementos en el hash se mantiene igual");
+
+	hash_destruir(hash);
+}
+
+void test_rehash() {
+	hash_t* hash = hash_crear(destruir_estudiante, 4);
+
+	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
+	estudiante_t* est1 = crear_estudiante(20, "Cami Fiorotto");
+	estudiante_t* est2 = crear_estudiante(36, "Carolina Aramay");
+	estudiante_t* est3 = crear_estudiante(10, "Facundo Sanso");
+	estudiante_t* est4 = crear_estudiante(22, "Joaquin Dopazo");
+	estudiante_t* est5 = crear_estudiante(30, "Julian Calderon");
+	estudiante_t* est6 = crear_estudiante(40, "Julian Stiefkens");
+	estudiante_t* est7 = crear_estudiante(5,  "Manuel Sanchez");
+	estudiante_t* est8 = crear_estudiante(12, "Nicolas Celano");
+	estudiante_t* est9 = crear_estudiante(28, "Nicolas Tonizzo");
+
+	hash_insertar(hash, "primero", est0);
+	// imprimir_hash(hash);
+	printf("=========================\n");
+
+	hash_insertar(hash, "segundo", est1);
+	// imprimir_hash(hash);
+	printf("=========================\n");
+
+	hash_insertar(hash, "tercero", est2);
+	// imprimir_hash(hash);
+	printf("=========================\n");
+
+	hash_insertar(hash, "cuarto",  est3);
+	// imprimir_hash(hash);
+	printf("=========================\n");
+
+	hash_insertar(hash, "quinto",  est4);
+	// imprimir_hash(hash);
+	printf("=========================\n");
+
+	hash_insertar(hash, "sexto",   est5);
+	// imprimir_hash(hash);
+	printf("=========================\n");
+
+	hash_insertar(hash, "septimo", est6);
+	// imprimir_hash(hash);
+	printf("=========================\n");
+
+	hash_insertar(hash, "octavo",  est7);
+	// imprimir_hash(hash);
+	printf("=========================\n");
+
+	hash_insertar(hash, "noveno",  est8);
+	// imprimir_hash(hash);
+	printf("=========================\n");
+
+	hash_insertar(hash, "decimo",  est9);
+	// imprimir_hash(hash);
+	printf("=========================\n");
 
 	hash_destruir(hash);
 }
@@ -252,7 +288,7 @@ void dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada() {
 	estudiante_t* est4 = crear_estudiante(22, "Joaquin Dopazo");
 	estudiante_t* est5 = crear_estudiante(30, "Julian Calderon");
 	estudiante_t* est6 = crear_estudiante(40, "Julian Stiefkens");
-	estudiante_t* est7 = crear_estudiante(5, "Manuel Sanchez");
+	estudiante_t* est7 = crear_estudiante(5,  "Manuel Sanchez");
 	estudiante_t* est8 = crear_estudiante(12, "Nicolas Celano");
 	estudiante_t* est9 = crear_estudiante(28, "Nicolas Tonizzo");
 
@@ -294,34 +330,35 @@ void dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElemen
 
 int main() {
 	pa2m_nuevo_grupo("Pruebas Hash: Creacion");
-	dadoUnDestructorYUnValorInicialValido_alCrearUnHash_seRetornaUnHashCon0Elementos();
-	dadoUnDestructorNULL_alDestruirUnHash_seDestruyeCorrectamenteSinDestruirLosElementos();
+	// dadoUnDestructorYUnValorInicialValido_alCrearUnHash_seRetornaUnHashCon0Elementos();
+	// dadoUnDestructorNULL_alDestruirUnHash_seDestruyeCorrectamenteSinDestruirLosElementos();
 	
 	pa2m_nuevo_grupo("Pruebas Hash: Insertar");
-	dadoUnHashNULL_alInsertarUnElemento_seRetornaError();
-	dadaUnaClaveNULL_alInsertarUnElemento_seRetornaError();
-	dadoUnHash_alInsertarVariosElementos_seInsertanCorrectamente();
-	dadoUnHash_alInsertarUnElementoConUnaClaveRepetida_seInsertaCorrectamente();
+	// dadoUnHashNULL_alInsertarUnElemento_seRetornaError();
+	// dadaUnaClaveNULL_alInsertarUnElemento_seRetornaError();
+	// dadoUnHash_alInsertarVariosElementos_seInsertanCorrectamente();
+	// dadoUnHash_alInsertarUnElementoConUnaClaveRepetida_seInsertaCorrectamente();
+	test_rehash();
 
 	pa2m_nuevo_grupo("Pruebas Hash: Quitar");
-	dadoUnHashNULL_alQuitarUnElemento_seRetornaError();
-	dadaUnaClaveNULL_alQuitarUnElemento_seRetornaError();
-	dadoUnHash_alQuitarVariosElementos_seQuitanCorrectamente();
+	// dadoUnHashNULL_alQuitarUnElemento_seRetornaError();
+	// dadaUnaClaveNULL_alQuitarUnElemento_seRetornaError();
+	// dadoUnHash_alQuitarVariosElementos_seQuitanCorrectamente();
 
 	pa2m_nuevo_grupo("Pruebas Hash: Obtener");
-	dadoUnHashNULL_alObtenerUnElemento_seRetornaNULL();
-	dadaUnaClaveNULL_alObtenerUnElemento_seRetornaNULL();
-	dadoUnHash_alObtenerUnElemento_seObtieneCorrectamente();
+	// dadoUnHashNULL_alObtenerUnElemento_seRetornaNULL();
+	// dadaUnaClaveNULL_alObtenerUnElemento_seRetornaNULL();
+	// dadoUnHash_alObtenerUnElemento_seObtieneCorrectamente();
 
 	pa2m_nuevo_grupo("Pruebas Hash: Contiene");
-	dadoUnHashNULL_alVerificarSiContieneUnElemento_seRetornaNULL();
-	dadaUnaClaveNULL_alVerificarSiElHashContieneUnElemento_seRetornaNULL();
-	dadoUnHash_alVerificarSiContieneUnElemento_seObtieneCorrectamente();
+	// dadoUnHashNULL_alVerificarSiContieneUnElemento_seRetornaNULL();
+	// dadaUnaClaveNULL_alVerificarSiElHashContieneUnElemento_seRetornaNULL();
+	// dadoUnHash_alVerificarSiContieneUnElemento_seObtieneCorrectamente();
 
 	pa2m_nuevo_grupo("Pruebas Hash: Recorrido");
-	dadoUnHashNULL_alRecorrerLosElementos_seRetorna0();
-	dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada();
-	dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElementos();
+	// dadoUnHashNULL_alRecorrerLosElementos_seRetorna0();
+	// dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada();
+	// dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElementos();
 
     return pa2m_mostrar_reporte();
 }
