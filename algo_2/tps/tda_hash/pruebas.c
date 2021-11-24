@@ -210,13 +210,13 @@ void dadoUnHash_alObtenerUnElemento_seObtieneCorrectamente() {
 
 void dadoUnHashNULL_alVerificarSiContieneUnElemento_seRetornaNULL() {
 	hash_t* hash = NULL;
-	pa2m_afirmar(hash_contiene(hash, "no_existe") == false, "Al verificar si un hash NULL contiene un elemento se retorna NULL");
+	pa2m_afirmar(hash_contiene(hash, "no_existe") == false, "Al verificar si un hash NULL contiene un elemento se retorna false");
 	hash_destruir(hash);
 }
 
 void dadaUnaClaveNULL_alVerificarSiElHashContieneUnElemento_seRetornaNULL() {
 	hash_t* hash = hash_crear(destruir_estudiante, 3);
-	pa2m_afirmar(hash_contiene(hash, "no_existe") == false, "Al verificar si un hash contiene un elemento con clave NULL se retorna NULL");
+	pa2m_afirmar(hash_contiene(hash, "no_existe") == false, "Al verificar si un hash contiene un elemento con clave NULL se retorna false");
 	hash_destruir(hash);
 }
 
@@ -227,7 +227,7 @@ void dadoUnHash_alVerificarSiContieneUnElemento_seObtieneCorrectamente() {
 	hash_insertar(hash, "primero", est0);
 
 	pa2m_afirmar(hash_obtener(hash, "primero") == est0, "Al verificar si un hash contiene un elemento insertado previamente se retorna true");
-	pa2m_afirmar(hash_obtener(hash, "no_existe") == NULL, "Al verificar si un hash contiene un elemento que no existe se retorna NULL");
+	pa2m_afirmar(hash_obtener(hash, "no_existe") == NULL, "Al verificar si un hash contiene un elemento que no existe se retorna false");
 
 	hash_destruir(hash);
 }

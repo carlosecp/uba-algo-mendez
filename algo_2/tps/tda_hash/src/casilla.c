@@ -10,7 +10,7 @@ casilla_t* casilla_crear() {
     return NULL;
 }
 
-casilla_t* casilla_insertar(casilla_t* casilla, const char* clave, void* elemento, size_t* cantidad_elementos) {
+casilla_t* casilla_insertar(casilla_t* casilla, const char* clave, void* elemento, hash_destruir_dato_t destruir_elemento, size_t* cantidad_elementos) {
     if (!casilla) {
         casilla_t* nueva_casilla = malloc(sizeof(casilla_t));
         if (!nueva_casilla)
@@ -26,11 +26,13 @@ casilla_t* casilla_insertar(casilla_t* casilla, const char* clave, void* element
     }
 
     if (strcmp(casilla->clave, clave) == 0) {
-        free(casilla->elemento);
+        if (destruir_elemento)
+			destruir_elemento(casilla->elemento);
+
         casilla->elemento = elemento;
         return casilla;
     } else {
-        casilla->siguiente = casilla_insertar(casilla->siguiente, clave, elemento, cantidad_elementos);
+        casilla->siguiente = casilla_insertar(casilla->siguiente, clave, elemento, destruir_elemento, cantidad_elementos);
     }
 
     return casilla;
