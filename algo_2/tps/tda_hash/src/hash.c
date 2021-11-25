@@ -9,12 +9,14 @@
 #define UMBRAL_REHASH 0.75
 #define MULTIPLICADOR_CANTIDAD_REHASH 2;
 
-// struct hash {
-    // casilla_t** casillas;
-    // size_t cantidad_casillas;
-    // size_t cantidad_elementos;
-    // hash_destruir_dato_t destruir_elemento;
-// };
+struct hash {
+    casilla_t** casillas;
+    size_t cantidad_casillas;
+    size_t cantidad_elementos;
+    hash_destruir_dato_t destruir_elemento;
+};
+
+void hash_destruir_aux(hash_t tmp);
 
 hash_t* hash_crear(hash_destruir_dato_t destruir_elemento, size_t capacidad_inicial) {
     hash_t* hash = malloc(sizeof(hash_t));
@@ -41,16 +43,21 @@ double calcular_factor_de_carga(size_t cantidad_elementos, size_t cantidad_casil
     return (double)cantidad_elementos / (double)cantidad_casillas;
 }
 
-hash_t* rehash(hash_t* hash) {
+void rehash(hash_t* hash) {
 	if (!hash)
-		return NULL;
+		return;
 
-	casilla_t* casillas[hash->cantidad_elementos];
-	for (size_t i = 0; i < hash->cantidad_casillas; i++) {
-		casilla_copiar_casillas(hash->casillas[i], casillas);
-	}
+	hash_t tmp = *hash;
 
-	return hash;
+	hash->cantidad_casillas *= MULTIPLICADOR_CANTIDAD_REHASH;
+	hash->casillas = calloc(hash->cantidad_casillas, sizeof(casilla_t*));
+	hash->cantidad_elementos = 0;
+
+	for (size_t i = 0; i < tmp.cantidad_casillas; i++)
+		casilla_copiar_casillas(tmp.casillas[i], hash);
+
+	tmp.destruir_elemento = NULL;
+	hash_destruir_aux(tmp);
 }
 
 int calcular_indice_hash(const char* clave) {
@@ -72,9 +79,8 @@ int hash_insertar(hash_t* hash, const char* clave, void* elemento) {
 	if ((int)factor_de_carga == ERROR)
 		return ERROR;
 
-	if (factor_de_carga >= UMBRAL_REHASH) {
+	if (factor_de_carga >= UMBRAL_REHASH)
 		rehash(hash);
-	}
 
     int indice_clave = calcular_indice_hash(clave);
     if (indice_clave == ERROR)
@@ -142,6 +148,13 @@ void hash_destruir(hash_t* hash) {
 
     free(hash->casillas);
     free(hash);
+}
+
+void hash_destruir_aux(hash_t tmp) {
+    for (size_t i = 0; i < tmp.cantidad_casillas; i++)
+        casilla_destruir(tmp.casillas[i], NULL);
+
+    free(tmp.casillas);
 }
 
 size_t hash_con_cada_clave(hash_t* hash, bool (*funcion)(hash_t* hash, const char* clave, void* aux), void* aux) {

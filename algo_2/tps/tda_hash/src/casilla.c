@@ -98,35 +98,11 @@ void casilla_con_cada_clave(casilla_t* casilla, hash_t* hash, bool (*funcion)(ha
         casilla_con_cada_clave(casilla->siguiente, hash, funcion, aux, cantidad_recorridos);
 }
 
-void casilla_copiar_casillas(casilla_t* origen, casilla_t** destino) {
-	if (!origen || !destino)
+void casilla_copiar_casillas(casilla_t* casilla, hash_t* hash) {
+	if (!casilla || !hash)
 		return;
 
-	*(destino++) = origen;
+	hash_insertar(hash, casilla->clave, casilla->elemento);
 
-	casilla_copiar_casillas(origen->siguiente, destino);
+	casilla_copiar_casillas(casilla->siguiente, hash);
 }
-
-// BORRAR
-
-void imprimir_casilla(casilla_t* casilla) {
-	if (!casilla)
-		return;
-
-	estudiante_t est = *(estudiante_t*)casilla->elemento;
-	printf(" {%s: {%s, %li}} ", casilla->clave, est.nombre, est.padron);
-	imprimir_casilla(casilla->siguiente);
-}
-
-void imprimir_hash(hash_t* hash) {
-	for (size_t i = 0; i < hash->cantidad_casillas; i++) {
-		printf("\t%li\t", i);
-		if (hash->casillas[i] == NULL) {
-			printf("---");
-		} else {
-			imprimir_casilla(hash->casillas[i]);
-		}
-		printf("\n");
-	}
-}
-

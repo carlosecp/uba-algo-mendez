@@ -23,24 +23,6 @@ void casilla_destruir(casilla_t* casilla, hash_destruir_dato_t destructor);
 
 void casilla_con_cada_clave(casilla_t* casilla, hash_t* hash, bool (*funcion)(hash_t* hash, const char* clave, void* aux), void* aux, size_t* cantidad_recorridos);
 
-void casilla_copiar_casillas(casilla_t* origen, casilla_t** destino);
-
-// BORRAR
-
-struct hash {
-	casilla_t** casillas;
-	size_t cantidad_casillas;
-	size_t cantidad_elementos;
-	hash_destruir_dato_t destruir_elemento;
-};
-
-typedef struct {
-	size_t padron;
-	char* nombre;
-} estudiante_t;
-
-void imprimir_casilla(casilla_t* casilla);
-
-void imprimir_hash(hash_t* hash);
+void casilla_copiar_casillas(casilla_t* origen, hash_t* destino);
 
 #endif
