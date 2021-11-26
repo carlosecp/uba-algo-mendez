@@ -16,6 +16,9 @@ pruebas: src/*.c pruebas.c
 valgrind: pruebas
 	valgrind $(VALGRIND_FLAGS) ./pruebas 2>&1
 
+zip:
+	zip tda_hash.zip ./**/*
+	zip tda_hash.zip *
 
 .PHONY: clean
 clean:

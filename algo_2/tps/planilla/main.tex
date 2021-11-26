@@ -10,14 +10,17 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{listings}
+\usepackage{xcolor}
 
-% +--- VARIABLES ---+
+
+
+% === VARIABLES ===
 \newcommand{\FirstName}{Carlos E.}
 \newcommand{\LastName}{Castillo}
 \newcommand{\StudentID}{108535}
 \newcommand{\StudentEmail}{ccastillo@fi.uba.ar}
 % \newcommand{\ProjectName}{Trabajo Práctico n — NombreTP}
-\newcommand{\ProjectName}{TDA 2 — ABB}
+\newcommand{\ProjectName}{TDA 3 — Hash}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -26,6 +29,28 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \fancyfoot[C]{\thepage}
 \renewcommand{\footrulewidth}{0.4pt}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    tabsize=4
+}
+
+\lstset{style=mystyle}
 
 \begin{document}
 \begin{titlepage}
@@ -51,340 +76,142 @@
 \newpage
 
 
-										\section{Introducción}\label{sec:intro}
 
-Muchos lenguajes de programación permiten al usuario extender los tipos de
-datos nativos del lenguaje con para facilitar la implementación de
-características y funcionalidades más complejas.  De esta forma, el programador
-tiene la capacidad de combinar diferentes primitivas del lenguaje y así generar
-nuevos tipos compuestos para crear interfaces abstractas que faciliten el
-manejo y organización de la información mediante diferentes estructuras de
-datos.
+% === INTRODUCCION ===
+\section{Introducción}\label{sec:intro}
+
+Muchos lenguajes de programación permiten al usuario extender los tipos de datos
+nativos del lenguaje con para facilitar la implementación de características y
+funcionalidades más complejas. De esta forma, el programador tiene la capacidad
+de combinar diferentes primitivas del lenguaje y así generar nuevos tipos
+compuestos para crear interfaces abstractas que faciliten el manejo y
+organización de la información mediante diferentes estructuras de datos.
 
 El objetivo de este trabajo práctico es implementar una de las estructuras de
-datos más populares, el árbol binario de búsqueda.
+datos más utilizadas, la tabla de hash. 
 
 
-											 \section{Teoría}\label{sec:teoria}
 
-														 \subsection{TDA Árbol}
-
-Un árbol es una colección de datos en la que la información mantiene una
-estructura jerárquica. Esta estructura puede ser definida de manera recursiva
-utilizando nodos enlazados, en la que cada nodo es una estructura que contiene
-el valor almacenado y referencias a los nodos siguientes, conocidos como
-\textbf{hijos}. Cada árbol tienen un nodo en particular que es inicio o el
-punto de entrada al árbol, es el único nodo sin padres, y se le conoce como
-\textbf{raiz}. Por otra parte, a aquellos nodos que no tienen ningún hijo, se
-les conoce como \textbf{hojas}.
-
-Existen muchas variantes de esta estructura de datos, cada una con diferentes
-propiedades y utilidades, por ejemplo: 
-
-\begin{itemize}
-	\item Árbol Binario
-	\item Árbol Binario de búsqueda
-	\item Árbol AVL
-	\item Árbol B
-	\item Árbol Rojo Negro
-\end{itemize}
-
-Sin embargo la más popular entre estas implementaciones es el \textbf{árbol
-binario}, que consiste en un árbol cuyos nodos pueden tener un máximo de dos
-hijos cada uno (esto no impide que un nodo pueda estar vació o tener solo un
-solo hijo). Para facilitar la diferenciación entre los hijos de un nodo, se les
-suele llamar ''nodo izquierdo'' y ''nodo derecho'' respectivamente, en función
-de la ubicación relativa de cada uno de los nodos con su nodo padre.
+% === TEORIA ===
+\section{Teoría}\label{sec:teoria}
+\subsection{Tabla de Hash}
+El concepto de tabla de hash se deriva de la estructura de datos conocida como
+diccionario, una colección de pares clave-valor, en la que cada elemento está
+asociado con una clave única con la que es identificado una vez es almacenado en
+el diccionario. De esta forma para acceder a los elementos contenidos en el
+diccionario se utiliza la misma clave con la que se insertó. Esta estructura de
+datos y sus derivados son utilizados principalmente por su capacidad de acceder
+rápidamente a la información y evitar la duplicidad de entradas.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\textwidth]{arbol_eneario.png}
-\caption{\label{fig:seq01}Ejemplo de árbol n-ario.}
+\includegraphics[width=0.8\textwidth]{1_diccionario.png}
+\caption{\label{fig:seq01}Estructura de Datos Diccionario.}
 \end{figure}
 
+En particular una tabla de hash implementa un arreglo asociativo en el que la
+ubicación de cada elemento agregado es calculada a traves de una función de
+hash, la cual genera un índice dentro del arreglo a partir de la clave indicada.
+Así para insertar, acceder o quitar un elemento almacenado en la tabla, se toma
+la clave provista, se encuentra su índice a través de la función de hash y
+finalmente se accede a esa posición dentro de la tabla. 
 
-									 \subsubsection{Árbol Binario de Búsqueda (ABB)}
+Sin embargo, a medida se van agregando elementos a la tabla, se va aumentando
+la probabilidad de que para dos claves distintas se genere un mismo indice de
+hash. Cuando esto sucede se dice que hay una ''colisión''. Existen muchas
+alternativas para resolver estas colisiones, la mayoría de las cuales implican
+cambiar ligeramente la estructura de la tabla o requieren de algún tipo de
+reorganización de la información ya almacenada. Las variantes de tablas de hash
+más comunes para lidiar con colisiones son la tabla de ''hash abierto'' y tabla
+de ''hash cerrado''. 
 
-Este tipo de árbol es un caso particular de un árbol binario. Como su nombre
-bien lo indica, es utilizado principalmente para operaciones de búsqueda entre
-los datos almacenados. Consiste en un tipo de árbol binario en el que se tiene
-un criterio de comparación definido para ser utilizado al momento
-de insertar nuevos nodos al árbol. Esto permite realizar búsquedas de manera
-más sencilla, ya que al contar con este patrón de ordenamiento, se pueden
-realizar operaciones de búsqueda binaria, recortando el tiempo de búsqueda en
-comparación con las listas enlazadas u otras estructuras de datos lineales.
+\subsection{Hash Abierto}
 
-Generalmente se plantea un método de comparación que permite distinguir entre
-valores considerados menores o mayores al nodo actual, así por ejemplo, si se
-le asigna la posición izquierda a los elementos cuyo valor es menor al valor
-del elemento del nodo actual, entonces se sabe que todos los nodos a la
-izquierda de cualquier nodo van a tener un valor menor al de sus respectivos
-padres, y todos los nodos la derecha, tendran un valor mayor al de sus padres.
-
-Esto facilita la navegación o \textbf{recorrido} del árbol, ya que al saber si
-el elemento buscado es menor o mayor que el nodo actual, se puede determinar
-en qué dirección seguir el recorrido y descartar todas aquellas ramas que no
-satisfagan la comparación.
+Una tabla de hash abierto
+consiste en una tabla de hash capaz de hacer encadenamiento o ''chaining'' a los
+elementos con un mismo indice de hash. Para esto se suele implementar una
+estructura de datos secundaria en la que se almacenarán los elementos que
+colisionen, generalmente listas enlazadas. De esta forma la tabla de hash en sí
+solamente contiene referencias a las diferentes listas en las que se guardan los
+elementos. Cada indice de hash apunta más bien a cada una de estas listas y en
+caso de colisión, dos pares clave-valor con el mismo indice de hash van a ser
+almacenados en la misma posición en la tabla de hash y encadenados al final de
+la lista en esa posición.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\textwidth]{arbol_binario.png}
-\caption{\label{fig:seq02}Ejemplo de árbol binario.}
+\includegraphics[width=0.5\textwidth]{2_hash_abierto.png}
+\caption{\label{fig:seq02}Hash Abierto con Listas Enlazadas.}
 \end{figure}
 
+Sin embargo uno de los puntos negativos de utilizar este tipo de hash es que
+si se van insertando varios elementos con el mismo indice de hash, las listas
+enlazadas van a ir aumentando su longitud, haciendo que el tiempo de acceso a
+los elementos se tienda a ser $O(n)$ en vez de conservarse como $O(1)$ como
+es característico de las estructuras de datos diccionarios. Para evitar esto se
+suele hacer una operación conocida como ''rehash'' cuando la cantidad de
+elementos en una tabla de hash sobrepasa cierto umbral. Esta operación consiste
+en incrementar el número de listas en la tabla y reinsertar nuevamente los
+elementos almacenados, ya que al si el indice producido por la función de hash
+depende de la cantidad de listas disponibles, al incrementar dicha cantidad, los
+indices de elementos previamente almacenados deberán ser reasignados en base a
+la nueva cantidad de listas disponibles.
 
-				 \section{Detalles de implementación}\label{sec:implementacion}
 
-La implementación de esta estructura de datos fue escrita en el lenguaje de
-programación C, siguiendo la especificación del lenguaje detallada en el
-estándar C99. Los archivos principales se encuentran dentro del directorio
-\textbf{src} ubicada en la raíz del repositorio. 
 
-Además se incluye un archivo \textbf{pruebas.c} en el que se encuentran
-diferentes pruebas automatizadas para detectar errores en la ejecución del
-programa o en la asignación, manejo y liberación de memoria dinámica. Para esto
-se utiliza \textbf{gcc} como compilador y \textbf{valgrind} como herramienta de
-análisis de memoria.
-
-La estructura de árbol binario de búsqueda propuesta para esta implementación
-es la siguiente:
+% === DETALLES DE IMPLEMENTACION ===
+\section{Detalles de implementación}\label{sec:implementacion}
 
 \begin{lstlisting}[language=C]
-typedef struct nodo_abb {
-  void* elemento;
-  struct nodo_abb* izquierda;
-  struct nodo_abb* derecha;
-} nodo_abb_t;
-
-typedef struct abb{
-  nodo_abb_t* nodo_raiz;
-  abb_comparador comparador;
-  size_t tamanio;
-} abb_t;
+struct hash {
+	casilla_t** casillas;
+	size_t cantidad_casillas;
+	size_t cantidad_elementos;
+	hash_destruir_dato_t destruir_elemento;
+};
 \end{lstlisting}
 
-Esta estructura no es meramente recursiva, ya que además de contener
-referencias a otros nodos (en este caso únicamente a la raíz del árbol),
-almacena el tamaño actual del árbol (la cantidad de nodos que contiene) y una
-función \lstinline{comparador} que establece el criterio de comparación
-utilizado para el árbol.
+\subsection{Inserción de elementos}
+Se proveen dos funciones para insertar elementos. La primera de estas, \lstinline{lista_insertar} se encarga de insertar un elemento al final de la lista y \lstinline{lista_insertar_en_posicion} se encarga de insertar un elemento en la posición especificada por el usuario. Para esta última función, en el caso de que el usuario quisiera agregar un elemento en una posición que no existe en la lista, el elemento se agregará al final de la misma.
 
-Por otra parte, la estructura de cada uno de los nodos si es recursiva. Cada
-nodo puede ser considerado como un sub-árbol, y almacena el elemento a guardar
-así como también referencias a sus nodos hijos derecho e izquierdo.
-
-
-											\subsection{Inserción de elementos}
-
-La función \lstinline{abb_insertar} permite agregar nuevos elementos a un ABB.
-En el caso de que el ABB esté vacio, cuando se inserte el primer elemento, este
-pasará a ubicarse en el nodo raíz. En este caso la posición en la que se va a
-insertar el nodo que contiene al nuevo nodo se define a partir del criterio de
-comparación propio de cada árbol. 
-
-La operación de inserción consiste en una serie de 3 pasos:
-
-\begin{enumerate}
-	\item Comparar el valor del elemento a insertar con el valor del nodo raíz.
-		En base al resultado de esta comparación se sabrá si navegar hacia la rama
-		izquierda del árbol (en el caso de que el valor comparado sea menor al de
-		la raíz) o a la derecha (en caso de que el valor comparado se mayor).
-	\item Se repite el paso anterior con cada uno de los nodos que se vayan 
-		recorriendo hasta llegar al final de la rama.
-	\item Al llegar al nodo final se crea un nuevo nodo que contiene el elemento
-		a insertar y se posiciona en la ubicación correspondiente (izquierda o
-		derecha) de acuerdo con el resultado de la comparación anterior.
-\end{enumerate}
-
-En este caso la implementación de la operación de inserción es recursiva. Para
-esto la función \lstinline{abb_insertar} antes mencionada, utiliza una función
-auxiliar llamada \lstinline{abb_insertar_recursivo_aux}. En la primera función
-solamente se hace la validación de los argumentos y se verifica que el nuevo
-elemento haya sido insertado con éxito. En caso afirmativo, se incrementa la
-cantidad de elementos del árbol y finalmente se retorna el nuevo árbol.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.6\textwidth]{insercion_1.png}
-\caption{\label{fig:seq03}Inserción del elemento de valor 22.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.6\textwidth]{insercion_2.png}
-\caption{\label{fig:seq04}Comparo el valor del elemento con el valor de la raíz.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.6\textwidth]{insercion_3.png}
-\caption{\label{fig:seq05}Avanzo hacia el sub-árbol izquierdo ya que el valor del elemento es menor.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.6\textwidth]{insercion_4.png}
-\caption{\label{fig:seq06}Vuelvo a comparar los valores de los elementos.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.6\textwidth]{insercion_5.png}
-\caption{\label{fig:seq07}Creo un nuevo hijo izquierdo e inserto el nuevo valor.}
-\end{figure}
-
-
-										 \subsection{Eliminación de elementos}
-
-Para quitar elementos del ABB primero se tiene que realizar un recorrido del
-mismo para buscar el elemento que se desea eliminar. En el caso en que el
-elemento que se desea eliminar no esté en el árbol, simplemente se termina
-la búsqueda. En caso contrario, la operación de eliminación puede ser dividida
-en tres casos particulares:
+Para insertar un elemento en una lista compuesta por nodos enlazados, es necesario cambiar las referencias de los nodos que anteceden y suceden a la posición en la que se quiere ubicar el nuevo elemento. Esta operación tiene varios casos particulares, y para cada uno de estos casos existe una solución específica:
 
 \begin{itemize}
-	\item \textbf{Nodo hoja:} En el caso en el que el elemento que
-			se quiere eliminar esté ubicado en un nodo hoja, el procedimiento para
-			remover este elemento simplemente consiste en extraer el elemento que
-			contiene ese nodo (para no perder la referencia al elemento) y después
-			la liberación del nodo de la memoria.
-		\item \textbf{Nodo con un hijo:} En este caso se tiene que identificar si
-			nodo actual tiene hijo izquierdo o derecho. Luego se enlaza el hijo
-			identificado con el padre del nodo a eliminar, de tal forma que el árbol
-			conserve sus propiedades de ABB. Finalmente se extra el valor almacenado
-			en el nodo a eliminar y se procede a la liberacion del nodo de la memoria.
-		\item \textbf{Nodo con dos hijos:} En este último caso se tiene que
-			encontrar el antecesor o sucesor inmediato al nodo eliminar, es decir,
-			para los nodos cuyo valor es menor al valor del nodo a eliminar, extraer
-			el nodo más a la derecha de estos mismos, es decir, el nodo con mayor
-			valor, en el caso de el sucesor inmediato es el caso contrario, se
-			extraer el nodo con menor valor entre todos los nodos que están a la
-			derecha del nodo a eliminar, es decir, entre los nodos cuyo valor es mayor
-			al nodo a eliminar. Una vez encontrado el nodo correcto, se reemplaza
-			por el nodo a eliminar. Esta forma de extracción asegura que el nodo que
-			pasa a tomar la posición del nodo a eliminar permita que se mantenga el
-			orden del ABB. Finalmente se guarda una referencia al valor del nodo a
-			eliminar y se libera de la memoria.
+  \item \textbf{Insertar en una lista vacía:} En este caso la implementación de lista cuenta con dos referencias al primer y último nodo de la lista. Al insertar el primer elemento de una lista vacía, se deben apuntar ambos nodos al mismo elemento.
+  \item \textbf{Insertar al inicio de la lista:} Para insertar en esta posición, nuevamente se saca provecho de la existencia de la referencia a un nodo inicial de la lista. Al agregar un elemento en la primera posición primero se establece que el nodo siguiente al nodo que va a ser insertado, es decir, el segundo nodo, va a ser el nodo que actualmente está al inicio de la lista. Luego se cambia referencia la referencia al primer nodo de la lista de tal modo que el nodo que contiene al elemento agregado sea el nuevo primer nodo de la lista. 
+  \item \textbf{Insertar al final de la lista:} La operación de insertar en esta posición puede ser vista como la inversa de la operación anterior. Esta vez se utiliza la referencia al elemento que actualmente está al final de la lista, se establece que el elemento siguiente a este último va a ser el nuevo nodo insertado, y finalmente se cambiar la referencia del último nodo de la lista hacia el nuevo nodo.
+  \item \textbf{Insertar en cualquier posicion:} Para insertar en cualquier posición de la lista se debe hacer un cambio de referencias similar al de los casos anteriores. Primero se tiene que ubicar el nodo que actualmente se encuentra en la posición anterior a la deseada. Se copia la referencia de este nodo a su nodo siguiente (el nodo que está en la posición deseada) de tal forma que el nuevo nodo a insertar apunte hacia este nodo, y finalmente se hace que el nodo que anterior a la posición deseada tome como nuevo siguiente el nodo que se está insertando.
 \end{itemize}
 
-Al finalizar la eliminación del nodo se retorna la referencia al elemento que
-estaba almacenado en este.
+Por último se aumenta la cantidad de elementos en la lista y se retorna el puntero a la lista nuevamente.
 
-Para reutilizar un poco mejor el código, en esta implementación tanto la
-eliminación de un nodo hoja como la eliminación de un nodo con un solo hijo se
-hacen de la misma forma. Estos dos casos pueden ser agrupados en uno solo para
-nodos que tienen como máximo un nodo. Al encontrar el nodo a eliminar, se sabe
-que este puede tener un hijo, entonces se busca si este nodo tiene hijo derecho.
-En el caso de que exista hijo derecho (que este no sea \lstinline{NULL}), se
-guarda una referencia al hijo derecho que luego va a ser enlazada con el padre
-del nodo a eliminar, en en el caso de que no tenga hijo derecho, entonces se 
-guarda la referencia al hijo izquierda y se enlaza dicho nodo. Si el nodo a
-eliminar no tenía ningún hijo, entonces igualmente se enlaza el hijo izquierdo,
-que como no existe, vale \lstinline{NULL}, es decir que al eliminar el nodo
-deseado, el padre de este va a quedar con una referencia a \lstinline{NULL},
-que es equivalente a directamente eliminar el nodo hoja deseado.
+Cada destacar que la función \lstinline{lista_insertar} fue implementada de tal manera que esta fuera solamente una manera auxiliar de llamar a la función \lstinline{lista_insertar_en_posicion} especificando la última posición de la lista.
 
-Cabe destacar que al igual que la operación de insertar, la función encargada
-de la eliminación de elementos también utiliza una función auxiliar recursiva,
-en este caso esa función es \lstinline{abb_quitar_recursivo_aux}. A su vez esta
-función utiliza un segundo auxiliar \lstinline{abb_extraer_maximo},
-utilizado para extraer el sucesor inmediato en el caso de eliminación de nodos
-con dos hijos.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{eliminacion_1.png}
-\caption{\label{fig:seq08}Inicio a buscar el elemento a eliminar desde la raíz.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{eliminacion_2.png}
-\caption{\label{fig:seq09}Comparo el valor del elemento con el valor de la raíz.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{eliminacion_3.png}
-\caption{\label{fig:seq10}Avanzo hacia el sub-árbol izquierdo ya que el valor del elemento es menor.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{eliminacion_4.png}
-\caption{\label{fig:seq11}Encuentro el elemento a eliminar.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{eliminacion_5.png}
-\caption{\label{fig:seq12}Encuentro el sucesor inmediato al elemento a eliminar.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{eliminacion_6.png}
-\caption{\label{fig:seq13}Reemplazo el nodo a eliminar por el sucesor inmediato.}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{eliminacion_7.png}
-\caption{\label{fig:seq14}Guardo una referencia al elemento dentro del nodo a eliminar y libero el nodo.}
-\end{figure}
+Para la operación de apilado en una pila, se utiliza la misma funcionalidad de inserción que para la lista pero especificando el tope de la pila (posición final) como la única posición de insertado. Por otra parte, para la operación de encolado en una cola, se utiliza esta misma función, nuevamente especificando la posición final de la cola como única posición de insertado posible.
 
 
+\subsection{Eliminación de elementos}
 
-											\subsection{Búsqueda de un elemento}
+La operación de quitar elementos de la lista tiene una implementación bastante similar a la operación de insertado. También se proveen dos funciones para quitar elementos tanto del final de la lista con la función \lstinline{lista_quitar}, así como también para quitar un elemento de cualquier posición con la función \lstinline{lista_quitar_en_posicion}, la primera de estas funciones siendo un auxiliar de la segunda, en el que se especifica que la posición de eliminado es la última en el caso de la lista.
 
-La operación de búsqueda consiste en una función llamada \lstinline{abb_buscar}
-que a su vez utiliza una función auxiliar recursiva llamada
-\lstinline{abb_buscar_recursivo_aux}. Esta función toma el elemento raíz del
-árbol y a partir de ahí inicia a comparar los valores de cada nodo con el
-valor buscado, utilizando la misma función de comparación con la que se
-insertaron los elementos. En caso de que el valor buscado sea menor al valor
-del nodo actual, se continúa el recorrido en la rama izquierda, en caso en que
-el valor buscado sea mayor al valor del nodo actual, la búsqueda se continúa en
-la derecha, y si los valores son iguales, significa que se encontró el elemento
-buscado. En este último caso se retorna el valor almacenado.
+Al igual que con la inserción de elementos, existen varios casos particulares de eliminación:
 
+\begin{itemize}
+  \item \textbf{Quitar del inicio de la lista:} En esta operación se guarda una referencia al nodo a quitar (el primer nodo de la lista) y posteriormente se apunta la referencia de la lista hacia el nuevo primer nodo (que anteriormente era el segundo). Finalmente se almacena el valor que contiene el nodo para retornarlo y se libera la estructura nodo que se removió de la lista.
+  \item \textbf{Quitar del final de la lista:} Para quitar un elemento del final de la lista simplemente se guarda una referencia a ese nodo, luego se apunta la referencia de la lista al nodo final hacia el nodo anterior (que anteriormente era el penúltimo), y finalmente se almacena el valor que contiene el nodo para retornarlo y se libera la estructura nodo que se removió de la lista. Al tener una referencia al final de la lista, no se tiene la necesidad de recorrer toda la lista para encontrar el final, así que el tiempo de inserción en el final de la lista es constante si no se requiere de una operación adicional.
+  \item \textbf{Quitar de cualquier posición:} Para quitar un elemento de cualquier posición se realiza una operación similar al insertado en cualquier posición, en la que primero guarda una referencia al nodo que se va a eliminar. Luego se localiza el nodo anterior a la posición que se desea quitar en este caso, se cambia la referencia al siguiente nodo para este nodo, y pasa ser el nodo siguiente al que se va a remover. Finalmente se guarda el valor del nodo a quitar para que pueda ser devuelto y se libera la estructura nodo de la memoria.
+\end{itemize}
 
-														 \subsection{Iterador}
+Para las implementaciones de los TDAs pila y cola también se trabaja con las funciones de lista para la operación de remover elementos. En el caso del desapilado en la pila se especifica la única opción de desapilado posible como la posición del tope de la pila (misma posición del último elemento apilado), y para el caso del tipo de dato cola, se especifica la posición de desencolado como la posición del primer nodo de la cola, es decir siempre el que siempre está al frente.
 
-Existen dos funciones utilizadas para recorrer el ABB. La primera función,
-llamada \lstinline{abb_recorrer}, solamente se encarga de recorrer todos los
-elementos del árbol en el orden especificado. Para esto se utilizan
-diferentes funciones auxiliares recursivas que van avanzando a través de los
-nodos del árbol en según el tipo de recorrido que corresponda. A medida se van
-recorriendo cada uno de los elementos, estos van siendo agregados a un vector
-externo en el orden esperado de cada uno de los recorridos.
+\subsection{Otras operaciones}
 
-La segunda de estas funciones, \lstinline{abb_con_cada_elemento} es utilizada
-para aplicar una función sobre cada uno de los elementos del árbol, hasta que se
-llegue al final del mismo o hasta que la función falle o llegue a un elemento
-específico, en cuyo caso esta retorna \lstinline{false}.
+Además de las operaciones de insertar y quitar se proveen una serie de getters para cada tipo de dato. En el caso de la lista, el usuario puede acceder al primer y último elemento de la misma sin necesidad de remover el elemento, así como también puede acceder a cualquier elemento en medio de la lista. Para acceder al primer y último nodo se utilizan las funciones \lstinline{lista_primero} y \lstinline{lista_ultimo} que toman provecho de las referencias que tiene la lista hacia el nodo inicial y final para realizar esta operación en tiempo constante. Por otra parte, para acceder a cualquier otro elemento se utiliza la función \lstinline{lista_elemento_en_posicion}, la cual si tiene que hacer un recorrido a traves de la lista hasta que encuentra el elemento buscado o \lstinline{NULL} si no se encuentra.
 
-Ambas funciones retornan solamente la cantidad de elementos recorridos.
+En el caso del tipo de dato pila solo se provee un getter para acceder al elemento del tope, y para el tipo de dato cola, solamente para acceder al elemento del frente.
 
-
-															\subsection{Getters}
-
-Finalmente se proveen una seria de getters para obtener información sobre el
-estado actual del ABB, como por ejemplo, la función \lstinline{abb_vacio}, que 
-retorna \lstinline{true} o \lstinline{false} si el ABB está vacío o no, o la
-función \lstinline{abb_tamanio} que retorna la cantidad actual de elementos
-en el ABB.
-
-
-											\subsection{Destrucción del ABB}
-
-Cuando se deja de utilizar el ABB, este se libera de la memoria. Para esto
-existen dos otras dos funciones encargadas de la destrucción del árbol. La
-primera de estas funciones, llamada \lstinline{abb_destruir_todo}, toma un
-destructor (una función encargada de liberar de la memoria cada uno de los
-elementos dentro del árbol) y recorre recursivamente el árbol con un recorrido
-postorden, para ir liberando de la memoria cada nodo hasta
-luego de haber destruido sus hijos.
+Para las tres estructuras de datos existen funciones que se encargan de la construcción y destrucción de las mismas, sin destruir la información que tiene almacenada el usuario. Además, las tres estructuras tienen una función retorna la cantidad de elementos que contienen en el momento y otra función que determina si la estructura está vacía o no.
 
 
 \end{document}
+
