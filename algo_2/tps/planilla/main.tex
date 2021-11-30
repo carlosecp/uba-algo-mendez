@@ -88,7 +88,7 @@ organización de la información mediante diferentes estructuras de datos.
 El objetivo de este trabajo práctico es implementar una de las estructuras de
 datos más utilizadas, la tabla de hash. 
 
-																		% TEORIA
+                                    % TEORIA
 
 \section{Teoría}\label{sec:teoria}
 
@@ -160,6 +160,20 @@ base a la nueva cantidad de listas disponibles.
 
 				 \section{Detalles de implementación}\label{sec:implementacion}
 
+La implementación de esta estructura de datos fue escrita en el lenguaje de
+programación C, siguiendo la especificación del lenguaje detallada en el
+estándar C99. Los archivos principales se encuentran dentro del directorio
+\textbf{src} ubicada en la raíz del repositorio. 
+
+Además se incluye un archivo \textbf{pruebas.c} en el que se encuentran
+diferentes pruebas automatizadas para detectar errores en la ejecución del
+programa o en la asignación, manejo y liberación de memoria dinámica. Para esto
+se utiliza \textbf{gcc} como compilador y \textbf{valgrind} como herramienta de
+análisis de memoria.
+
+La estructura de tabla de hash propuesta para esta implementación es la
+siguiente:
+
 \begin{lstlisting}[language=C]
 struct hash {
 	casilla_t** casillas;
@@ -169,57 +183,107 @@ struct hash {
 };
 \end{lstlisting}
 
-											\subsection{Inserción de elementos}
+El campo \lstinline{casillas} de cada hash es un vector de listas simplemente enlazadas y puramente recursiva, implementadas de la siguiente forma:
 
-Se proveen dos funciones para insertar elementos. La primera de estas,
-\lstinline{lista_insertar} se encarga de insertar un elemento al final de la
-lista y \lstinline{lista_insertar_en_posicion} se encarga de insertar un
-elemento en la posición especificada por el usuario. Para esta última función,
-en el caso de que el usuario quisiera agregar un elemento en una posición que
-no existe en la lista, el elemento se agregará al final de la misma.
+\begin{lstlisting}[language=C]
+typedef struct casilla {
+	char* clave;
+	void* elemento;
+	struct casilla* siguiente;
+} casilla_t;
+\end{lstlisting}
 
-Para insertar un elemento en una lista compuesta por nodos enlazados, es
-necesario cambiar las referencias de los nodos que anteceden y suceden a la
-posición en la que se quiere ubicar el nuevo elemento. Esta operación tiene
-varios casos particulares, y para cada uno de estos casos existe una solución
-específica:
+Al estar utilizando esta segunda estructura de datos, la mayoría de las operaciones de la tabla de hash son fundamentalmente auxiliares que trabajan
+con operaciones de lista enlazada, por lo que el funcionamiento de las mismas es muy similar al de las operaciones regulares para una lista enlazada.
 
-\begin{itemize}
-  \item \textbf{Insertar en una lista vacía:} En este caso la implementación de lista cuenta con dos referencias al primer y último nodo de la lista. Al insertar el primer elemento de una lista vacía, se deben apuntar ambos nodos al mismo elemento.
-  \item \textbf{Insertar al inicio de la lista:} Para insertar en esta posición, nuevamente se saca provecho de la existencia de la referencia a un nodo inicial de la lista. Al agregar un elemento en la primera posición primero se establece que el nodo siguiente al nodo que va a ser insertado, es decir, el segundo nodo, va a ser el nodo que actualmente está al inicio de la lista. Luego se cambia referencia la referencia al primer nodo de la lista de tal modo que el nodo que contiene al elemento agregado sea el nuevo primer nodo de la lista. 
-  \item \textbf{Insertar al final de la lista:} La operación de insertar en esta posición puede ser vista como la inversa de la operación anterior. Esta vez se utiliza la referencia al elemento que actualmente está al final de la lista, se establece que el elemento siguiente a este último va a ser el nuevo nodo insertado, y finalmente se cambiar la referencia del último nodo de la lista hacia el nuevo nodo.
-  \item \textbf{Insertar en cualquier posicion:} Para insertar en cualquier posición de la lista se debe hacer un cambio de referencias similar al de los casos anteriores. Primero se tiene que ubicar el nodo que actualmente se encuentra en la posición anterior a la deseada. Se copia la referencia de este nodo a su nodo siguiente (el nodo que está en la posición deseada) de tal forma que el nuevo nodo a insertar apunte hacia este nodo, y finalmente se hace que el nodo que anterior a la posición deseada tome como nuevo siguiente el nodo que se está insertando.
-\end{itemize}
+                         \subsection{Insertar Elemento}
 
-Por último se aumenta la cantidad de elementos en la lista y se retorna el puntero a la lista nuevamente.
+Para insertar elementos en el hash se provee la función
+\lstinline{hash_insertar} que recibe la clave y el elemento a insertar. Lo
+primero que se hace en este caso es determinar la posición en la que se va a
+insertar el elemento dentro de las posiciones disponibles en el vector de
+casillas de la tabla de hash. Para esto se utiliza como auxiliar la función
+\lstinline{calcular_indice_hash}, que toma la clave dada y retorna la sumatoria
+de los valores ASCII de cada uno de los caracteres de esta clave. A este
+resultado luego se le aplica la operación módulo respecto del tamaño actual del
+vector de casilleros del hash, para así limitar el índice de hash a un rango
+válido para este vector.
 
-Cada destacar que la función \lstinline{lista_insertar} fue implementada de tal manera que esta fuera solamente una manera auxiliar de llamar a la función \lstinline{lista_insertar_en_posicion} especificando la última posición de la lista.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{img/3_hash_insercion.png}
+\caption{\label{fig:seq03}Inserción de clave con función de hash.}
+\end{figure}
 
-Para la operación de apilado en una pila, se utiliza la misma funcionalidad de inserción que para la lista pero especificando el tope de la pila (posición final) como la única posición de insertado. Por otra parte, para la operación de encolado en una cola, se utiliza esta misma función, nuevamente especificando la posición final de la cola como única posición de insertado posible.
+Una vez se determina el indice correspondiente, se llama a la operación insertar
+de la lista enlazada ubicada en ese índice. Para esto se utiliza la función
+\lstinline{casilla_insertar} que recorre la lista deseada de manera recursiva
+hasta encontrar la clave dada o hasta llegar al final de la lista. Si encuentra
+la clave dada antes de llegar al final de la lista, significa que esa clave ya
+tenía asignado un elemento previamente, así que destruye ese elemento para
+actualizar la clave en cuestión con el nuevo elemento que se desea guardar.  En
+el caso de que se llegue al final de la lista sin haber encontrado la clave, se
+crea un nuevo nodo/casilla en la que se guarda una copia de la clave y se
+almacena el elemento.
 
+                             \subsubsection{Rehash}
 
-										 \subsection{Eliminación de elementos}
+Para evitar la degeneración excesiva causada por la continua inserción de
+múltiples claves con el mismo valor de hash, se implementa también una operación
+interna de rehash. Esta se encarga de reorganizar el hash original,
+incrementando la cantidad de listas disponibles y volviendo a insertar los
+elementos almacenados. Esta función primero crea una copia del estado original
+del hash. Luego agranda el tamaño del vector de casillas y le asigna una nueva
+ubicación en memoria, lo suficientemente grande para el nuevo tamaño del hash.
+Sin embargo al reasignar la memoria, el vector en cuestión pierde toda la
+información que estaba almacenada, por lo que se debe recurrir a la copia hecha
+previamente para ir insertando los elementos uno a uno. Esto se hace con la
+ayuda de la función \lstinline{casilla_copiar_casillas}, la cual va recorriendo
+cada una de las listas recursivamente y llamando a la función
+\lstinline{casilla_insertar} para cada elemento.
 
-La operación de quitar elementos de la lista tiene una implementación bastante similar a la operación de insertado. También se proveen dos funciones para quitar elementos tanto del final de la lista con la función \lstinline{lista_quitar}, así como también para quitar un elemento de cualquier posición con la función \lstinline{lista_quitar_en_posicion}, la primera de estas funciones siendo un auxiliar de la segunda, en el que se especifica que la posición de eliminado es la última en el caso de la lista.
+La operación de rehash es computacionalmente costosa, así que solo se manda aplica cuando la cantidad de elementos almacenados en el hash supera determinado umbral en relación con la capacidad total del mismo. En este caso el umbral es:
 
-Al igual que con la inserción de elementos, existen varios casos particulares de eliminación:
+$$
+\frac{\textnormal{cantidad\_elementos}}{\textnormal{cantidad\_casillas}} \ge 0.75
+$$
 
-\begin{itemize}
-  \item \textbf{Quitar del inicio de la lista:} En esta operación se guarda una referencia al nodo a quitar (el primer nodo de la lista) y posteriormente se apunta la referencia de la lista hacia el nuevo primer nodo (que anteriormente era el segundo). Finalmente se almacena el valor que contiene el nodo para retornarlo y se libera la estructura nodo que se removió de la lista.
-  \item \textbf{Quitar del final de la lista:} Para quitar un elemento del final de la lista simplemente se guarda una referencia a ese nodo, luego se apunta la referencia de la lista al nodo final hacia el nodo anterior (que anteriormente era el penúltimo), y finalmente se almacena el valor que contiene el nodo para retornarlo y se libera la estructura nodo que se removió de la lista. Al tener una referencia al final de la lista, no se tiene la necesidad de recorrer toda la lista para encontrar el final, así que el tiempo de inserción en el final de la lista es constante si no se requiere de una operación adicional.
-  \item \textbf{Quitar de cualquier posición:} Para quitar un elemento de cualquier posición se realiza una operación similar al insertado en cualquier posición, en la que primero guarda una referencia al nodo que se va a eliminar. Luego se localiza el nodo anterior a la posición que se desea quitar en este caso, se cambia la referencia al siguiente nodo para este nodo, y pasa ser el nodo siguiente al que se va a remover. Finalmente se guarda el valor del nodo a quitar para que pueda ser devuelto y se libera la estructura nodo de la memoria.
-\end{itemize}
+Y el factor de incremento al aumentar la cantidad de espacios disponibles en el hash anterior es igual a $2$, es decir, cada vez que se hace rehash, la cantidad de listas en el hash se duplica.
 
-Para las implementaciones de los TDAs pila y cola también se trabaja con las funciones de lista para la operación de remover elementos. En el caso del desapilado en la pila se especifica la única opción de desapilado posible como la posición del tope de la pila (misma posición del último elemento apilado), y para el caso del tipo de dato cola, se especifica la posición de desencolado como la posición del primer nodo de la cola, es decir siempre el que siempre está al frente.
+                          \subsection{Quitar Elemento}
 
-												 \subsection{Otras operaciones}
+La operación de quitar un elemento se asemeja a la de insertar. En esta
+operación nuevamente lo primero que se hace es calcular el índice de hash que
+corresponde con la clave dada. Luego se ubica la lista que se encuentra en ese
+índice y se utiliza la función \lstinline{casilla_quitar} para eliminar la clave
+deseada de la lista.  La operación de quitar un elemento se asemeja a la de
+insertar. En esta operación nuevamente lo primero que se hace es calcular el
+índice de hash que corresponde con la clave dada. Luego se ubica la lista que se
+encuentra en ese índice y se utiliza la función \lstinline{casilla_quitar} para
+eliminar la clave deseada de la lista.
 
-Además de las operaciones de insertar y quitar se proveen una serie de getters para cada tipo de dato. En el caso de la lista, el usuario puede acceder al primer y último elemento de la misma sin necesidad de remover el elemento, así como también puede acceder a cualquier elemento en medio de la lista. Para acceder al primer y último nodo se utilizan las funciones \lstinline{lista_primero} y \lstinline{lista_ultimo} que toman provecho de las referencias que tiene la lista hacia el nodo inicial y final para realizar esta operación en tiempo constante. Por otra parte, para acceder a cualquier otro elemento se utiliza la función \lstinline{lista_elemento_en_posicion}, la cual si tiene que hacer un recorrido a traves de la lista hasta que encuentra el elemento buscado o \lstinline{NULL} si no se encuentra.
+                         \subsection{Iterador Interno}
 
-En el caso del tipo de dato pila solo se provee un getter para acceder al elemento del tope, y para el tipo de dato cola, solamente para acceder al elemento del frente.
+La función \lstinline{hash_con_cada_clave} permite recorrer los elementos de un hash y aplicarles un función a cada elemento. Para esto se utiliza una función auxiliar \lstinline{casilla_con_cada_clave} que simplemente recorre cada lista enlazada de manera recursiva. Esta función se manda a llamar para cada lista almacenada en el vector de casillas del hash. En caso de que la función aplicada sobre un elemento retorne \lstinline{true} se detiene el recorrido del hash.
 
-Para las tres estructuras de datos existen funciones que se encargan de la construcción y destrucción de las mismas, sin destruir la información que tiene almacenada el usuario. Además, las tres estructuras tienen una función retorna la cantidad de elementos que contienen en el momento y otra función que determina si la estructura está vacía o no.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{img/4_recorrido.png}
+\caption{\label{fig:seq04}Recorrido hasta que función retorne \lstinline{true}.}
+\end{figure}
 
+                         \subsection{Otra Operaciones}
+
+Además de las operaciones de insertar y quitar se provee la función
+\lstinline{hash_contiene} que solamente verifica si existe una clave dada en el
+hash, los getters \lstinline{hash_obtener} y \lstinline{hash_cantidad}, la
+primera de estas funciones se encarga de buscar un elemento por su clave y
+retornarlo si lo encuentra, la segunda devuelve la cantidad total de elementos
+almacenados actualmente en el hash. Tanto \lstinline{hash_contiene} como
+\lstinline{hash_obtener} utilizan funciones auxiliares recursivas que recorren
+las listas enlazadas para encontrar la clave dada.
+
+También se proveen las funciones encargadas de la creación y destrucción de una tabla de hash. La función \lstinline{hash_crear} toma una cantidad inicial de casillas mayor a $3$ o directamente el valor $3$ si el valor dado es menor. En base a la cantidad inicial de casillas también se asigna la memoria correspondiente, inicializando todas las listas enlazadas (todas inician como NULL). Finalmente se guarda una función \lstinline{destruir_elemento} que va a ser utilizada al momento de la liberación de un elemento, y se inicia la cantidad actual de elementos insertados en $0$. Por otra parte, la función \lstinline{hash_destruir} utiliza la función auxiliar \lstinline{casilla_destruir} para destruir cada lista enlazada recursivamente, destruyendo cada uno de los elementos con la función \lstinline{destruir_elemento} que se asigna en la creación del hash.
 
 \end{document}
 
