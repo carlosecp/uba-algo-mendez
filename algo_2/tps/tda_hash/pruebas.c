@@ -32,12 +32,11 @@ void destruir_estudiante(void* est) {
 }
 
 bool reprobar_estudiante(hash_t* hash, const char* clave, void* aux) {
-	printf("clave: %s\n", clave);
-	return true;
+	return false;
 }
 
-bool reprobar_hasta_segundo_estudiante(hash_t* hash, const char* clave, void* aux) {
-	return !strcmp(clave, "segundo");
+bool reprobar_hasta_septimo_estudiante(hash_t* hash, const char* clave, void* aux) {
+	return (strcmp(clave, "septimo") == 0);
 }
 
 // === BORRAR ===
@@ -117,6 +116,20 @@ void dadoUnHash_alInsertarVariosElementos_seInsertanCorrectamente() {
 
 	pa2m_afirmar(hash_cantidad(hash) == 5, "Al insertar 5 elementos en un hash la cantidad de elementos es 5");
 
+	estudiante_t* est5 = crear_estudiante(30, "Julian Calderon");
+	estudiante_t* est6 = crear_estudiante(40, "Julian Stiefkens");
+	estudiante_t* est7 = crear_estudiante(5,  "Manuel Sanchez");
+	estudiante_t* est8 = crear_estudiante(12, "Nicolas Celano");
+	estudiante_t* est9 = crear_estudiante(28, "Nicolas Tonizzo");
+
+	hash_insertar(hash, "sexto",   est5);
+	hash_insertar(hash, "septimo", est6);
+	hash_insertar(hash, "octavo",  est7);
+	hash_insertar(hash, "noveno",  est8);
+	hash_insertar(hash, "decimo",  est9);
+	
+	pa2m_afirmar(hash_cantidad(hash) == 10, "Luego de insertar varios elementos y hacer rehash, la cantidad de elementos siguie siendo la correcta");
+
 	hash_destruir(hash);
 }
 
@@ -134,64 +147,35 @@ void dadoUnHash_alInsertarUnElementoConUnaClaveRepetida_seInsertaCorrectamente()
 	hash_destruir(hash);
 }
 
-void test_rehash() {
-	hash_t* hash = hash_crear(destruir_estudiante, 2);
+void dadoUnHash_alInsertarUnaClaveQueLuegoPuedeSerModificada_seHaceUnaCopiaDeLaClave() {
+	hash_t* hash = hash_crear(destruir_estudiante, 3);
 
 	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
 	estudiante_t* est1 = crear_estudiante(20, "Cami Fiorotto");
 	estudiante_t* est2 = crear_estudiante(36, "Carolina Aramay");
 	estudiante_t* est3 = crear_estudiante(10, "Facundo Sanso");
 	estudiante_t* est4 = crear_estudiante(22, "Joaquin Dopazo");
-	estudiante_t* est5 = crear_estudiante(30, "Julian Calderon");
-	estudiante_t* est6 = crear_estudiante(40, "Julian Stiefkens");
-	estudiante_t* est7 = crear_estudiante(5,  "Manuel Sanchez");
-	estudiante_t* est8 = crear_estudiante(12, "Nicolas Celano");
-	estudiante_t* est9 = crear_estudiante(28, "Nicolas Tonizzo");
 
 	hash_insertar(hash, "primero", est0);
-	imprimir_hash(hash);
-	printf("\n----------------------------------------------\n\n");
-
 	hash_insertar(hash, "segundo", est1);
-	imprimir_hash(hash);
-	printf("\n----------------------------------------------\n\n");
 
-	hash_insertar(hash, "tercero", est2);
-	imprimir_hash(hash);
-	printf("\n----------------------------------------------\n\n");
+	char tercera_clave[] = "tercero";
+	hash_insertar(hash, tercera_clave, est2);
+	tercera_clave[0] = 'T';
+	tercera_clave[1] = 'E';
+	tercera_clave[2] = 'R';
+	tercera_clave[3] = 'C';
+	tercera_clave[4] = 'E';
+	tercera_clave[5] = 'R';
+	tercera_clave[6] = '0';
 
 	hash_insertar(hash, "cuarto",  est3);
-	imprimir_hash(hash);
-	printf("\n----------------------------------------------\n\n");
-
 	hash_insertar(hash, "quinto",  est4);
-	imprimir_hash(hash);
-	printf("\n----------------------------------------------\n\n");
-
-	hash_insertar(hash, "sexto",   est5);
-	imprimir_hash(hash);
-	printf("\n----------------------------------------------\n\n");
-
-	hash_insertar(hash, "septimo", est6);
-	imprimir_hash(hash);
-	printf("\n----------------------------------------------\n\n");
-
-	hash_insertar(hash, "octavo",  est7);
-	imprimir_hash(hash);
-	printf("\n----------------------------------------------\n\n");
-
-	hash_insertar(hash, "noveno",  est8);
-	imprimir_hash(hash);
-	printf("\n----------------------------------------------\n\n");
-
-	hash_insertar(hash, "decimo",  est9);
-	imprimir_hash(hash);
-	printf("\n----------------------------------------------\n\n");
 
 	hash_destruir(hash);
 }
 
-						   /* Pruebas Hash: Quitar */
+                           /* Pruebas Hash: Quitar */
 
 void dadoUnHashNULL_alQuitarUnElemento_seRetornaError() {
 	hash_t* hash = NULL;
@@ -300,7 +284,7 @@ void dadoUnHashNULL_alRecorrerLosElementos_seRetorna0() {
 }
 
 void dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada() {
-	hash_t* hash = hash_crear(destruir_estudiante, 5);
+	hash_t* hash = hash_crear(destruir_estudiante, 20);
 
 	pa2m_afirmar(hash_con_cada_clave(hash, reprobar_estudiante, NULL) == 0, "Al recorrer un hash vacio se recorren 0 elementos");
 
@@ -326,7 +310,9 @@ void dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada() {
 	hash_insertar(hash, "noveno",  est8);
 	hash_insertar(hash, "decimo",  est9);
 
-	pa2m_afirmar(hash_con_cada_clave(hash, reprobar_hasta_segundo_estudiante, NULL) == 5, "Al recorrer un hash hasta llegar a cierta clave e interrumpir el recorrido, se recorren la cantidad de elementos correctos");
+	pa2m_afirmar(hash_con_cada_clave(hash, reprobar_estudiante, NULL) == 10, "Al recorrer un hash ininterrumpidamente se recorren todos los elementos");
+	pa2m_afirmar(hash_con_cada_clave(hash, reprobar_hasta_septimo_estudiante, NULL) == 5, "Al recorrer un hash hasta llegar a cierta clave e interrumpir el recorrido, se recorren la cantidad de elementos correctos");
+	pa2m_afirmar(hash_con_cada_clave(hash, NULL, NULL) == 10, "Al recorrer un hash con una funcion NULL se recorren todos los elementos");
 
 	hash_destruir(hash);
 }
@@ -351,37 +337,66 @@ void dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElemen
 	hash_destruir(hash);
 }
 
+                     // Pruebas Auxiliares Lista: Insercion
+
+void dadaUnaLista_alInsertarConUnaClaveNULLYUnaCantidadDeElementosNULL_seRetornaNULL() {
+	casilla_t* lista = casilla_crear();
+
+	size_t cantidad_elementos = 0;
+	pa2m_afirmar(casilla_insertar(lista, NULL, NULL, NULL, &cantidad_elementos) == NULL, "Al insertar clave NULL en una lista se retorna NULL");
+	pa2m_afirmar(casilla_insertar(lista, "primero", NULL, NULL, NULL) == NULL, "Al insertar en lista con una cantidad de elementos NULL se retorna NULL");
+
+	casilla_destruir(lista, NULL);
+}
+
+void dadaUnaLista_alInsertarUnElemento_seAumentaLaCantidadDeElementos() {
+	casilla_t* lista = casilla_crear();
+
+	size_t cantidad_elementos = 0;
+	casilla_insertar(lista, "primero", NULL, NULL, &cantidad_elementos);
+	casilla_insertar(lista, "segundo", NULL, NULL, &cantidad_elementos);
+	casilla_insertar(lista, "tercero", NULL, NULL, &cantidad_elementos);
+
+	pa2m_afirmar(cantidad_elementos == 3, "Al insertar en lista la cantidad de elementos aumenta correctamente");
+
+	casilla_destruir(lista, NULL);
+}
+
 int main() {
 	pa2m_nuevo_grupo("Pruebas Hash: Creacion");
-	// dadoUnDestructorYUnValorInicialValido_alCrearUnHash_seRetornaUnHashCon0Elementos();
-	// dadoUnDestructorNULL_alDestruirUnHash_seDestruyeCorrectamenteSinDestruirLosElementos();
+	dadoUnDestructorYUnValorInicialValido_alCrearUnHash_seRetornaUnHashCon0Elementos();
+	dadoUnDestructorNULL_alDestruirUnHash_seDestruyeCorrectamenteSinDestruirLosElementos();
 	
 	pa2m_nuevo_grupo("Pruebas Hash: Insertar");
-	// dadoUnHashNULL_alInsertarUnElemento_seRetornaError();
-	// dadaUnaClaveNULL_alInsertarUnElemento_seRetornaError();
-	// dadoUnHash_alInsertarVariosElementos_seInsertanCorrectamente();
-	// dadoUnHash_alInsertarUnElementoConUnaClaveRepetida_seInsertaCorrectamente();
-	test_rehash();
+	dadoUnHashNULL_alInsertarUnElemento_seRetornaError();
+	dadaUnaClaveNULL_alInsertarUnElemento_seRetornaError();
+	dadoUnHash_alInsertarVariosElementos_seInsertanCorrectamente();
+	dadoUnHash_alInsertarUnElementoConUnaClaveRepetida_seInsertaCorrectamente();
+	dadoUnHash_alInsertarUnaClaveQueLuegoPuedeSerModificada_seHaceUnaCopiaDeLaClave();
 
 	pa2m_nuevo_grupo("Pruebas Hash: Quitar");
-	// dadoUnHashNULL_alQuitarUnElemento_seRetornaError();
-	// dadaUnaClaveNULL_alQuitarUnElemento_seRetornaError();
-	// dadoUnHash_alQuitarVariosElementos_seQuitanCorrectamente();
+	dadoUnHashNULL_alQuitarUnElemento_seRetornaError();
+	dadaUnaClaveNULL_alQuitarUnElemento_seRetornaError();
+	dadoUnHash_alQuitarVariosElementos_seQuitanCorrectamente();
 
 	pa2m_nuevo_grupo("Pruebas Hash: Obtener");
-	// dadoUnHashNULL_alObtenerUnElemento_seRetornaNULL();
-	// dadaUnaClaveNULL_alObtenerUnElemento_seRetornaNULL();
-	// dadoUnHash_alObtenerUnElemento_seObtieneCorrectamente();
+	dadoUnHashNULL_alObtenerUnElemento_seRetornaNULL();
+	dadaUnaClaveNULL_alObtenerUnElemento_seRetornaNULL();
+	dadoUnHash_alObtenerUnElemento_seObtieneCorrectamente();
 
 	pa2m_nuevo_grupo("Pruebas Hash: Contiene");
-	// dadoUnHashNULL_alVerificarSiContieneUnElemento_seRetornaNULL();
-	// dadaUnaClaveNULL_alVerificarSiElHashContieneUnElemento_seRetornaNULL();
-	// dadoUnHash_alVerificarSiContieneUnElemento_seObtieneCorrectamente();
+	dadoUnHashNULL_alVerificarSiContieneUnElemento_seRetornaNULL();
+	dadaUnaClaveNULL_alVerificarSiElHashContieneUnElemento_seRetornaNULL();
+	dadoUnHash_alVerificarSiContieneUnElemento_seObtieneCorrectamente();
 
 	pa2m_nuevo_grupo("Pruebas Hash: Recorrido");
-	// dadoUnHashNULL_alRecorrerLosElementos_seRetorna0();
-	// dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada();
-	// dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElementos();
+	dadoUnHashNULL_alRecorrerLosElementos_seRetorna0();
+	dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada();
+	dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElementos();
+
+	pa2m_nuevo_grupo("Pruebas Auxiliares Lista: Insercion");
+	// dadaUnaLista_alInsertarConUnaClaveNULLYUnaCantidadDeElementosNULL_seRetornaNULL();
+	// dadaUnaLista_alInsertarUnElemento_seAumentaLaCantidadDeElementos();
 
     return pa2m_mostrar_reporte();
 }

@@ -72,27 +72,27 @@ int calcular_indice_hash(const char* clave) {
 }
 
 int hash_insertar(hash_t* hash, const char* clave, void* elemento) {
-    if (!hash || !clave)
-        return ERROR;
+	if (!hash || !clave)
+		return ERROR;
 
-    double factor_de_carga = calcular_factor_de_carga(hash->cantidad_elementos, hash->cantidad_casillas);
+	double factor_de_carga = calcular_factor_de_carga(hash->cantidad_elementos, hash->cantidad_casillas);
 	if ((int)factor_de_carga == ERROR)
 		return ERROR;
 
 	if (factor_de_carga >= UMBRAL_REHASH)
 		rehash(hash);
 
-    int indice_clave = calcular_indice_hash(clave);
-    if (indice_clave == ERROR)
-        return ERROR;
+	int indice_clave = calcular_indice_hash(clave);
+	if (indice_clave == ERROR)
+		return ERROR;
 
-    indice_clave %= hash->cantidad_casillas;
-    casilla_t* tmp = casilla_insertar(hash->casillas[indice_clave], clave, elemento, hash->destruir_elemento, &(hash->cantidad_elementos));
-    if (!tmp)
-        return ERROR;
+	indice_clave %= hash->cantidad_casillas;
+	casilla_t* tmp = casilla_insertar(hash->casillas[indice_clave], clave, elemento, hash->destruir_elemento, &(hash->cantidad_elementos));
+	if (!tmp)
+		return ERROR;
 
-    hash->casillas[indice_clave] = tmp;
-    return EXITO;
+	hash->casillas[indice_clave] = tmp;
+	return EXITO;
 }
 
 int hash_quitar(hash_t* hash, const char* clave) {
@@ -158,12 +158,14 @@ void hash_destruir_aux(hash_t tmp) {
 }
 
 size_t hash_con_cada_clave(hash_t* hash, bool (*funcion)(hash_t* hash, const char* clave, void* aux), void* aux) {
-    if (!hash)
-        return 0;
+	if (!hash)
+		return 0;
 
-    size_t cantidad_recorridos = 0;
-    for (size_t i = 0; i < hash->cantidad_casillas; i++)
-        casilla_con_cada_clave(hash->casillas[i], hash, funcion, aux, &cantidad_recorridos);
+	size_t cantidad_recorridos = 0;
+	size_t detener_recorrido = false;
 
-    return cantidad_recorridos;
+	for (size_t i = 0; i < hash->cantidad_casillas && !detener_recorrido; i++)
+		detener_recorrido = casilla_con_cada_clave(hash->casillas[i], hash, funcion, aux, &cantidad_recorridos);
+
+	return cantidad_recorridos;
 }

@@ -12,9 +12,8 @@
 \usepackage{listings}
 \usepackage{xcolor}
 
+																	% VARIABLES 
 
-
-% === VARIABLES ===
 \newcommand{\FirstName}{Carlos E.}
 \newcommand{\LastName}{Castillo}
 \newcommand{\StudentID}{108535}
@@ -75,9 +74,8 @@
 \tableofcontents
 \newpage
 
+																 % INTRODUCCION
 
-
-% === INTRODUCCION ===
 \section{Introducción}\label{sec:intro}
 
 Muchos lenguajes de programación permiten al usuario extender los tipos de datos
@@ -90,11 +88,12 @@ organización de la información mediante diferentes estructuras de datos.
 El objetivo de este trabajo práctico es implementar una de las estructuras de
 datos más utilizadas, la tabla de hash. 
 
+																		% TEORIA
 
-
-% === TEORIA ===
 \section{Teoría}\label{sec:teoria}
+
 \subsection{Tabla de Hash}
+
 El concepto de tabla de hash se deriva de la estructura de datos conocida como
 diccionario, una colección de pares clave-valor, en la que cada elemento está
 asociado con una clave única con la que es identificado una vez es almacenado en
@@ -105,16 +104,16 @@ rápidamente a la información y evitar la duplicidad de entradas.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{1_diccionario.png}
+\includegraphics[width=0.8\textwidth]{img/1_diccionario.png}
 \caption{\label{fig:seq01}Estructura de Datos Diccionario.}
 \end{figure}
 
 En particular una tabla de hash implementa un arreglo asociativo en el que la
 ubicación de cada elemento agregado es calculada a traves de una función de
-hash, la cual genera un índice dentro del arreglo a partir de la clave indicada.
-Así para insertar, acceder o quitar un elemento almacenado en la tabla, se toma
-la clave provista, se encuentra su índice a través de la función de hash y
-finalmente se accede a esa posición dentro de la tabla. 
+hash, la cual genera un índice dentro del arreglo a partir de la clave
+indicada.  Así para insertar, acceder o quitar un elemento almacenado en la
+tabla, se toma la clave provista, se encuentra su índice a través de la función
+de hash y finalmente se accede a esa posición dentro de la tabla. 
 
 Sin embargo, a medida se van agregando elementos a la tabla, se va aumentando
 la probabilidad de que para dos claves distintas se genere un mismo indice de
@@ -125,42 +124,41 @@ reorganización de la información ya almacenada. Las variantes de tablas de has
 más comunes para lidiar con colisiones son la tabla de ''hash abierto'' y tabla
 de ''hash cerrado''. 
 
-\subsection{Hash Abierto}
+													 \subsection{Hash Abierto}
 
-Una tabla de hash abierto
-consiste en una tabla de hash capaz de hacer encadenamiento o ''chaining'' a los
-elementos con un mismo indice de hash. Para esto se suele implementar una
-estructura de datos secundaria en la que se almacenarán los elementos que
-colisionen, generalmente listas enlazadas. De esta forma la tabla de hash en sí
-solamente contiene referencias a las diferentes listas en las que se guardan los
-elementos. Cada indice de hash apunta más bien a cada una de estas listas y en
-caso de colisión, dos pares clave-valor con el mismo indice de hash van a ser
-almacenados en la misma posición en la tabla de hash y encadenados al final de
-la lista en esa posición.
+Una tabla de hash abierto consiste en una tabla de hash capaz de hacer
+encadenamiento o ''chaining'' a los elementos con un mismo indice de hash. Para
+esto se suele implementar una estructura de datos secundaria en la que se
+almacenarán los elementos que colisionen, generalmente listas enlazadas. De
+esta forma la tabla de hash en sí solamente contiene referencias a las
+diferentes listas en las que se guardan los elementos. Cada indice de hash
+apunta más bien a cada una de estas listas y en caso de colisión, dos pares
+clave-valor con el mismo indice de hash van a ser almacenados en la misma
+posición en la tabla de hash y encadenados al final de la lista en esa
+posición.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.5\textwidth]{2_hash_abierto.png}
+\includegraphics[width=0.5\textwidth]{img/2_hash_abierto.png}
 \caption{\label{fig:seq02}Hash Abierto con Listas Enlazadas.}
 \end{figure}
 
 Sin embargo uno de los puntos negativos de utilizar este tipo de hash es que
 si se van insertando varios elementos con el mismo indice de hash, las listas
 enlazadas van a ir aumentando su longitud, haciendo que el tiempo de acceso a
-los elementos se tienda a ser $O(n)$ en vez de conservarse como $O(1)$ como
-es característico de las estructuras de datos diccionarios. Para evitar esto se
+los elementos se tienda a ser $O(n)$ en vez de conservarse como $O(1)$ como es
+característico de las estructuras de datos diccionarios. Para evitar esto se
 suele hacer una operación conocida como ''rehash'' cuando la cantidad de
 elementos en una tabla de hash sobrepasa cierto umbral. Esta operación consiste
 en incrementar el número de listas en la tabla y reinsertar nuevamente los
 elementos almacenados, ya que al si el indice producido por la función de hash
-depende de la cantidad de listas disponibles, al incrementar dicha cantidad, los
-indices de elementos previamente almacenados deberán ser reasignados en base a
-la nueva cantidad de listas disponibles.
+depende de la cantidad de listas disponibles, al incrementar dicha cantidad,
+los indices de elementos previamente almacenados deberán ser reasignados en
+base a la nueva cantidad de listas disponibles.
 
+													% DETALLES DE IMPLEMENTACION
 
-
-% === DETALLES DE IMPLEMENTACION ===
-\section{Detalles de implementación}\label{sec:implementacion}
+				 \section{Detalles de implementación}\label{sec:implementacion}
 
 \begin{lstlisting}[language=C]
 struct hash {
@@ -171,10 +169,20 @@ struct hash {
 };
 \end{lstlisting}
 
-\subsection{Inserción de elementos}
-Se proveen dos funciones para insertar elementos. La primera de estas, \lstinline{lista_insertar} se encarga de insertar un elemento al final de la lista y \lstinline{lista_insertar_en_posicion} se encarga de insertar un elemento en la posición especificada por el usuario. Para esta última función, en el caso de que el usuario quisiera agregar un elemento en una posición que no existe en la lista, el elemento se agregará al final de la misma.
+											\subsection{Inserción de elementos}
 
-Para insertar un elemento en una lista compuesta por nodos enlazados, es necesario cambiar las referencias de los nodos que anteceden y suceden a la posición en la que se quiere ubicar el nuevo elemento. Esta operación tiene varios casos particulares, y para cada uno de estos casos existe una solución específica:
+Se proveen dos funciones para insertar elementos. La primera de estas,
+\lstinline{lista_insertar} se encarga de insertar un elemento al final de la
+lista y \lstinline{lista_insertar_en_posicion} se encarga de insertar un
+elemento en la posición especificada por el usuario. Para esta última función,
+en el caso de que el usuario quisiera agregar un elemento en una posición que
+no existe en la lista, el elemento se agregará al final de la misma.
+
+Para insertar un elemento en una lista compuesta por nodos enlazados, es
+necesario cambiar las referencias de los nodos que anteceden y suceden a la
+posición en la que se quiere ubicar el nuevo elemento. Esta operación tiene
+varios casos particulares, y para cada uno de estos casos existe una solución
+específica:
 
 \begin{itemize}
   \item \textbf{Insertar en una lista vacía:} En este caso la implementación de lista cuenta con dos referencias al primer y último nodo de la lista. Al insertar el primer elemento de una lista vacía, se deben apuntar ambos nodos al mismo elemento.
@@ -190,7 +198,7 @@ Cada destacar que la función \lstinline{lista_insertar} fue implementada de tal
 Para la operación de apilado en una pila, se utiliza la misma funcionalidad de inserción que para la lista pero especificando el tope de la pila (posición final) como la única posición de insertado. Por otra parte, para la operación de encolado en una cola, se utiliza esta misma función, nuevamente especificando la posición final de la cola como única posición de insertado posible.
 
 
-\subsection{Eliminación de elementos}
+										 \subsection{Eliminación de elementos}
 
 La operación de quitar elementos de la lista tiene una implementación bastante similar a la operación de insertado. También se proveen dos funciones para quitar elementos tanto del final de la lista con la función \lstinline{lista_quitar}, así como también para quitar un elemento de cualquier posición con la función \lstinline{lista_quitar_en_posicion}, la primera de estas funciones siendo un auxiliar de la segunda, en el que se especifica que la posición de eliminado es la última en el caso de la lista.
 
@@ -204,7 +212,7 @@ Al igual que con la inserción de elementos, existen varios casos particulares d
 
 Para las implementaciones de los TDAs pila y cola también se trabaja con las funciones de lista para la operación de remover elementos. En el caso del desapilado en la pila se especifica la única opción de desapilado posible como la posición del tope de la pila (misma posición del último elemento apilado), y para el caso del tipo de dato cola, se especifica la posición de desencolado como la posición del primer nodo de la cola, es decir siempre el que siempre está al frente.
 
-\subsection{Otras operaciones}
+												 \subsection{Otras operaciones}
 
 Además de las operaciones de insertar y quitar se proveen una serie de getters para cada tipo de dato. En el caso de la lista, el usuario puede acceder al primer y último elemento de la misma sin necesidad de remover el elemento, así como también puede acceder a cualquier elemento en medio de la lista. Para acceder al primer y último nodo se utilizan las funciones \lstinline{lista_primero} y \lstinline{lista_ultimo} que toman provecho de las referencias que tiene la lista hacia el nodo inicial y final para realizar esta operación en tiempo constante. Por otra parte, para acceder a cualquier otro elemento se utiliza la función \lstinline{lista_elemento_en_posicion}, la cual si tiene que hacer un recorrido a traves de la lista hasta que encuentra el elemento buscado o \lstinline{NULL} si no se encuentra.
 

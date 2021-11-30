@@ -11,12 +11,17 @@ casilla_t* casilla_crear() {
 }
 
 casilla_t* casilla_insertar(casilla_t* casilla, const char* clave, void* elemento, hash_destruir_dato_t destruir_elemento, size_t* cantidad_elementos) {
+	if (!clave || !cantidad_elementos)
+		return NULL;
+
     if (!casilla) {
         casilla_t* nueva_casilla = malloc(sizeof(casilla_t));
         if (!nueva_casilla)
             return NULL;
 
-        nueva_casilla->clave = clave;
+        nueva_casilla->clave = malloc(sizeof(strlen(clave)));
+		strcpy(nueva_casilla->clave, clave);
+
         nueva_casilla->elemento = elemento;
         nueva_casilla->siguiente = NULL;
 
@@ -42,9 +47,8 @@ int casilla_quitar(casilla_t** casilla, const char* clave, hash_destruir_dato_t 
     if (!casilla || !clave)
         return ERROR;
 
-    while (*casilla && strcmp((*casilla)->clave, clave)) {
+    while (*casilla && strcmp((*casilla)->clave, clave))
         casilla = &((*casilla)->siguiente);
-    }
 
     if (*casilla) {
         if (destruir_elemento)
@@ -52,6 +56,7 @@ int casilla_quitar(casilla_t** casilla, const char* clave, hash_destruir_dato_t 
 
         casilla_t* tmp = *casilla;
         *casilla = (*casilla)->siguiente;
+		free(tmp->clave);
         free(tmp);
 
         (*cantidad_elementos)--;
@@ -79,23 +84,27 @@ void casilla_destruir(casilla_t* casilla, hash_destruir_dato_t destruir_elemento
         destruir_elemento(casilla->elemento);
 
     casilla_t* siguiente = casilla->siguiente;
+	free(casilla->clave);
     free(casilla);
 
     casilla_destruir(siguiente, destruir_elemento);
 }
 
-void casilla_con_cada_clave(casilla_t* casilla, hash_t* hash, bool (*funcion)(hash_t*, const char*, void*), void* aux, size_t* cantidad_recorridos) {
-    if (!casilla || !cantidad_recorridos)
-        return;
+bool casilla_con_cada_clave(casilla_t* casilla, hash_t* hash, bool (*funcion)(hash_t*, const char*, void*), void* aux, size_t* cantidad_recorridos) {
+	if (!casilla || !cantidad_recorridos)
+		return false;
 
-    (*cantidad_recorridos)++;
+	(*cantidad_recorridos)++;
 
-    bool continuar_recorrido = true;
-    if (funcion)
-        continuar_recorrido = funcion(hash, casilla->elemento, aux);
+	bool detener_recorrido = false;
 
-    if (continuar_recorrido)
-        casilla_con_cada_clave(casilla->siguiente, hash, funcion, aux, cantidad_recorridos);
+	if (funcion)
+		detener_recorrido = funcion(hash, casilla->clave, aux);
+
+	if (!detener_recorrido)
+		detener_recorrido = casilla_con_cada_clave(casilla->siguiente, hash, funcion, aux, cantidad_recorridos);
+
+	return detener_recorrido;
 }
 
 void casilla_copiar_casillas(casilla_t* casilla, hash_t* hash) {
