@@ -11,15 +11,20 @@ casilla_t* casilla_crear() {
 }
 
 casilla_t* casilla_insertar(casilla_t* casilla, const char* clave, void* elemento, hash_destruir_dato_t destruir_elemento, size_t* cantidad_elementos) {
-	if (!clave || !cantidad_elementos)
+	if (!clave || !cantidad_elementos) {
 		return NULL;
+	}
 
     if (!casilla) {
         casilla_t* nueva_casilla = malloc(sizeof(casilla_t));
         if (!nueva_casilla)
             return NULL;
 
-        nueva_casilla->clave = malloc(sizeof(strlen(clave)));
+		char* copia_clave = malloc(sizeof(strlen(clave)));
+		if (!copia_clave)
+			return NULL;
+
+        nueva_casilla->clave = copia_clave;
 		strcpy(nueva_casilla->clave, clave);
 
         nueva_casilla->elemento = elemento;

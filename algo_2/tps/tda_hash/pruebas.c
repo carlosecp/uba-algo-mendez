@@ -41,6 +41,14 @@ bool reprobar_hasta_septimo_estudiante(hash_t* hash, const char* clave, void* au
 
 // === BORRAR ===
 
+void imprimir_lista(casilla_t* lista) {
+	if (!lista)
+		return;
+
+	printf("%i\n", *(int*)lista->elemento);
+	imprimir_lista(lista->siguiente);
+}
+
 void imprimir_casilla(casilla_t* casilla) {
 	if (!casilla)
 		return;
@@ -147,34 +155,6 @@ void dadoUnHash_alInsertarUnElementoConUnaClaveRepetida_seInsertaCorrectamente()
 	hash_destruir(hash);
 }
 
-void dadoUnHash_alInsertarUnaClaveQueLuegoPuedeSerModificada_seHaceUnaCopiaDeLaClave() {
-	hash_t* hash = hash_crear(destruir_estudiante, 3);
-
-	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
-	estudiante_t* est1 = crear_estudiante(20, "Cami Fiorotto");
-	estudiante_t* est2 = crear_estudiante(36, "Carolina Aramay");
-	estudiante_t* est3 = crear_estudiante(10, "Facundo Sanso");
-	estudiante_t* est4 = crear_estudiante(22, "Joaquin Dopazo");
-
-	hash_insertar(hash, "primero", est0);
-	hash_insertar(hash, "segundo", est1);
-
-	char tercera_clave[] = "tercero";
-	hash_insertar(hash, tercera_clave, est2);
-	tercera_clave[0] = 'T';
-	tercera_clave[1] = 'E';
-	tercera_clave[2] = 'R';
-	tercera_clave[3] = 'C';
-	tercera_clave[4] = 'E';
-	tercera_clave[5] = 'R';
-	tercera_clave[6] = '0';
-
-	hash_insertar(hash, "cuarto",  est3);
-	hash_insertar(hash, "quinto",  est4);
-
-	hash_destruir(hash);
-}
-
                            /* Pruebas Hash: Quitar */
 
 void dadoUnHashNULL_alQuitarUnElemento_seRetornaError() {
@@ -233,7 +213,7 @@ void dadoUnHashNULL_alObtenerUnElemento_seRetornaNULL() {
 
 void dadaUnaClaveNULL_alObtenerUnElemento_seRetornaNULL() {
 	hash_t* hash = hash_crear(destruir_estudiante, 3);
-	pa2m_afirmar(hash_obtener(hash, "no_existe") == false, "Al obtener un elemento con clave NULL se retorna NULL");
+	pa2m_afirmar(hash_obtener(hash, NULL) == false, "Al obtener un elemento con clave NULL se retorna NULL");
 	hash_destruir(hash);
 }
 
@@ -259,7 +239,7 @@ void dadoUnHashNULL_alVerificarSiContieneUnElemento_seRetornaNULL() {
 
 void dadaUnaClaveNULL_alVerificarSiElHashContieneUnElemento_seRetornaNULL() {
 	hash_t* hash = hash_crear(destruir_estudiante, 3);
-	pa2m_afirmar(hash_contiene(hash, "no_existe") == false, "Al verificar si un hash contiene un elemento con clave NULL se retorna false");
+	pa2m_afirmar(hash_contiene(hash, NULL) == false, "Al verificar si un hash contiene un elemento con clave NULL se retorna false");
 	hash_destruir(hash);
 }
 
@@ -337,27 +317,105 @@ void dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElemen
 	hash_destruir(hash);
 }
 
-                     // Pruebas Auxiliares Lista: Insercion
+					  /* Pruebas Hash: Copia de Claves */
 
-void dadaUnaLista_alInsertarConUnaClaveNULLYUnaCantidadDeElementosNULL_seRetornaNULL() {
+void dadoUnHash_alInsertarUnaClaveQueLuegoPuedeSerModificada_seHaceUnaCopiaDeLaClave() {
+	hash_t* hash = hash_crear(destruir_estudiante, 3);
+
+	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
+	estudiante_t* est1 = crear_estudiante(20, "Cami Fiorotto");
+	estudiante_t* est2 = crear_estudiante(36, "Carolina Aramay");
+	estudiante_t* est3 = crear_estudiante(10, "Facundo Sanso");
+
+	hash_insertar(hash, "primero", est0);
+	hash_insertar(hash, "segundo", est1);
+
+	char tercera_clave[] = "tercero";
+	hash_insertar(hash, tercera_clave, est2);
+	tercera_clave[0] = 'T';
+	tercera_clave[1] = 'E';
+	tercera_clave[2] = 'R';
+	tercera_clave[3] = 'C';
+	tercera_clave[4] = 'E';
+	tercera_clave[5] = 'R';
+	tercera_clave[6] = '0';
+
+	pa2m_afirmar(hash_insertar(hash, "cuarto",  est3) == 0, "Al modificar una clave previamente insertada, puedo seguir insertando elementos al hash");
+	pa2m_afirmar(hash_obtener(hash, "tercero") == est2, "Al modificar una clave previamente insertada, puedo seguir obteniendo el elemento en la clave anterior");
+
+	hash_destruir(hash);
+}
+
+					/* Pruebas Auxiliares Lista: Insertar */
+
+void dadaUnaLista_alInsertarVariosElementos_seInsertanCorrectamente() {
 	casilla_t* lista = casilla_crear();
 
 	size_t cantidad_elementos = 0;
+
+	pa2m_afirmar(casilla_insertar(NULL, NULL, NULL, NULL, NULL) == NULL, "Al insertar en lista NULL se retorna NULL");
 	pa2m_afirmar(casilla_insertar(lista, NULL, NULL, NULL, &cantidad_elementos) == NULL, "Al insertar clave NULL en una lista se retorna NULL");
 	pa2m_afirmar(casilla_insertar(lista, "primero", NULL, NULL, NULL) == NULL, "Al insertar en lista con una cantidad de elementos NULL se retorna NULL");
+
+	lista = casilla_insertar(lista, "primero", NULL, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "segundo", NULL, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "tercero", NULL, NULL, &cantidad_elementos);
+
+	pa2m_afirmar(cantidad_elementos == 3, "Al insertar 3 elementos en una lista la cantidad de elementos es 3");
 
 	casilla_destruir(lista, NULL);
 }
 
-void dadaUnaLista_alInsertarUnElemento_seAumentaLaCantidadDeElementos() {
+					 /* Pruebas Auxiliares Lista: Quitar */
+
+void dadaUnaLista_alQuitarVariosElementos_seQuitanCorrectamente() {
 	casilla_t* lista = casilla_crear();
 
 	size_t cantidad_elementos = 0;
-	casilla_insertar(lista, "primero", NULL, NULL, &cantidad_elementos);
-	casilla_insertar(lista, "segundo", NULL, NULL, &cantidad_elementos);
-	casilla_insertar(lista, "tercero", NULL, NULL, &cantidad_elementos);
 
-	pa2m_afirmar(cantidad_elementos == 3, "Al insertar en lista la cantidad de elementos aumenta correctamente");
+	pa2m_afirmar(casilla_quitar(NULL, NULL, NULL, NULL) == -1, "Al quitar en una lista NULL se devuelve ERROR (-1)");
+	pa2m_afirmar(casilla_quitar(&lista, NULL, NULL, NULL) == -1, "Al quitar un elemento con clave NULL en una lista se devuelve ERROR (-1)");
+
+	lista = casilla_insertar(lista, "primero", NULL, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "segundo", NULL, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "tercero", NULL, NULL, &cantidad_elementos);
+
+	casilla_quitar(&lista, "primero", NULL, &cantidad_elementos);
+	pa2m_afirmar(cantidad_elementos == 2, "Al quitar un elemento en una lista la cantidad de elementos disminuye");
+
+	casilla_quitar(&lista, "primero", NULL, &cantidad_elementos);
+	pa2m_afirmar(cantidad_elementos == 2, "Al quitar un elemento que no existe en una lista la cantidad de elementos no disminuye");
+
+	casilla_quitar(&lista, "segundo", NULL, &cantidad_elementos);
+	casilla_quitar(&lista, "tercero", NULL, &cantidad_elementos);
+
+	pa2m_afirmar(cantidad_elementos == 0, "Al quitar todos los elementos en una lista la cantidad de elementos es 0");
+
+	casilla_destruir(lista, NULL);
+}
+
+					/* Pruebas Auxiliares Lista: Obtener */
+
+void dadaUnaLista_alObtenerUnElemento_seObtieneCorrectamente() {
+	casilla_t* lista = casilla_crear();
+
+	pa2m_afirmar(casilla_obtener(lista, "no_existe") == false, "Al obtener un elemento en una lista NULL se retorna NULL");
+
+	size_t cantidad_elementos = 0;
+
+	lista = casilla_insertar(lista, "primero", NULL, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "segundo", NULL, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "tercero", NULL, NULL, &cantidad_elementos);
+
+	pa2m_afirmar(casilla_obtener(lista, "no_existe") == false, "Al obtener un elemento con clave NULL se retorna NULL");
+
+	// hash_t* hash = hash_crear(destruir_estudiante, 3);
+
+	// estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
+	// hash_insertar(hash, "primero", est0);
+
+	// pa2m_afirmar(hash_obtener(hash, "primero") == est0, "Al obtener un elemento por su clave se retorna el elemento correcto");
+	// pa2m_afirmar(hash_obtener(hash, "no_existe") == NULL, "Al obtener un elemento que no existe se retorna NULL");
 
 	casilla_destruir(lista, NULL);
 }
@@ -394,9 +452,13 @@ int main() {
 	dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada();
 	dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElementos();
 
-	pa2m_nuevo_grupo("Pruebas Auxiliares Lista: Insercion");
-	// dadaUnaLista_alInsertarConUnaClaveNULLYUnaCantidadDeElementosNULL_seRetornaNULL();
-	// dadaUnaLista_alInsertarUnElemento_seAumentaLaCantidadDeElementos();
+	pa2m_nuevo_grupo("Pruebas Auxiliares Lista: Insertar");
+	dadaUnaLista_alInsertarVariosElementos_seInsertanCorrectamente();
+
+	pa2m_nuevo_grupo("Pruebas Auxiliares Lista: Quitar");
+	dadaUnaLista_alQuitarVariosElementos_seQuitanCorrectamente();
+
+	pa2m_nuevo_grupo("Pruebas Auxiliares Lista: Obtener");
 
     return pa2m_mostrar_reporte();
 }
