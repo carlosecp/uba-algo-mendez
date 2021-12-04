@@ -297,26 +297,6 @@ void dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada() {
 	hash_destruir(hash);
 }
 
-void dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElementos() {
-	hash_t* hash = hash_crear(destruir_estudiante, 5);
-
-	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
-	estudiante_t* est1 = crear_estudiante(20, "Cami Fiorotto");
-	estudiante_t* est2 = crear_estudiante(36, "Carolina Aramay");
-	estudiante_t* est3 = crear_estudiante(10, "Facundo Sanso");
-	estudiante_t* est4 = crear_estudiante(22, "Joaquin Dopazo");
-
-	hash_insertar(hash, "primero", est0);
-	hash_insertar(hash, "segundo", est1);
-	hash_insertar(hash, "tercero", est2);
-	hash_insertar(hash, "cuarto",  est3);
-	hash_insertar(hash, "quinto",  est4);
-
-	pa2m_afirmar(hash_con_cada_clave(hash, NULL, NULL) == 5, "Al recorrer un hash con una funcion NULL se recorren todos los elementos");
-
-	hash_destruir(hash);
-}
-
 					  /* Pruebas Hash: Copia de Claves */
 
 void dadoUnHash_alInsertarUnaClaveQueLuegoPuedeSerModificada_seHaceUnaCopiaDeLaClave() {
@@ -399,7 +379,7 @@ void dadaUnaLista_alQuitarVariosElementos_seQuitanCorrectamente() {
 void dadaUnaLista_alObtenerUnElemento_seObtieneCorrectamente() {
 	casilla_t* lista = casilla_crear();
 
-	pa2m_afirmar(casilla_obtener(lista, "no_existe") == false, "Al obtener un elemento en una lista NULL se retorna NULL");
+	pa2m_afirmar(casilla_obtener(NULL, "no_existe") == false, "Al obtener un elemento en una lista NULL se retorna NULL");
 
 	size_t cantidad_elementos = 0;
 
@@ -409,15 +389,62 @@ void dadaUnaLista_alObtenerUnElemento_seObtieneCorrectamente() {
 
 	pa2m_afirmar(casilla_obtener(lista, "no_existe") == false, "Al obtener un elemento con clave NULL se retorna NULL");
 
-	// hash_t* hash = hash_crear(destruir_estudiante, 3);
+	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
+	lista = casilla_insertar(lista, "primero", est0, destruir_estudiante, &cantidad_elementos);
 
-	// estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
-	// hash_insertar(hash, "primero", est0);
+	pa2m_afirmar(casilla_obtener(lista, "primero") == est0, "Al obtener un elemento por su clave se retorna el elemento correcto");
+	pa2m_afirmar(casilla_obtener(lista, "no_existe") == NULL, "Al obtener un elemento que no existe se retorna NULL");
 
-	// pa2m_afirmar(hash_obtener(hash, "primero") == est0, "Al obtener un elemento por su clave se retorna el elemento correcto");
-	// pa2m_afirmar(hash_obtener(hash, "no_existe") == NULL, "Al obtener un elemento que no existe se retorna NULL");
+	casilla_destruir(lista, destruir_estudiante);
+}
 
-	casilla_destruir(lista, NULL);
+				   /* Pruebas Auxiliares Lista: Recorrido */
+
+void dadaUnaLista_alRecorrerLosElementos_seRecorrenCorrectamente() {
+	hash_t* hash = hash_crear(NULL, 3);
+	casilla_t* lista = casilla_crear();
+
+	size_t cantidad_elementos = 0;
+	size_t cantidad_recorridos = 0;
+
+	casilla_con_cada_clave(NULL, hash, NULL, NULL, &cantidad_recorridos);
+	pa2m_afirmar(cantidad_recorridos == 0, "Al recorrer una lista NULL se retorna 0");
+
+	estudiante_t* est0 = crear_estudiante(25, "Alejandro Schamun");
+	estudiante_t* est1 = crear_estudiante(20, "Cami Fiorotto");
+	estudiante_t* est2 = crear_estudiante(36, "Carolina Aramay");
+	estudiante_t* est3 = crear_estudiante(10, "Facundo Sanso");
+	estudiante_t* est4 = crear_estudiante(22, "Joaquin Dopazo");
+	estudiante_t* est5 = crear_estudiante(30, "Julian Calderon");
+	estudiante_t* est6 = crear_estudiante(40, "Julian Stiefkens");
+	estudiante_t* est7 = crear_estudiante(5,  "Manuel Sanchez");
+	estudiante_t* est8 = crear_estudiante(12, "Nicolas Celano");
+	estudiante_t* est9 = crear_estudiante(28, "Nicolas Tonizzo");
+
+	lista = casilla_insertar(lista, "primero", est0, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "segundo", est1, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "tercero", est2, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "cuarto",  est3, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "quinto",  est4, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "sexto",   est5, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "septimo", est6, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "octavo",  est7, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "noveno",  est8, NULL, &cantidad_elementos);
+	lista = casilla_insertar(lista, "decimo",  est9, NULL, &cantidad_elementos);
+
+	casilla_con_cada_clave(lista, hash, NULL, NULL, &cantidad_recorridos);
+	pa2m_afirmar(cantidad_recorridos == 10, "Al recorrer una lista ininterrumpidamente se recorren todos los elementos");
+
+	cantidad_recorridos = 0;
+	casilla_con_cada_clave(lista, hash, reprobar_hasta_septimo_estudiante, NULL, &cantidad_recorridos);
+	pa2m_afirmar(cantidad_recorridos == 7, "Al recorrer una lista hasta llegar a cierta clave e interrumpir el recorrido, se recorren la cantidad de elementos correctos");
+
+	cantidad_recorridos = 0;
+	casilla_con_cada_clave(lista, hash, NULL, NULL, &cantidad_recorridos);
+	pa2m_afirmar(cantidad_recorridos == 10, "Al recorrer una lista con una funcion NULL se recorren todos los elementos");
+
+	hash_destruir(hash);
+	casilla_destruir(lista, destruir_estudiante);
 }
 
 int main() {
@@ -450,7 +477,6 @@ int main() {
 	pa2m_nuevo_grupo("Pruebas Hash: Recorrido");
 	dadoUnHashNULL_alRecorrerLosElementos_seRetorna0();
 	dadoUnHash_alRecorrerLosElementos_seRetornaLaCantidadEsperada();
-	dadoUnHash_alRecorrerLosElementosConUnaFuncionNULL_seRecorrenTodosLosElementos();
 
 	pa2m_nuevo_grupo("Pruebas Auxiliares Lista: Insertar");
 	dadaUnaLista_alInsertarVariosElementos_seInsertanCorrectamente();
@@ -459,6 +485,10 @@ int main() {
 	dadaUnaLista_alQuitarVariosElementos_seQuitanCorrectamente();
 
 	pa2m_nuevo_grupo("Pruebas Auxiliares Lista: Obtener");
+	dadaUnaLista_alObtenerUnElemento_seObtieneCorrectamente();
+
+	pa2m_nuevo_grupo("Pruebas Auxiliares Lista: Recorrido");
+	dadaUnaLista_alRecorrerLosElementos_seRecorrenCorrectamente();
 
     return pa2m_mostrar_reporte();
 }

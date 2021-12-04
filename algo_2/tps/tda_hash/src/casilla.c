@@ -24,7 +24,7 @@ casilla_t* casilla_insertar(casilla_t* casilla, const char* clave, void* element
 		if (!copia_clave)
 			return NULL;
 
-        nueva_casilla->clave = copia_clave;
+		nueva_casilla->clave = copia_clave;
 		strcpy(nueva_casilla->clave, clave);
 
         nueva_casilla->elemento = elemento;
