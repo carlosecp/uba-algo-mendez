@@ -5,6 +5,23 @@
 #include "parser.h"
 #include "split.h"
 
+typedef struct entrenador {
+	int   id;
+	char* nombre;
+} entrenador_t;
+
+struct _hospital_pkm_t {
+	size_t        cantidad_pokemon;
+	size_t        cantidad_entrenador;
+	pokemon_t*    vector_pokemones;
+	entrenador_t* vector_entrenadores;
+};
+
+struct _pkm_t {
+	char*  nombre;
+	size_t nivel;
+};
+
 hospital_t*
 hospital_crear()
 {
