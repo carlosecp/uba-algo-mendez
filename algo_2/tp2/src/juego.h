@@ -13,6 +13,8 @@ typedef struct {
 
 void inicializar_juego(Juego* juego, hospital_t* hospital);
 
+void terminar_juego(Juego* juego);
+
 void destruir_juego(Juego juego);
 
 #endif

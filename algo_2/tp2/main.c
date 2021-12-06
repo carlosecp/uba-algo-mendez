@@ -5,7 +5,7 @@
 
 #include "src/hospital.h"
 #include "src/simulador.h"
-#include "src/juego.c"
+#include "src/juego.h"
 
 char leer_comando() {
     char linea[100];
@@ -28,6 +28,7 @@ void mostrar_estadisticas(Juego* juego) {
 void ejecutar_comando(Juego* juego, char comando) {
     switch (comando) {
         case 'q':  // Salir del juego
+			terminar_juego(juego);
             break;
         case 'e':
             mostrar_estadisticas(juego);
