@@ -25,7 +25,7 @@ typedef enum {
     ExitoSimulacion
 } ResultadoSimulacion;
 
-typedef struct{
+typedef struct {
     unsigned entrenadores_atendidos;
     unsigned entrenadores_totales;
     unsigned pokemon_atendidos;
@@ -33,31 +33,31 @@ typedef struct{
     unsigned pokemon_totales;
     unsigned puntos;
     unsigned cantidad_eventos_simulados;
-}EstadisticasSimulacion;
+} EstadisticasSimulacion;
 
-typedef struct{
+typedef struct {
     const char* nombre_pokemon;
     const char* nombre_entrenador;
-}InformacionPokemon;
+} InformacionPokemon;
 
-typedef struct{
+typedef struct {
     unsigned nivel_adivinado;
     bool es_correcto;
     const char* resultado_string;
-}Intento;
+} Intento;
 
-typedef struct{
+typedef struct {
     const char* nombre;
     unsigned (*calcular_puntaje)(unsigned cantidad_intentos);
     int (*verificar_nivel)(unsigned nivel_adivinado, unsigned nivel_pokemon);
     const char* (*verificacion_a_string)(int resultado_verificacion);
-}DatosDificultad;
+} DatosDificultad;
 
-typedef struct{
+typedef struct {
     const char* nombre_dificultad;
     bool en_uso;
     int id;
-}InformacionDificultad;
+} InformacionDificultad;
 
 /**
  * Crea un simulador para un hospital. El simulador toma control del hospital y
@@ -86,4 +86,4 @@ ResultadoSimulacion simulador_simular_evento(simulador_t* simulador, EventoSimul
  */
 void simulador_destruir(simulador_t* simulador);
 
-#endif // SIMULADOR_H_
+#endif  // SIMULADOR_H_

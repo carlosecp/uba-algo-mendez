@@ -3,6 +3,7 @@
 #include "pa2mm.h"
 #include "src/hospital.h"
 #include "src/juego.h"
+#include "src/simulador.h"
 #include "string.h"
 
 bool ignorar_pokemon(pokemon_t* p) {
@@ -131,10 +132,32 @@ void dadosVariosArchivos_puedoAgregarlosTodosAlMismoHospital() {
     hospital_destruir(h);
 }
 
-/* Pruebas: Juego */
-void dadoUnJuegoYHospitalNULL_alCrearUnJuego_noSeInicializaElJuego() {
-    Juego juego;
-	inicializar_juego(&juego, NULL);
+/* Pruebas simulador */
+
+void dadoUnHospital_alCrearUnSimulador_seRetornaElSimulador() {
+    simulador_t* simulador = simulador_crear(NULL);
+
+    pa2m_afirmar(simulador == NULL, "Al crear un simulador con un hospital NULL, el simulador es igual a NULL");
+
+    hospital_t* hospital = hospital_crear();
+    simulador = simulador_crear(hospital);
+
+    pa2m_afirmar(simulador != NULL, "Al crear un simulador con un hospital valido, se retorna un simulador valido");
+
+    simulador_destruir(simulador);
+}
+
+void dadoUnSimuladorYUnEvento_alSimuladorElEvento_seRetornaElResultadoDeLaSimulacion() {
+    hospital_t* hospital = hospital_crear();
+    simulador_t* simulador = simulador_crear(hospital);
+
+    ResultadoSimulacion resultado = simulador_simular_evento(simulador, ObtenerEstadisticas, NULL);
+    pa2m_afirmar(resultado == ExitoSimulacion, "Al simular un evento disponible, el resultado de la simulacion es exitoso");
+
+    resultado = simulador_simular_evento(NULL, ObtenerEstadisticas, NULL);
+    pa2m_afirmar(resultado == ErrorSimulacion, "Al simular un evento con un simulador NULL, la simulacion resulta en error");
+
+    simulador_destruir(simulador);
 }
 
 int main() {
@@ -156,8 +179,9 @@ int main() {
     pa2m_nuevo_grupo("Pruebas con mas de un archivo");
     dadosVariosArchivos_puedoAgregarlosTodosAlMismoHospital();
 
-    pa2m_nuevo_grupo("Pruebas de inicializacion de juego");
-	dadoUnJuegoYHospitalNULL_alCrearUnJuego_noSeInicializaElJuego();
+    pa2m_nuevo_grupo("Pruebas simulador");
+    dadoUnHospital_alCrearUnSimulador_seRetornaElSimulador();
+    dadoUnSimuladorYUnEvento_alSimuladorElEvento_seRetornaElResultadoDeLaSimulacion();
 
     return pa2m_mostrar_reporte();
 }

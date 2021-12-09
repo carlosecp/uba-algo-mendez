@@ -21,17 +21,23 @@ char leer_comando() {
 void mostrar_estadisticas(Juego* juego) {
     EstadisticasSimulacion e;
     simulador_simular_evento(juego->simulador, ObtenerEstadisticas, &e);
+}
 
-    // Mostrar estadísticas
+void atender_entrenador(Juego* juego) {
+    EstadisticasSimulacion e;
+	simulador_simular_evento(juego->simulador, AtenderProximoEntrenador, &e);
 }
 
 void ejecutar_comando(Juego* juego, char comando) {
     switch (comando) {
-        case 'q':  // Salir del juego
-			terminar_juego(juego);
-            break;
         case 'e':
             mostrar_estadisticas(juego);
+            break;
+		case 'a':
+			atender_entrenador(juego);
+			break;
+        case 'q':  // Salir del juego
+			terminar_juego(juego);
             break;
         default:  // el resto de las cosas
             break;
