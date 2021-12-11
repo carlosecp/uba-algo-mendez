@@ -1,3 +1,4 @@
+/* TODO: Agregar validaciones para las operaciones de guardado. */
 #include "hospital.h"
 
 #include <stdio.h>
@@ -6,26 +7,31 @@
 
 #include "parser.h"
 #include "split.h"
+#include "lista.h"
 
 struct _pkm_t {
-    char* nombre;
-    size_t nivel;
+	char* nombre;
+	size_t nivel;
 };
 
 struct _entrenador_t {
-    int id;
-    char* nombre;
+	int id;
+	char* nombre;
+	lista_t* pokemones;
 };
 
 struct _hospital_pkm_t {
-    size_t cantidad_pokemon;
-    size_t cantidad_entrenador;
-    pokemon_t* vector_pokemones;
-    entrenador_t* vector_entrenadores;
+	lista_t* entrenadores;
 };
 
 hospital_t* hospital_crear() {
-    return calloc(1, sizeof(hospital_t));
+	hospital_t* hospital = calloc(1, sizeof(hospital_t));
+	if (!hospital)
+		return NULL;
+
+	hospital->entrenadores = lista_crear();
+
+	return hospital;
 }
 
 /**
@@ -33,41 +39,23 @@ hospital_t* hospital_crear() {
  * En caso de error devuelve NULL. Caso contrario, un puntero al nuevo pokemon creado.
  */
 pokemon_t* crear_pokemon(char* nivel, char* nombre) {
-    if (!nombre)
-        return NULL;
+	if (!nombre)
+		return NULL;
 
-    pokemon_t* nuevo_pokemon = malloc(sizeof(pokemon_t));
-    if (!nuevo_pokemon)
-        return NULL;
+	pokemon_t* nuevo_pokemon = malloc(sizeof(pokemon_t));
+	if (!nuevo_pokemon)
+		return NULL;
 
-    nuevo_pokemon->nivel = (size_t)atoi(nivel);
-    nuevo_pokemon->nombre = malloc((strlen(nombre) + 1) * sizeof(char));
-    if (!nuevo_pokemon->nombre) {
-        free(nuevo_pokemon);
-        return NULL;
-    }
+	nuevo_pokemon->nivel = (size_t)atoi(nivel);
+	nuevo_pokemon->nombre = malloc((strlen(nombre) + 1) * sizeof(char));
+	if (!nuevo_pokemon->nombre) {
+		free(nuevo_pokemon);
+		return NULL;
+	}
 
-    strcpy(nuevo_pokemon->nombre, nombre);
-    return nuevo_pokemon;
-    return NULL;
-}
-
-/**
- * Agrega un pokemon dado al vector de pokemones de un hospital (en la ultima posicion).
- * En caso de error no agrega el pokemon dado al hospital.
- */
-void hospital_guardar_pokemon(hospital_t* hospital, pokemon_t* nuevo_pokemon) {
-    if (!hospital || !nuevo_pokemon)
-        return;
-
-    size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
-    pokemon_t* vector_pokemones_aux = realloc(hospital->vector_pokemones, (cantidad_pokemon + 1) * sizeof(pokemon_t));
-    if (!vector_pokemones_aux)
-        return;
-
-    hospital->vector_pokemones = vector_pokemones_aux;
-    hospital->vector_pokemones[hospital->cantidad_pokemon++] = *nuevo_pokemon;
-    return;
+	strcpy(nuevo_pokemon->nombre, nombre);
+	return nuevo_pokemon;
+	return NULL;
 }
 
 /**
@@ -75,23 +63,30 @@ void hospital_guardar_pokemon(hospital_t* hospital, pokemon_t* nuevo_pokemon) {
  * En caso de error devuelve NULL. Caso contrario, un puntero al nuevo entrenador creado.
  */
 entrenador_t* crear_entrenador(char* id, char* nombre) {
-    if (!nombre)
-        return NULL;
+	if (!nombre)
+		return NULL;
 
-    entrenador_t* nuevo_entrenador = malloc(sizeof(entrenador_t));
-    if (!nuevo_entrenador)
-        return NULL;
+	entrenador_t* nuevo_entrenador = malloc(sizeof(entrenador_t));
+	if (!nuevo_entrenador)
+		return NULL;
 
-    nuevo_entrenador->id = atoi(id);
-    nuevo_entrenador->nombre = malloc((strlen(nombre) + 1) * sizeof(char));
-    if (!nuevo_entrenador->nombre) {
-        free(nuevo_entrenador);
-        return NULL;
-    }
+	nuevo_entrenador->id = atoi(id);
+	nuevo_entrenador->nombre = malloc((strlen(nombre) + 1) * sizeof(char));
+	if (!nuevo_entrenador->nombre) {
+		free(nuevo_entrenador);
+		return NULL;
+	}
 
-    strcpy(nuevo_entrenador->nombre, nombre);
-    return nuevo_entrenador;
-    return NULL;
+	strcpy(nuevo_entrenador->nombre, nombre);
+
+	nuevo_entrenador->pokemones = lista_crear();
+	if (!nuevo_entrenador->pokemones) {
+		free(nuevo_entrenador);
+		free(nuevo_entrenador->nombre);
+		return NULL;
+	}
+
+	return nuevo_entrenador;
 }
 
 /**
@@ -99,17 +94,15 @@ entrenador_t* crear_entrenador(char* id, char* nombre) {
  * En caso de error no agrega el pokemon dado al hospital.
  */
 void hospital_guardar_entrenador(hospital_t* hospital, entrenador_t* nuevo_entrenador) {
-    if (!hospital || !nuevo_entrenador)
-        return;
+	if (!hospital || !nuevo_entrenador)
+		return;
 
-    size_t cantidad_entrenador = hospital_cantidad_entrenadores(hospital);
-    entrenador_t* vector_entrenadores_aux = realloc(hospital->vector_entrenadores, (cantidad_entrenador + 1) * sizeof(entrenador_t));
-    if (!vector_entrenadores_aux)
-        return;
+	lista_t* entrenadores = lista_insertar(hospital->entrenadores, nuevo_entrenador);
+	if (!entrenadores)
+		return;
 
-    hospital->vector_entrenadores = vector_entrenadores_aux;
-    hospital->vector_entrenadores[hospital->cantidad_entrenador++] = *nuevo_entrenador;
-    return;
+	hospital->entrenadores = entrenadores;
+	return;
 }
 
 /**
@@ -119,153 +112,130 @@ void hospital_guardar_entrenador(hospital_t* hospital, entrenador_t* nuevo_entre
  * Devuelve true si pudo guardarlo o false en caso de error.
  */
 bool hospital_guardar_informacion(hospital_t* hospital, char* linea_archivo) {
-    if (!hospital || !linea_archivo)
-        return false;
+	if (!hospital || !linea_archivo)
+		return false;
 
-    char** informacion_linea = obtener_informacion_linea(linea_archivo);
-    if (!informacion_linea)
-        return false;
+	char** informacion_linea = obtener_informacion_linea(linea_archivo);
+	if (!informacion_linea)
+		return false;
 
-    entrenador_t* nuevo_entrenador = crear_entrenador(informacion_linea[0], informacion_linea[1]);
-    if (!nuevo_entrenador) {
-        free(informacion_linea);
-        return false;
-    }
+	entrenador_t* nuevo_entrenador = crear_entrenador(informacion_linea[0], informacion_linea[1]);
+	if (!nuevo_entrenador) {
+		free(informacion_linea);
+		return false;
+	}
 
-    hospital_guardar_entrenador(hospital, nuevo_entrenador);
-    free(nuevo_entrenador);
+	for (size_t i = 2; informacion_linea[i]; i += 2) {
+		pokemon_t* nuevo_pokemon = crear_pokemon(informacion_linea[i + 1], informacion_linea[i]);
+		if (!nuevo_pokemon) {
+			free_vector_strings(informacion_linea);
+			free(informacion_linea);
+			return false;
+		}
 
-    for (size_t i = 2; informacion_linea[i]; i += 2) {
-        pokemon_t* nuevo_pokemon = crear_pokemon(informacion_linea[i + 1], informacion_linea[i]);
-        if (!nuevo_pokemon) {
-            free_vector_strings(informacion_linea);
-            free(informacion_linea);
-            return false;
-        }
+		nuevo_entrenador->pokemones = lista_insertar(nuevo_entrenador->pokemones, nuevo_pokemon);
+	}
 
-        hospital_guardar_pokemon(hospital, nuevo_pokemon);
-        free(nuevo_pokemon);
-    }
+	hospital_guardar_entrenador(hospital, nuevo_entrenador);
 
-    free_vector_strings(informacion_linea);
-    free(informacion_linea);
+	free_vector_strings(informacion_linea);
+	free(informacion_linea);
 
-    return true;
+	return true;
 }
 
 bool hospital_leer_archivo(hospital_t* hospital, const char* nombre_archivo) {
-    if (!hospital)
-        return false;
+	if (!hospital)
+		return false;
 
-    FILE* archivo = fopen(nombre_archivo, "r");
-    if (!archivo)
-        return false;
+	FILE* archivo = fopen(nombre_archivo, "r");
+	if (!archivo)
+		return false;
 
-    char* linea = leer_linea(archivo);
-    bool continuar_guardando_informacion = true;
+	char* linea = leer_linea(archivo);
+	bool continuar_guardando_informacion = true;
 
-    while (linea && continuar_guardando_informacion) {
-        continuar_guardando_informacion = hospital_guardar_informacion(hospital, linea);
-        free(linea);
-        linea = leer_linea(archivo);
-    }
+	while (linea && continuar_guardando_informacion) {
+		continuar_guardando_informacion = hospital_guardar_informacion(hospital, linea);
+		free(linea);
+		linea = leer_linea(archivo);
+	}
 
-    fclose(archivo);
-    return true;
+	fclose(archivo);
+	return true;
+}
+
+bool sumar_pokemones_por_entrenador(void* _entrenador, void* aux) {
+	entrenador_t* entrenador = _entrenador;
+	size_t* cantidad_pokemon = aux;
+
+	*cantidad_pokemon += lista_tamanio(entrenador->pokemones);
+
+	return true;
 }
 
 size_t hospital_cantidad_pokemon(hospital_t* hospital) {
-    if (!hospital)
-        return 0;
-    return hospital->cantidad_pokemon;
+	if (!hospital)
+		return 0;
+
+	size_t cantidad_pokemon = 0;
+	lista_con_cada_elemento(hospital->entrenadores, sumar_pokemones_por_entrenador, &cantidad_pokemon);
+
+	return cantidad_pokemon;
 }
 
 size_t hospital_cantidad_entrenadores(hospital_t* hospital) {
-    if (!hospital)
-        return 0;
-    return hospital->cantidad_entrenador;
-}
+	if (!hospital)
+		return 0;
 
-/**
- * Ordena las referencias a los pokemones para que se les pueda aplicar una funcion
- * en orden alfabético tener que sin modificar el orden original del vector de
- * pokemones almacenados en el hospital.
- *
- * Recibe un vector de referencias a pokemones, que inicialmente comparte el mismo orden
- * que el vector original de pokemones almacenados en el hospital. Además recibe la cantidad
- * de pokemones actual.
- */
-void ordenar_referencia_a_pokemones(pokemon_t** referencias_pokemones, size_t cantidad_pokemon) {
-    if (!referencias_pokemones || !cantidad_pokemon)
-        return;
-
-    for (size_t i = 0; i < (cantidad_pokemon - 1); i++) {
-        size_t indice_min = i;
-        for (size_t j = i + 1; j < cantidad_pokemon; j++) {
-            if (strcmp((*referencias_pokemones[j]).nombre, (*referencias_pokemones[indice_min]).nombre) < 0)
-                indice_min = j;
-        }
-
-        pokemon_t* temp = referencias_pokemones[indice_min];
-        referencias_pokemones[indice_min] = referencias_pokemones[i];
-        referencias_pokemones[i] = temp;
-    }
-    return;
+	return lista_tamanio(hospital->entrenadores);
 }
 
 size_t hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* p)) {
-    if (!hospital || !funcion)
-        return 0;
+	return 0;
+}
 
-    size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
-    pokemon_t** referencias_pokemones = malloc(cantidad_pokemon * sizeof(pokemon_t));
-    for (size_t i = 0; i < cantidad_pokemon; i++)
-        referencias_pokemones[i] = &(hospital->vector_pokemones[i]);
+bool destruir_pokemon(void* pokemon, void* aux) {
+	pokemon_t* tmp = pokemon;
+	free(tmp->nombre);
+	free(tmp);
+	return true;
+}
 
-    ordenar_referencia_a_pokemones(referencias_pokemones, cantidad_pokemon);
+bool destruir_entrenador(void* entrenador, void* aux) {
+	entrenador_t* tmp = entrenador;
 
-    size_t recorridos = 0;
-    while ((recorridos < cantidad_pokemon) && funcion(referencias_pokemones[recorridos++]))
-        ;
+	lista_con_cada_elemento(tmp->pokemones, destruir_pokemon, NULL);
+	lista_destruir(tmp->pokemones);
 
-    free(referencias_pokemones);
-    return recorridos;
+	free(tmp->nombre);
+	free(tmp);
+
+	return true;
 }
 
 void hospital_destruir(hospital_t* hospital) {
-    if (!hospital)
-        return;
+	if (!hospital)
+		return;
 
-    if (hospital->vector_pokemones) {
-        size_t cantidad_pokemon = hospital_cantidad_pokemon(hospital);
-        for (size_t i = 0; i < cantidad_pokemon; i++)
-            free(hospital->vector_pokemones[i].nombre);
+	lista_con_cada_elemento(hospital->entrenadores, destruir_entrenador, NULL);
+	lista_destruir(hospital->entrenadores);
 
-        free(hospital->vector_pokemones);
-    }
+	free(hospital);
 
-    if (hospital->vector_entrenadores) {
-        size_t cantidad_entrenador = hospital_cantidad_entrenadores(hospital);
-        for (size_t i = 0; i < cantidad_entrenador; i++)
-            free(hospital->vector_entrenadores[i].nombre);
-
-        free(hospital->vector_entrenadores);
-    }
-
-    if (hospital)
-        free(hospital);
-
-    return;
+	return;
 }
 
 size_t pokemon_nivel(pokemon_t* pokemon) {
-    if (!pokemon)
-        return 0;
-    return pokemon->nivel;
+	if (!pokemon)
+		return 0;
+
+	return pokemon->nivel;
 }
 
 const char* pokemon_nombre(pokemon_t* pokemon) {
-    if (!pokemon)
-        return NULL;
-    return pokemon->nombre;
+	if (!pokemon)
+		return NULL;
+
+	return pokemon->nombre;
 }

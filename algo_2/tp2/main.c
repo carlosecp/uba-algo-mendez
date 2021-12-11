@@ -46,7 +46,7 @@ void ejecutar_comando(Juego* juego, char comando) {
 
 int main(int argc, char* argv[]) {
     hospital_t* hospital = hospital_crear();
-    hospital_leer_archivo(hospital, "ejemplos/varios_entrenadores.hospital");
+    hospital_leer_archivo(hospital, "ejemplos/archivo_vacio.hospital");
 
     Juego juego;
     inicializar_juego(&juego, hospital);
