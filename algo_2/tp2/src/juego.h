@@ -13,6 +13,10 @@ typedef struct {
 
 void inicializar_juego(Juego* juego, hospital_t* hospital);
 
+void mostrar_estadisticas(Juego* juego);
+
+void atender_entrenador(Juego* juego);
+
 void terminar_juego(Juego* juego);
 
 void destruir_juego(Juego juego);
