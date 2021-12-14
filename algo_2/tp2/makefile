@@ -14,5 +14,9 @@ valgrind-pruebas: pruebas
 pruebas: pruebas.c src/*.c src/*.h
 	gcc $(CFLAGS) -o pruebas pruebas.c src/*.c 2>&1
 
+zip:
+	zip tp2.zip ./**/*
+	zip tp2.zip *
+
 clean:
 	rm pruebas 2>&1

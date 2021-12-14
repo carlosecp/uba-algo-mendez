@@ -44,7 +44,10 @@ ResultadoSimulacion obtener_estadisticas(simulador_t simulador) {
 	return ExitoSimulacion;
 }
 
-ResultadoSimulacion atender_proximo_entrenador() {
+ResultadoSimulacion atender_proximo_entrenador(hospital_t* hospital) {
+	if (hospital)
+		printf("HELLO WORLD\n");
+
 	return ExitoSimulacion;
 }
 
@@ -56,7 +59,7 @@ ResultadoSimulacion simulador_simular_evento(simulador_t* simulador, EventoSimul
 		case ObtenerEstadisticas:
 			return obtener_estadisticas(*simulador);
 		case AtenderProximoEntrenador:
-			return atender_proximo_entrenador();
+			return atender_proximo_entrenador(simulador->hospital);
 		case ObtenerInformacionPokemonEnTratamiento:
 			break;
 		case AdivinarNivelPokemon:
