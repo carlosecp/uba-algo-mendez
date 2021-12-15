@@ -25,7 +25,7 @@ struct _pkm_t {
     size_t nivel;
 };
 
-int comparador_pokemones_por_nivel(void* _p1, void* _p2) {
+int abb_comparador_pokemones_por_nombre(void* _p1, void* _p2) {
     pokemon_t* p1 = _p1;
     pokemon_t* p2 = _p2;
     return strcmp(p1->nombre, p2->nombre);
@@ -58,7 +58,7 @@ hospital_t* hospital_crear() {
         return NULL;
     }
 
-    hospital->pokemones = abb_crear(comparador_pokemones_por_nivel);
+    hospital->pokemones = abb_crear(abb_comparador_pokemones_por_nombre);
     if (!hospital->pokemones) {
         lista_destruir(hospital->entrenadores);
         free(hospital);
