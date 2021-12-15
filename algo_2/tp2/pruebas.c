@@ -147,15 +147,22 @@ void dadoUnHospital_alCrearUnSimulador_seRetornaElSimulador() {
     simulador_destruir(simulador);
 }
 
-void dadoUnSimuladorYUnEvento_alSimuladorElEvento_seRetornaElResultadoDeLaSimulacion() {
+void dadosLosDatosDelSimulador_alObtenerLasEstadisticas_seRetornaElResultadoEsperado() {
     hospital_t* hospital = hospital_crear();
+	hospital_leer_archivo(hospital, "ejemplos/varios_entrenadores.hospital");
+
     simulador_t* simulador = simulador_crear(hospital);
 
-    ResultadoSimulacion resultado = simulador_simular_evento(simulador, ObtenerEstadisticas, NULL);
-    pa2m_afirmar(resultado == ExitoSimulacion, "Al simular un evento disponible, el resultado de la simulacion es exitoso");
+    ResultadoSimulacion res;
+    EstadisticasSimulacion e = {0};
 
-    resultado = simulador_simular_evento(NULL, ObtenerEstadisticas, NULL);
-    pa2m_afirmar(resultado == ErrorSimulacion, "Al simular un evento con un simulador NULL, la simulacion resulta en error");
+    res = simulador_simular_evento(simulador, ObtenerEstadisticas, NULL);
+    pa2m_afirmar(res == ErrorSimulacion, "Al obtener las estadisticas del simulador pasando un dato NULL, se retorna ErrorSimulacion");
+
+    res = simulador_simular_evento(simulador, ObtenerEstadisticas, &e);
+    pa2m_afirmar((e.entrenadores_totales == hospital_cantidad_entrenadores(hospital)) &&
+                     (e.pokemon_totales == hospital_cantidad_pokemon(hospital)),
+                 "Las cantidades de entrenadores y pokemones de las estadisticas coinciden con las cantidades del hospital");
 
     simulador_destruir(simulador);
 }
@@ -181,7 +188,7 @@ int main() {
 
     pa2m_nuevo_grupo("Pruebas simulador");
     dadoUnHospital_alCrearUnSimulador_seRetornaElSimulador();
-    dadoUnSimuladorYUnEvento_alSimuladorElEvento_seRetornaElResultadoDeLaSimulacion();
+    dadosLosDatosDelSimulador_alObtenerLasEstadisticas_seRetornaElResultadoEsperado();
 
     return pa2m_mostrar_reporte();
 }
