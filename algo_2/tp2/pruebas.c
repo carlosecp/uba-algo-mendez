@@ -5,6 +5,7 @@
 #include "src/juego.h"
 #include "src/simulador.h"
 #include "string.h"
+#include "src/heap.h"
 
 bool ignorar_pokemon(pokemon_t* p) {
     p = p;
@@ -167,6 +168,112 @@ void dadosLosDatosDelSimulador_alObtenerLasEstadisticas_seRetornaElResultadoEspe
     simulador_destruir(simulador);
 }
 
+/* Pruebas heap */
+
+int comparador(void* _a, void* _b) {
+	int* a = _a;
+	int* b = _b;
+
+	if (*a > *b)
+		return 1;
+	else if (*a < *b)
+		return -1;
+
+	return 0;
+}
+
+void dadoUnComparador_alCrearUnHeap_seCreaCorrectamente() {
+	heap_t* heap = heap_crear(NULL);
+	
+	pa2m_afirmar(heap == NULL, "Al crear un heap con un comparador NULL, el comparador es igual a NULL");
+
+	heap = heap_crear(comparador);
+	pa2m_afirmar(heap != NULL, "Al crear un heap con un comparador valido, se retorna un heap");
+	pa2m_afirmar(heap_tamanio(heap) == 0, "Al crear un heap el tamanio inicial es igual a 0");
+
+	heap_destruir(heap);
+}
+
+void dadoUnHeap_alInsertarElementos_seInsertanCorrectamente() {
+	heap_t* heap = NULL;
+
+	int e0 = 3019, e1 = 5828, e2 = 1257;
+
+	size_t res;
+	res = heap_insertar(heap, &e0);
+
+	pa2m_afirmar(res == 0, "Al insertar en un heap NULL, se retorna la cantidad de elementos que es igual a 0");
+
+	heap = heap_crear(comparador);
+
+	res = heap_insertar(heap, &e0);
+	res = heap_insertar(heap, &e1);
+	res = heap_insertar(heap, &e2);
+
+	pa2m_afirmar(res == heap_tamanio(heap), "Al insertar elementos en un heap se retorna el tamanio correcto del heap");
+	pa2m_afirmar(res == 3, "Al insertar 3 elementos en un heap, se retorna la cantidad de elementos que es igual a 3");
+
+	heap_destruir(heap);
+}
+
+void imprimir_heap(heap_t* heap) {
+	for (int i = 0; i < heap->tamanio; i++)
+		printf("%i ", *(int*)heap->elementos[i]);
+
+	printf("\n");
+}
+
+void dadoUnHeapMinimal_alQuitarElementos_seRetornaElMenorElementoDelHeap() {
+	heap_t* heap = NULL;
+
+	pa2m_afirmar(heap_extraer_raiz(heap) == NULL, "Al extraer la raiz de un heap NULL, se retorna NULL");
+
+	heap = heap_crear(comparador);
+	pa2m_afirmar(heap_extraer_raiz(heap) == NULL, "Al extraer la raiz de un heap vacio, se retorna NULL");
+
+	int e0 = 3019, e1 = 5828, e2 = 1257, e3 = 4761, e4 = 2779, e5 = 629,
+		e6 = 9689, e7 = 2728, e8 = 2783, e9 = 2774;
+
+	heap_insertar(heap, &e0);
+	heap_insertar(heap, &e1);
+	heap_insertar(heap, &e2);
+	heap_insertar(heap, &e3);
+	heap_insertar(heap, &e4);
+	heap_insertar(heap, &e5);
+	heap_insertar(heap, &e6);
+	heap_insertar(heap, &e7);
+	heap_insertar(heap, &e8);
+	heap_insertar(heap, &e9);
+
+	imprimir_heap(heap);
+
+	int extraido = *(int*)heap_extraer_raiz(heap);
+
+	imprimir_heap(heap);
+
+	pa2m_afirmar(extraido == e5, "Al extraer la raiz de un heap minimal, se obtiene el elemento de menor valor entre todos los insertados");
+	pa2m_afirmar(heap_tamanio(heap) == 9, "Al extraer la raiz de un heap su tamanio se reduce");
+
+	imprimir_heap(heap);
+
+	extraido = *(int*)heap_extraer_raiz(heap);
+	printf("EXTRAIDO: %i\n", extraido);
+	pa2m_afirmar(extraido == e2, "Al extraer la raiz de un heap minimal por segunda vez, se obtiene el segundo elemento de menor valor entre todos los insertados");
+
+	imprimir_heap(heap);
+
+	heap_extraer_raiz(heap);
+	heap_extraer_raiz(heap);
+	heap_extraer_raiz(heap);
+	heap_extraer_raiz(heap);
+	heap_extraer_raiz(heap);
+	heap_extraer_raiz(heap);
+
+	printf("TAMANIO: %li\n", heap_tamanio(heap));
+
+	heap_destruir(heap);
+}
+
 int main() {
     pa2m_nuevo_grupo("Pruebas de creación y destrucción");
     puedoCrearYDestruirUnHospital();
@@ -189,6 +296,11 @@ int main() {
     pa2m_nuevo_grupo("Pruebas simulador");
     dadoUnHospital_alCrearUnSimulador_seRetornaElSimulador();
     dadosLosDatosDelSimulador_alObtenerLasEstadisticas_seRetornaElResultadoEsperado();
+
+    pa2m_nuevo_grupo("Pruebas heap");
+	dadoUnComparador_alCrearUnHeap_seCreaCorrectamente();
+	dadoUnHeap_alInsertarElementos_seInsertanCorrectamente();
+	dadoUnHeapMinimal_alQuitarElementos_seRetornaElMenorElementoDelHeap();
 
     return pa2m_mostrar_reporte();
 }

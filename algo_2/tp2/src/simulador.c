@@ -65,13 +65,23 @@ ResultadoSimulacion obtener_estadisticas(simulador_t simulador, EstadisticasSimu
     return ExitoSimulacion;
 }
 
+bool imprimir_pokemon(void* _pokemon, void* aux) {
+	pokemon_t* pokemon = _pokemon;
+	printf("{%s} ", pokemon->nombre);
+	return true;
+}
+
 ResultadoSimulacion atender_proximo_entrenador(simulador_t* simulador) {
 	if (!simulador)
 		return ErrorSimulacion;
 
 	entrenador_t* entrenador_atendido = lista_iterador_elemento_actual(simulador->sala_de_espera);
 	if (entrenador_atendido) {
-		printf("Entrenador: {%s}\n", entrenador_atendido->nombre);
+		printf("\x1b[32;1mEntrenador Agregado:\x1b[0m %s\n", entrenador_atendido->nombre);
+		printf("\x1b[32;1mPokemones Agregados:\x1b[0m ");
+		lista_con_cada_elemento(entrenador_atendido->pokemones, imprimir_pokemon, NULL);
+		printf("\n");
+
 		lista_iterador_avanzar(simulador->sala_de_espera);
 		simulador->estadisticas.entrenadores_atendidos++;
 	}
