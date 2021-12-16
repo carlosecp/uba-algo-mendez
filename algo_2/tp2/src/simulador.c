@@ -29,13 +29,6 @@ typedef struct {
 	char* nombre_entrenador;
 } pokemon_en_recepcion_t;
 
-void destructor_pokemon_en_recepcion(void* _pokemon) {
-	pokemon_en_recepcion_t* pokemon = _pokemon;
-	free(pokemon->nombre);
-	free(pokemon->nombre_entrenador);
-	free(pokemon);
-}
-
 // TODO: Documentacion de esta funcion
 int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b) {
 	pokemon_en_recepcion_t* pokemon_a = _pokemon_a;
@@ -47,6 +40,13 @@ int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b) {
 		return -1;
 
 	return 0;
+}
+
+void destructor_pokemon_en_recepcion(void* _pokemon) {
+	pokemon_en_recepcion_t* pokemon = _pokemon;
+	free(pokemon->nombre);
+	free(pokemon->nombre_entrenador);
+	free(pokemon);
 }
 
 simulador_t* simulador_crear(hospital_t* hospital) {
@@ -152,12 +152,14 @@ ResultadoSimulacion atender_proximo_entrenador(simulador_t* simulador) {
 			if (!pokemon_en_recepcion)
 				return ErrorSimulacion;
 
-			heap_insertar(simulador->recepcion, pokemon_en_sala_de_espera);
-			free(pokemon_en_recepcion);
+			heap_insertar(simulador->recepcion, pokemon_en_recepcion);
 		}
 
 		lista_iterador_avanzar(simulador->pokemones_sala_espera);
 	}
+
+	simulador->estadisticas.pokemon_en_espera = (unsigned)heap_tamanio(simulador->recepcion);
+	simulador->estadisticas.entrenadores_atendidos++;
 
 	lista_iterador_avanzar(simulador->entrenadores_sala_espera);
 
@@ -170,7 +172,7 @@ ResultadoSimulacion obtener_informacion_pokemon_en_tratamiento(simulador_t simul
 
 	*informacion = (InformacionPokemon){
 		.nombre_pokemon = simulador.pokemon_en_consultorio.nombre_pokemon,
-			.nombre_entrenador = simulador.pokemon_en_consultorio.nombre_entrenador,
+		.nombre_entrenador = simulador.pokemon_en_consultorio.nombre_entrenador,
 	};
 
 	return ExitoSimulacion;

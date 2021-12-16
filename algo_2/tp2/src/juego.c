@@ -11,7 +11,7 @@ void juego_inicializar(Juego* juego, hospital_t* hospital) {
     juego->simulador = simulador_crear(hospital);
     juego->jugando = true;
 
-	simulador_simular_evento(juego->simulador, AgregarDificultad, NULL);
+	// simulador_simular_evento(juego->simulador, AgregarDificultad, NULL);
 }
 
 void juego_log_error(const char* evento_simulado) {
