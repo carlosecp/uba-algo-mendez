@@ -63,15 +63,15 @@ hospital_t* hospital_crear() {
 
 	hospital->pokemones_orden_llegada = lista_crear();
 	if (!(hospital->pokemones_orden_llegada)) {
-		lista_destruir(hospital->pokemones_orden_llegada);
+		lista_destruir(hospital->entrenadores);
 		free(hospital);
 		return NULL;
 	}
 
 	hospital->pokemones_orden_alfabetico = abb_crear(abb_comparador_pokemones_por_nombre);
 	if (!hospital->pokemones_orden_alfabetico) {
-		lista_destruir(hospital->entrenadores);
 		lista_destruir(hospital->pokemones_orden_llegada);
+		lista_destruir(hospital->entrenadores);
 		free(hospital);
 		return NULL;
 	}
@@ -122,6 +122,9 @@ entrenador_t* crear_entrenador(char* id, char* nombre) {
 	}
 
 	strcpy(nuevo_entrenador->nombre, nombre);
+
+	nuevo_entrenador->cantidad_pokemones = 0;
+
 	return nuevo_entrenador;
 }
 
@@ -153,7 +156,11 @@ bool hospital_guardar_informacion(hospital_t* hospital, char* linea_archivo) {
 			return false;
 		}
 
+		// TODO: Validar estas inserciones
+		hospital->pokemones_orden_llegada = lista_insertar(hospital->pokemones_orden_llegada, nuevo_pokemon);
 		hospital->pokemones_orden_alfabetico = abb_insertar(hospital->pokemones_orden_alfabetico, nuevo_pokemon);
+
+		nuevo_entrenador->cantidad_pokemones++;
 	}
 
 	hospital->entrenadores = lista_insertar(hospital->entrenadores, nuevo_entrenador);
@@ -212,11 +219,11 @@ void hospital_destruir(hospital_t* hospital) {
 	if (!hospital)
 		return;
 
+	lista_con_cada_elemento(hospital->pokemones_orden_llegada, NULL, NULL);
 	lista_con_cada_elemento(hospital->entrenadores, destruir_entrenador, NULL);
-	lista_con_cada_elemento(hospital->pokemones_orden_llegada, destruir_entrenador, NULL);
 
-	lista_destruir(hospital->entrenadores);
 	lista_destruir(hospital->pokemones_orden_llegada);
+	lista_destruir(hospital->entrenadores);
 
 	abb_destruir_todo(hospital->pokemones_orden_alfabetico, destruir_pokemon);
 

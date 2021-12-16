@@ -13,7 +13,7 @@ typedef struct _heap_t {
 	heap_comparador comparador;
 } heap_t;
 
-heap_t* heap_crear();
+heap_t* heap_crear(heap_comparador comparador);
 
 size_t heap_insertar(heap_t* heap, void* elemento);
 
@@ -23,6 +23,6 @@ void heapify(void** elementos, size_t cantidad);
 
 size_t heap_tamanio(heap_t* heap);
 
-void heap_destruir(heap_t* heap);
+void heap_destruir(heap_t* heap, void (*destructor)(void*));
 
 #endif

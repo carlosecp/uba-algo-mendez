@@ -13,6 +13,7 @@ struct _hospital_pkm_t {
 struct _entrenador_t {
 	int id;
 	char* nombre;
+	size_t cantidad_pokemones;
 };
 
 struct _pkm_t {

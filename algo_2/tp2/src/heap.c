@@ -108,9 +108,6 @@ void* heap_extraer_raiz(heap_t* heap) {
     return elemento_extraido;
 }
 
-void heapify(void** elementos, size_t cantidad) {
-}
-
 size_t heap_tamanio(heap_t* heap) {
     if (!heap)
         return 0;
@@ -118,10 +115,16 @@ size_t heap_tamanio(heap_t* heap) {
     return heap->tamanio;
 }
 
-void heap_destruir(heap_t* heap) {
-    if (!heap)
-        return;
+void heap_destruir(heap_t* heap, void (*destructor)(void*)) {
+	if (!heap)
+		return;
 
-    free(heap->elementos);
-    free(heap);
+	if (destructor) {
+		while (heap_tamanio(heap) > 0) {
+			destructor(heap_extraer_raiz(heap));
+		}
+	}
+
+	free(heap->elementos);
+	free(heap);
 }

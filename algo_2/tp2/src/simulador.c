@@ -15,9 +15,39 @@ struct _simulador_t {
 	hospital_t* hospital;
 	InformacionPokemon pokemon_en_consultorio;
 	EstadisticasSimulacion estadisticas;
+
+	heap_t* recepcion;
 	lista_iterador_t* entrenadores_sala_espera;
+	lista_iterador_t* pokemones_sala_espera;
+
 	// hash_t* dificultades;
 };
+
+typedef struct {
+	char* nombre;
+	size_t nivel;
+	char* nombre_entrenador;
+} pokemon_en_recepcion_t;
+
+void destructor_pokemon_en_recepcion(void* _pokemon) {
+	pokemon_en_recepcion_t* pokemon = _pokemon;
+	free(pokemon->nombre);
+	free(pokemon->nombre_entrenador);
+	free(pokemon);
+}
+
+// TODO: Documentacion de esta funcion
+int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b) {
+	pokemon_en_recepcion_t* pokemon_a = _pokemon_a;
+	pokemon_en_recepcion_t* pokemon_b = _pokemon_b;
+
+	if (pokemon_a->nivel > pokemon_b->nivel)
+		return 1;
+	else if (pokemon_a->nivel < pokemon_b->nivel)
+		return -1;
+
+	return 0;
+}
 
 simulador_t* simulador_crear(hospital_t* hospital) {
 	if (!hospital)
@@ -36,8 +66,23 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 
 	simulador->pokemon_en_consultorio = (InformacionPokemon){NULL};
 
+	simulador->recepcion = heap_crear(comparador_nivel_pokemon);
+	if (!(simulador->recepcion)) {
+		free(simulador);
+		return NULL;
+	}
+
 	simulador->entrenadores_sala_espera = lista_iterador_crear(hospital->entrenadores);
 	if (!(simulador->entrenadores_sala_espera)) {
+		heap_destruir(simulador->recepcion, destructor_pokemon_en_recepcion);
+		free(simulador);
+		return NULL;
+	}
+
+	simulador->pokemones_sala_espera = lista_iterador_crear(hospital->pokemones_orden_llegada);
+	if (!(simulador->pokemones_sala_espera)) {
+		heap_destruir(simulador->recepcion, destructor_pokemon_en_recepcion);
+		free(simulador->entrenadores_sala_espera);
 		free(simulador);
 		return NULL;
 	}
@@ -62,23 +107,61 @@ ResultadoSimulacion obtener_estadisticas(simulador_t simulador, EstadisticasSimu
 	return ExitoSimulacion;
 }
 
-ResultadoSimulacion atender_proximo_entrenador(simulador_t* simulador) {
-	/* NOTE: Necesito que el pokemon que queda en la recepcion tenga conocimiento
-	   del entrenador al que pertence para luego poderlo mostrar en la
-	   informacion */
+pokemon_en_recepcion_t* preparar_pokemon_para_recepcion(pokemon_t* pokemon, char* nombre_entrenador) {
+	if (!pokemon || !nombre_entrenador)
+		return NULL;
 
+	pokemon_en_recepcion_t* pokemon_en_recepcion = malloc(sizeof(pokemon_en_recepcion_t));
+	if (!pokemon_en_recepcion)
+		return NULL;
+
+	char* copia_nombre = malloc(strlen(pokemon->nombre) + 1);
+	if (!copia_nombre)
+		return NULL;
+
+	pokemon_en_recepcion->nombre = copia_nombre;
+	strcpy(pokemon_en_recepcion->nombre, pokemon->nombre);
+
+	pokemon_en_recepcion->nivel = pokemon->nivel;
+
+	char* copia_nombre_entrenador = malloc(strlen(nombre_entrenador) + 1);
+	if (!copia_nombre_entrenador) {
+		free(copia_nombre);
+		return NULL;
+	}
+
+	pokemon_en_recepcion->nombre_entrenador = copia_nombre_entrenador;
+	strcpy(pokemon_en_recepcion->nombre_entrenador, nombre_entrenador);
+
+	return pokemon_en_recepcion;
+}
+
+ResultadoSimulacion atender_proximo_entrenador(simulador_t* simulador) {
 	if (!simulador)
 		return ErrorSimulacion;
 
 	entrenador_t* entrenador_en_recepcion = lista_iterador_elemento_actual(simulador->entrenadores_sala_espera);
+	if (!entrenador_en_recepcion)
+		return ErrorSimulacion;
 
-	if (entrenador_en_recepcion) {
-		printf("%s\n", entrenador_en_recepcion->nombre);
+	for (int i = 0; i < entrenador_en_recepcion->cantidad_pokemones; i++) {
+		pokemon_t* pokemon_en_sala_de_espera = lista_iterador_elemento_actual(simulador->pokemones_sala_espera);
 
-		lista_iterador_avanzar(simulador->entrenadores_sala_espera);
+		if (pokemon_en_sala_de_espera) {
+			pokemon_en_recepcion_t* pokemon_en_recepcion = preparar_pokemon_para_recepcion(pokemon_en_sala_de_espera, entrenador_en_recepcion->nombre);
+			if (!pokemon_en_recepcion)
+				return ErrorSimulacion;
+
+			heap_insertar(simulador->recepcion, pokemon_en_sala_de_espera);
+			free(pokemon_en_recepcion);
+		}
+
+		lista_iterador_avanzar(simulador->pokemones_sala_espera);
 	}
 
-	return ErrorSimulacion;
+	lista_iterador_avanzar(simulador->entrenadores_sala_espera);
+
+	return ExitoSimulacion;
 }
 
 ResultadoSimulacion obtener_informacion_pokemon_en_tratamiento(simulador_t simulador, InformacionPokemon* informacion) {
@@ -138,7 +221,10 @@ void simulador_destruir(simulador_t* simulador) {
 	if (!simulador)
 		return;
 
+	heap_destruir(simulador->recepcion, destructor_pokemon_en_recepcion);
 	lista_iterador_destruir(simulador->entrenadores_sala_espera);
+	lista_iterador_destruir(simulador->pokemones_sala_espera);
+
 	hospital_destruir(simulador->hospital);
 
 	free(simulador);

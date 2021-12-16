@@ -238,7 +238,11 @@ void dadoUnHospital_alAtenderAlProximoEntrenador_seAtiendeCorrectamente() {
 	EstadisticasSimulacion estadisticas;
 	simulador_simular_evento(simulador, ObtenerEstadisticas, &estadisticas);
 
-	/* ResultadoSimulacion res =  */simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 
 	simulador_destruir(simulador);
 }
@@ -263,7 +267,10 @@ void dadoUnHospitalVacio_alObtenerLaInformacionDelPokemonEnTratamiento_seObtiene
 
 /* Pruebas heap */
 
-int comparador_heap(void* _a, void* _b) {
+int comparador_heap_pruebas(void* _a, void* _b) {
+	if (!_a || !_b)
+		return 0;
+
 	int* a = _a;
 	int* b = _b;
 
@@ -280,11 +287,11 @@ void dadoUnComparador_alCrearUnHeap_seCreaCorrectamente() {
 
 	pa2m_afirmar(heap == NULL, "Al crear un heap con un comparador NULL, el comparador es igual a NULL");
 
-	heap = heap_crear(comparador_heap);
+	heap = heap_crear(comparador_heap_pruebas);
 	pa2m_afirmar(heap != NULL, "Al crear un heap con un comparador valido, se retorna un heap");
 	pa2m_afirmar(heap_tamanio(heap) == 0, "Al crear un heap el tamanio inicial es igual a 0");
 
-	heap_destruir(heap);
+	heap_destruir(heap, NULL);
 }
 
 void dadoUnHeap_alInsertarElementos_seInsertanCorrectamente() {
@@ -297,7 +304,7 @@ void dadoUnHeap_alInsertarElementos_seInsertanCorrectamente() {
 
 	pa2m_afirmar(res == 0, "Al insertar en un heap NULL, se retorna la cantidad de elementos que es igual a 0");
 
-	heap = heap_crear(comparador_heap);
+	heap = heap_crear(comparador_heap_pruebas);
 
 	res = heap_insertar(heap, &e0);
 	res = heap_insertar(heap, &e1);
@@ -306,7 +313,7 @@ void dadoUnHeap_alInsertarElementos_seInsertanCorrectamente() {
 	pa2m_afirmar(res == heap_tamanio(heap), "Al insertar elementos en un heap se retorna el tamanio correcto del heap");
 	pa2m_afirmar(res == 3, "Al insertar 3 elementos en un heap, se retorna la cantidad de elementos que es igual a 3");
 
-	heap_destruir(heap);
+	heap_destruir(heap, NULL);
 }
 
 void dadoUnHeapMinimal_alQuitarElementos_seRetornaElMenorElementoDelHeap() {
@@ -314,7 +321,7 @@ void dadoUnHeapMinimal_alQuitarElementos_seRetornaElMenorElementoDelHeap() {
 
 	pa2m_afirmar(heap_extraer_raiz(heap) == NULL, "Al extraer la raiz de un heap NULL, se retorna NULL");
 
-	heap = heap_crear(comparador_heap);
+	heap = heap_crear(comparador_heap_pruebas);
 	pa2m_afirmar(heap_extraer_raiz(heap) == NULL, "Al extraer la raiz de un heap vacio, se retorna NULL");
 
 	int e0 = 3019, e1 = 5828, e2 = 1257, e3 = 4761, e4 = 2779, e5 = 629,
@@ -350,7 +357,7 @@ void dadoUnHeapMinimal_alQuitarElementos_seRetornaElMenorElementoDelHeap() {
 
 	pa2m_afirmar(heap_tamanio(heap) == 0, "Al extraer todos los elementos de un heap, el tamanio es igual a 0");
 
-	heap_destruir(heap);
+	heap_destruir(heap, NULL);
 }
 
 int main() {
