@@ -4,26 +4,33 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "abb.h"
-#include "lista.h"
-#include "parser.h"
+#include "auxiliares_hospital.h"
+#include "parser_hospital.h"
 #include "split.h"
 
-struct _hospital_pkm_t {
-    lista_t* entrenadores;
-    abb_t* pokemones;
-};
+/*
+ * Destructor utilizado para liberar un entrenador de memoria cuando se
+ * elimina del hospital.
+ */
+bool destruir_entrenador(void* _entrenador, void* aux) {
+    entrenador_t* entrenador = _entrenador;
 
-struct _entrenador_t {
-    int id;
-    char* nombre;
-    lista_t* pokemones;
-};
+    lista_destruir(entrenador->pokemones);
+    free(entrenador->nombre);
+    free(entrenador);
 
-struct _pkm_t {
-    char* nombre;
-    size_t nivel;
-};
+    return true;
+}
+
+/*
+ * Destructor utilizado para liberar un pokemon de memoria cuando se
+ * elimina del hospital.
+ */
+void destruir_pokemon(void* _pokemon) {
+    pokemon_t* pokemon = _pokemon;
+    free(pokemon->nombre);
+    free(pokemon);
+}
 
 int abb_comparador_pokemones_por_nombre(void* _p1, void* _p2) {
     pokemon_t* p1 = _p1;
@@ -31,12 +38,8 @@ int abb_comparador_pokemones_por_nombre(void* _p1, void* _p2) {
     return strcmp(p1->nombre, p2->nombre);
 }
 
-void destruir_pokemon(void* _pokemon) {
-    pokemon_t* pokemon = _pokemon;
-    free(pokemon->nombre);
-    free(pokemon);
-}
-
+// TODO: Esta struct y la funcion que le sigue son las que utilizo
+// para recorrer los pokemones utilizando el iterador de ABB.
 typedef struct {
     bool (*funcion)(pokemon_t* p);
 } wrapper_funcion_aux;
@@ -205,23 +208,15 @@ size_t hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* 
     return cantidad_recorridos;
 }
 
-bool destruir_entrenador(void* _entrenador, void* aux) {
-    entrenador_t* entrenador = _entrenador;
-    lista_destruir(entrenador->pokemones);
-    free(entrenador->nombre);
-    free(entrenador);
-    return true;
-}
-
 void hospital_destruir(hospital_t* hospital) {
-	if (!hospital)
-		return;
+    if (!hospital)
+        return;
 
-	lista_con_cada_elemento(hospital->entrenadores, destruir_entrenador, NULL);
-	lista_destruir(hospital->entrenadores);
-	abb_destruir_todo(hospital->pokemones, destruir_pokemon);
+    lista_con_cada_elemento(hospital->entrenadores, destruir_entrenador, NULL);
+    lista_destruir(hospital->entrenadores);
+    abb_destruir_todo(hospital->pokemones, destruir_pokemon);
 
-	free(hospital);
+    free(hospital);
 }
 
 size_t pokemon_nivel(pokemon_t* pokemon) {

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "nodo.h"
+#include "nodo_lista.h"
 
 lista_t* lista_crear() {
     return calloc(1, sizeof(lista_t));

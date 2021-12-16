@@ -6,57 +6,57 @@
 typedef struct _simulador_t simulador_t;
 
 typedef enum {
-    ObtenerEstadisticas,
+	ObtenerEstadisticas,
 
-    AtenderProximoEntrenador,
+	AtenderProximoEntrenador,
 
-    ObtenerInformacionPokemonEnTratamiento,
-    AdivinarNivelPokemon,
+	ObtenerInformacionPokemonEnTratamiento,
+	AdivinarNivelPokemon,
 
-    AgregarDificultad,
-    SeleccionarDificultad,
-    ObtenerInformacionDificultad,
+	AgregarDificultad,
+	SeleccionarDificultad,
+	ObtenerInformacionDificultad,
 
-    FinalizarSimulacion
+	FinalizarSimulacion
 } EventoSimulacion;
 
 typedef enum {
-    ErrorSimulacion,
-    ExitoSimulacion
+	ErrorSimulacion,
+	ExitoSimulacion
 } ResultadoSimulacion;
 
 typedef struct {
-    unsigned entrenadores_atendidos;
-    unsigned entrenadores_totales;
-    unsigned pokemon_atendidos;
-    unsigned pokemon_en_espera;
-    unsigned pokemon_totales;
-    unsigned puntos;
-    unsigned cantidad_eventos_simulados;
+	unsigned entrenadores_atendidos;
+	unsigned entrenadores_totales;
+	unsigned pokemon_atendidos;
+	unsigned pokemon_en_espera;
+	unsigned pokemon_totales;
+	unsigned puntos;
+	unsigned cantidad_eventos_simulados;
 } EstadisticasSimulacion;
 
 typedef struct {
-    const char* nombre_pokemon;
-    const char* nombre_entrenador;
+	const char* nombre_pokemon;
+	const char* nombre_entrenador;
 } InformacionPokemon;
 
 typedef struct {
-    unsigned nivel_adivinado;
-    bool es_correcto;
-    const char* resultado_string;
+	unsigned nivel_adivinado;
+	bool es_correcto;
+	const char* resultado_string;
 } Intento;
 
 typedef struct {
-    const char* nombre;
-    unsigned (*calcular_puntaje)(unsigned cantidad_intentos);
-    int (*verificar_nivel)(unsigned nivel_adivinado, unsigned nivel_pokemon);
-    const char* (*verificacion_a_string)(int resultado_verificacion);
+	const char* nombre;
+	unsigned (*calcular_puntaje)(unsigned cantidad_intentos);
+	int (*verificar_nivel)(unsigned nivel_adivinado, unsigned nivel_pokemon);
+	const char* (*verificacion_a_string)(int resultado_verificacion);
 } DatosDificultad;
 
 typedef struct {
-    const char* nombre_dificultad;
-    bool en_uso;
-    int id;
+	const char* nombre_dificultad;
+	bool en_uso;
+	int id;
 } InformacionDificultad;
 
 /**

@@ -163,9 +163,9 @@ void dadosLosDatosDelSimulador_alObtenerLasEstadisticas_seRetornaElResultadoEspe
     pa2m_afirmar(res == ErrorSimulacion, "Al obtener las estadisticas del simulador pasando un dato NULL, se retorna ErrorSimulacion");
 
     res = simulador_simular_evento(simulador, ObtenerEstadisticas, &e);
-	pa2m_afirmar((e.entrenadores_totales == hospital_cantidad_entrenadores(hospital)) &&
-			(e.pokemon_totales == hospital_cantidad_pokemon(hospital)),
-			"Las cantidades de entrenadores y pokemones de las estadisticas coinciden con las cantidades del hospital");
+    pa2m_afirmar((e.entrenadores_totales == hospital_cantidad_entrenadores(hospital)) &&
+                     (e.pokemon_totales == hospital_cantidad_pokemon(hospital)),
+                 "Las cantidades de entrenadores y pokemones de las estadisticas coinciden con las cantidades del hospital");
 
     simulador_destruir(simulador);
 }
@@ -178,46 +178,40 @@ void dadoUnSimuladorConUnHospitalVacio_alAtenderUnEntrenador_seRetornaError() {
 
     simulador_t* simulador = simulador_crear(hospital);
 
-	ResultadoSimulacion res;
-	
-	res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
-	pa2m_afirmar(res == ErrorSimulacion, "Al atender el proximo entrendor en un hospital sin entrenadores, se retorna ErrorSimulacion");
+    ResultadoSimulacion res;
+
+    res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+    pa2m_afirmar(res == ErrorSimulacion, "Al atender el proximo entrendor en un hospital sin entrenadores, se retorna ErrorSimulacion");
 
     simulador_destruir(simulador);
 }
 
-struct _simulador_t {
-    hospital_t* hospital;
-    EstadisticasSimulacion estadisticas;
-    heap_t* recepcion_pokemones;
-};
-
 void dadoUnSimulador_alAtenderUnEntrenador_suPokemonesSonAgregadosALaSalaDeEspera() {
-	hospital_t* hospital = hospital_crear();
-	hospital_leer_archivo(hospital, "ejemplos/varios_entrenadores.hospital");
+    hospital_t* hospital = hospital_crear();
+    hospital_leer_archivo(hospital, "ejemplos/varios_entrenadores.hospital");
 
-	simulador_t* simulador = simulador_crear(hospital);
+    simulador_t* simulador = simulador_crear(hospital);
 
-	ResultadoSimulacion res;
+    ResultadoSimulacion res;
 
-	res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
-	pa2m_afirmar(res == ExitoSimulacion, "Al atender a un entrenador correctamente se retorna ExitoSimulacion");
+    res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+    pa2m_afirmar(res == ExitoSimulacion, "Al atender a un entrenador correctamente se retorna ExitoSimulacion");
 
-	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+    simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 
-	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
-	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
-	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
-	res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+    simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+    simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+    simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+    res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 
-	pa2m_afirmar(res == ErrorSimulacion, "Luego de atender a todos los entrenadores de un hospital, si se intenta antender al proximo, se retorna ErrorSimulacion");
+    pa2m_afirmar(res == ErrorSimulacion, "Luego de atender a todos los entrenadores de un hospital, si se intenta antender al proximo, se retorna ErrorSimulacion");
 
-	simulador_destruir(simulador);
+    simulador_destruir(simulador);
 }
 
 /* Pruebas heap */
 
-int comparador(void* _a, void* _b) {
+int comparador_heap(void* _a, void* _b) {
     int* a = _a;
     int* b = _b;
 
@@ -234,7 +228,7 @@ void dadoUnComparador_alCrearUnHeap_seCreaCorrectamente() {
 
     pa2m_afirmar(heap == NULL, "Al crear un heap con un comparador NULL, el comparador es igual a NULL");
 
-    heap = heap_crear(comparador);
+    heap = heap_crear(comparador_heap);
     pa2m_afirmar(heap != NULL, "Al crear un heap con un comparador valido, se retorna un heap");
     pa2m_afirmar(heap_tamanio(heap) == 0, "Al crear un heap el tamanio inicial es igual a 0");
 
@@ -251,7 +245,7 @@ void dadoUnHeap_alInsertarElementos_seInsertanCorrectamente() {
 
     pa2m_afirmar(res == 0, "Al insertar en un heap NULL, se retorna la cantidad de elementos que es igual a 0");
 
-    heap = heap_crear(comparador);
+    heap = heap_crear(comparador_heap);
 
     res = heap_insertar(heap, &e0);
     res = heap_insertar(heap, &e1);
@@ -268,7 +262,7 @@ void dadoUnHeapMinimal_alQuitarElementos_seRetornaElMenorElementoDelHeap() {
 
     pa2m_afirmar(heap_extraer_raiz(heap) == NULL, "Al extraer la raiz de un heap NULL, se retorna NULL");
 
-    heap = heap_crear(comparador);
+    heap = heap_crear(comparador_heap);
     pa2m_afirmar(heap_extraer_raiz(heap) == NULL, "Al extraer la raiz de un heap vacio, se retorna NULL");
 
     int e0 = 3019, e1 = 5828, e2 = 1257, e3 = 4761, e4 = 2779, e5 = 629,
@@ -333,8 +327,8 @@ int main() {
     dadosLosDatosDelSimulador_alObtenerLasEstadisticas_seRetornaElResultadoEsperado();
 
     pa2m_nuevo_grupo("Pruebas evento \"AtenderProximoEntrenador\"");
-	dadoUnSimuladorConUnHospitalVacio_alAtenderUnEntrenador_seRetornaError();
-	dadoUnSimulador_alAtenderUnEntrenador_suPokemonesSonAgregadosALaSalaDeEspera();
+    dadoUnSimuladorConUnHospitalVacio_alAtenderUnEntrenador_seRetornaError();
+    dadoUnSimulador_alAtenderUnEntrenador_suPokemonesSonAgregadosALaSalaDeEspera();
 
     pa2m_nuevo_grupo("Pruebas heap");
     dadoUnComparador_alCrearUnHeap_seCreaCorrectamente();
