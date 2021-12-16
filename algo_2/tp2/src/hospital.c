@@ -4,28 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "abb.h"
 #include "auxiliares_hospital.h"
-#include "lista.h"
 #include "parser_hospital.h"
 #include "split.h"
 
-struct _hospital_pkm_t {
-	lista_t* entrenadores;
-	abb_t* pokemones;
-};
-
-struct _entrenador_t {
-	int id;
-	char* nombre;
-};
-
-struct _pkm_t {
-	char* nombre;
-	size_t nivel;
-};
-
-/*
+/**
  * Destructor utilizado para liberar un entrenador de memoria cuando se
  * elimina del hospital.
  */
@@ -38,7 +21,7 @@ bool destruir_entrenador(void* _entrenador, void* aux) {
 	return true;
 }
 
-/*
+/**
  * Destructor utilizado para liberar un pokemon de memoria cuando se
  * elimina del hospital.
  */
@@ -54,8 +37,9 @@ int abb_comparador_pokemones_por_nombre(void* _p1, void* _p2) {
 	return strcmp(p1->nombre, p2->nombre);
 }
 
-// TODO: Esta struct y la funcion que le sigue son las que utilizo
-// para recorrer los pokemones utilizando el iterador de ABB.
+/* TODO: Esta struct y la funcion que le sigue son las que utilizo
+   para recorrer los pokemones utilizando el iterador de ABB.*/
+
 typedef struct {
 	bool (*funcion)(pokemon_t* p);
 } wrapper_funcion_aux;
@@ -72,14 +56,22 @@ hospital_t* hospital_crear() {
 		return NULL;
 
 	hospital->entrenadores = lista_crear();
-	if (!hospital->entrenadores) {
+	if (!(hospital->entrenadores)) {
 		free(hospital);
 		return NULL;
 	}
 
-	hospital->pokemones = abb_crear(abb_comparador_pokemones_por_nombre);
-	if (!hospital->pokemones) {
+	hospital->pokemones_orden_llegada = lista_crear();
+	if (!(hospital->pokemones_orden_llegada)) {
+		lista_destruir(hospital->pokemones_orden_llegada);
+		free(hospital);
+		return NULL;
+	}
+
+	hospital->pokemones_orden_alfabetico = abb_crear(abb_comparador_pokemones_por_nombre);
+	if (!hospital->pokemones_orden_alfabetico) {
 		lista_destruir(hospital->entrenadores);
+		lista_destruir(hospital->pokemones_orden_llegada);
 		free(hospital);
 		return NULL;
 	}
@@ -161,7 +153,7 @@ bool hospital_guardar_informacion(hospital_t* hospital, char* linea_archivo) {
 			return false;
 		}
 
-		hospital->pokemones = abb_insertar(hospital->pokemones, nuevo_pokemon);
+		hospital->pokemones_orden_alfabetico = abb_insertar(hospital->pokemones_orden_alfabetico, nuevo_pokemon);
 	}
 
 	hospital->entrenadores = lista_insertar(hospital->entrenadores, nuevo_entrenador);
@@ -197,7 +189,7 @@ size_t hospital_cantidad_pokemon(hospital_t* hospital) {
 	if (!hospital)
 		return 0;
 
-	return abb_tamanio(hospital->pokemones);
+	return abb_tamanio(hospital->pokemones_orden_alfabetico);
 }
 
 size_t hospital_cantidad_entrenadores(hospital_t* hospital) {
@@ -212,7 +204,7 @@ size_t hospital_a_cada_pokemon(hospital_t* hospital, bool (*funcion)(pokemon_t* 
 		return 0;
 
 	wrapper_funcion_aux aux = {funcion};
-	size_t cantidad_recorridos = abb_con_cada_elemento(hospital->pokemones, INORDEN, funcion_aux, &aux);
+	size_t cantidad_recorridos = abb_con_cada_elemento(hospital->pokemones_orden_alfabetico, INORDEN, funcion_aux, &aux);
 	return cantidad_recorridos;
 }
 
@@ -221,8 +213,12 @@ void hospital_destruir(hospital_t* hospital) {
 		return;
 
 	lista_con_cada_elemento(hospital->entrenadores, destruir_entrenador, NULL);
+	lista_con_cada_elemento(hospital->pokemones_orden_llegada, destruir_entrenador, NULL);
+
 	lista_destruir(hospital->entrenadores);
-	abb_destruir_todo(hospital->pokemones, destruir_pokemon);
+	lista_destruir(hospital->pokemones_orden_llegada);
+
+	abb_destruir_todo(hospital->pokemones_orden_alfabetico, destruir_pokemon);
 
 	free(hospital);
 }

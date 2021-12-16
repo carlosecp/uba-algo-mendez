@@ -11,14 +11,12 @@ typedef struct {
     bool jugando;
 } Juego;
 
-void inicializar_juego(Juego* juego, hospital_t* hospital);
+void juego_inicializar(Juego* juego, hospital_t* hospital);
 
-void mostrar_estadisticas(Juego* juego);
+void juego_log_error(const char* evento_simulado);
 
-void atender_entrenador(Juego* juego);
+void juego_terminar(Juego* juego);
 
-void terminar_juego(Juego* juego);
-
-void destruir_juego(Juego juego);
+void juego_destruir(Juego juego);
 
 #endif
