@@ -137,14 +137,22 @@ const char* verificacion_a_string_facil(int resultado_verificacion) {
 	return "Adivinaste Crack";
 }
 
-void agregar_dificultades_iniciales(lista_t* dificultades) {
+lista_t* agregar_dificultades_iniciales(lista_t* dificultades) {
 	DatosDificultad* dificultad_facil = malloc(sizeof(DatosDificultad));
 	if (!dificultad_facil)
-		return;
+		return NULL;
 
 	dificultad_facil->nombre = "Facil";
 	dificultad_facil->verificar_nivel = verificar_nivel_facil;
 	dificultad_facil->verificacion_a_string = verificacion_a_string_facil;
 
-	lista_insertar(dificultades, dificultad_facil);
+	dificultades = lista_insertar(dificultades, dificultad_facil);
+
+	return dificultades;
+}
+
+bool destruir_dificultad(void* _dificultad, void* aux) {
+	DatosDificultad* dificultad = _dificultad;
+	free(dificultad);
+	return true;
 }

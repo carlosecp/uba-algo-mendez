@@ -68,9 +68,8 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 	}
 
 	// TODO: Mejorar estas validaciones
-	// lista_t* dificultades = lista_crear();
-
-	// agregar_dificultades_iniciales(dificultades);
+	lista_t* dificultades = lista_crear();
+	dificultades = agregar_dificultades_iniciales(dificultades);
 
 	simulador->hospital = hospital;
 	simulador->estadisticas = estadisticas;
@@ -78,6 +77,7 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 	simulador->recepcion = recepcion;
 	simulador->sala_espera_entrenadores = sala_espera_entrenadores;
 	simulador->sala_espera_pokemones = sala_espera_pokemones;
+	simulador->dificultades = dificultades;
 
 	return simulador;
 }
@@ -212,7 +212,9 @@ void simulador_destruir(simulador_t* simulador) {
 
 	lista_iterador_destruir(simulador->sala_espera_entrenadores);
 	lista_iterador_destruir(simulador->sala_espera_pokemones);
-	// lista_destruir(simulador->dificultades);
+
+	lista_con_cada_elemento(simulador->dificultades, destruir_dificultad, NULL);
+	lista_destruir(simulador->dificultades);
 
 	hospital_destruir(simulador->hospital);
 
