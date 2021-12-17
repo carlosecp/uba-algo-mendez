@@ -13,7 +13,9 @@ typedef struct {
 
 void juego_inicializar(Juego* juego, hospital_t* hospital);
 
-void juego_log_error(const char* evento_simulado);
+void juego_titulo(const char* titulo);
+
+void juego_catch_error(const char* evento_simulado);
 
 void juego_terminar(Juego* juego);
 

@@ -6,17 +6,20 @@
 #include "hospital.h"
 #include "auxiliares_hospital.h"
 #include "simulador.h"
+#include "heap.h"
 
 typedef struct {
-	char* nombre;
-	size_t nivel;
+	char* nombre_pokemon;
 	char* nombre_entrenador;
+	size_t nivel;
 } pokemon_en_recepcion_t;
 
-pokemon_en_recepcion_t* preparar_pokemon_para_recepcion(pokemon_t* pokemon, char* nombre_entrenador);
+int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b);
 
-bool hay_pokemon_en_consultorio(InformacionPokemon pokemon_en_consultorio);
+void destructor_pokemon_en_recepcion(void* _pokemon);
 
-void atender_pokemon_de_menor_nivel(InformacionPokemon* pokemon_en_consultorio, pokemon_en_recepcion_t* pokemon_de_menor_nivel);
+bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenador, lista_iterador_t* sala_de_espera_pokemones, heap_t* recepcion);
+
+void actualizar_pokemon_en_consultorio(pokemon_en_recepcion_t* pokemon_en_consultorio, heap_t* recepcion);
 
 #endif

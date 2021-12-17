@@ -224,7 +224,7 @@ void dadoUnHospitalVacio_alAtenderAlProximoEntrenador_seRetornaError() {
 
 	ResultadoSimulacion res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 
-	pa2m_afirmar(res == ErrorSimulacion, "Atender al proximo entrenador en un hospital sin mas entrenadores retorna Error");
+	pa2m_afirmar(res == ErrorSimulacion, "Atender al proximo entrenador en un hospital vacio retorna Error");
 
 	simulador_destruir(simulador);
 }
@@ -252,15 +252,12 @@ void dadoUnHospital_alAtenderAlProximoEntrenador_seAtiendeCorrectamente() {
 
 	simulador_simular_evento(simulador, ObtenerEstadisticas, &estadisticas);
 
-	// TODO: Tengo que verificar que la cantidad de atendidos sin haber adivinado
-	// ningun pokemon aun se igual a n-1, por el hecho de un pokemon va a estar 
-	// en el consultorio.
-	// TODO: Cambiar la descripcion de la prueba.
-	pa2m_afirmar(estadisticas.pokemon_en_espera == hospital_cantidad_pokemon(hospital),
-			"Luego de agregar todos los entrenadores del hospital la cantidad de pokemones en la recepcion es igual al total de pokemones")
+	pa2m_afirmar(estadisticas.pokemon_en_espera == hospital_cantidad_pokemon(hospital) - 1,
+			"Luego de agregar todos los pokemones del hospital y no haber atentido a ninguno, la cantidad de pokemones en la recepcion es igual al total de pokemones menos el pokemon en el consultorio")
 
-	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
-	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+	res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+
+	pa2m_afirmar(res == ErrorSimulacion, "Intentar atender al proximo entrenador cuando ya se han atendido todos los entrenadores retorna Error")
 
 	simulador_destruir(simulador);
 }

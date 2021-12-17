@@ -13,35 +13,13 @@
 
 struct _simulador_t {
 	hospital_t* hospital;
-	InformacionPokemon pokemon_en_consultorio;
+	pokemon_en_recepcion_t* pokemon_en_consultorio;
 	EstadisticasSimulacion estadisticas;
 
 	heap_t* recepcion;
-	lista_iterador_t* entrenadores_sala_espera;
-	lista_iterador_t* pokemones_sala_espera;
-
-	// hash_t* dificultades;
+	lista_iterador_t* sala_espera_entrenadores;
+	lista_iterador_t* sala_espera_pokemones;
 };
-
-// TODO: Documentacion de esta funcion
-int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b) {
-	pokemon_en_recepcion_t* pokemon_a = _pokemon_a;
-	pokemon_en_recepcion_t* pokemon_b = _pokemon_b;
-
-	if (pokemon_a->nivel > pokemon_b->nivel)
-		return 1;
-	else if (pokemon_a->nivel < pokemon_b->nivel)
-		return -1;
-
-	return 0;
-}
-
-void destructor_pokemon_en_recepcion(void* _pokemon) {
-	pokemon_en_recepcion_t* pokemon = _pokemon;
-	free(pokemon->nombre);
-	free(pokemon->nombre_entrenador);
-	free(pokemon);
-}
 
 simulador_t* simulador_crear(hospital_t* hospital) {
 	if (!hospital)
@@ -51,35 +29,48 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 	if (!simulador)
 		return NULL;
 
-	simulador->hospital = hospital;
-	simulador->estadisticas = (EstadisticasSimulacion){
+	pokemon_en_recepcion_t* pokemon_en_consultorio = calloc(1, sizeof(pokemon_en_recepcion_t));
+	if (!pokemon_en_consultorio) {
+		free(simulador);
+		return NULL;
+	}
+
+	EstadisticasSimulacion estadisticas = (EstadisticasSimulacion){
 		0,
 		.entrenadores_totales = (unsigned)hospital_cantidad_entrenadores(hospital),
 		.pokemon_totales = (unsigned)hospital_cantidad_pokemon(hospital),
 	};
 
-	simulador->pokemon_en_consultorio = (InformacionPokemon){NULL};
-
-	simulador->recepcion = heap_crear(comparador_nivel_pokemon);
-	if (!(simulador->recepcion)) {
+	heap_t* recepcion = heap_crear(comparador_nivel_pokemon);
+	if (!recepcion) {
+		free(pokemon_en_consultorio);
 		free(simulador);
 		return NULL;
 	}
 
-	simulador->entrenadores_sala_espera = lista_iterador_crear(hospital->entrenadores);
-	if (!(simulador->entrenadores_sala_espera)) {
-		heap_destruir(simulador->recepcion, destructor_pokemon_en_recepcion);
+	lista_iterador_t* sala_espera_entrenadores = lista_iterador_crear(hospital->entrenadores);
+	if (!sala_espera_entrenadores) {
+		free(pokemon_en_consultorio);
+		heap_destruir(recepcion, destructor_pokemon_en_recepcion);
 		free(simulador);
 		return NULL;
 	}
 
-	simulador->pokemones_sala_espera = lista_iterador_crear(hospital->pokemones_orden_llegada);
-	if (!(simulador->pokemones_sala_espera)) {
-		heap_destruir(simulador->recepcion, destructor_pokemon_en_recepcion);
-		free(simulador->entrenadores_sala_espera);
+	lista_iterador_t* sala_espera_pokemones = lista_iterador_crear(hospital->pokemones_orden_llegada);
+	if (!sala_espera_pokemones) {
+		free(pokemon_en_consultorio);
+		heap_destruir(recepcion, destructor_pokemon_en_recepcion);
+		lista_iterador_destruir(sala_espera_entrenadores);
 		free(simulador);
 		return NULL;
 	}
+
+	simulador->hospital = hospital;
+	simulador->estadisticas = estadisticas;
+	simulador->pokemon_en_consultorio = pokemon_en_consultorio;
+	simulador->recepcion = recepcion;
+	simulador->sala_espera_entrenadores = sala_espera_entrenadores;
+	simulador->sala_espera_pokemones = sala_espera_pokemones;
 
 	return simulador;
 }
@@ -105,36 +96,20 @@ ResultadoSimulacion atender_proximo_entrenador(simulador_t* simulador) {
 	if (!simulador)
 		return ErrorSimulacion;
 
-	entrenador_t* entrenador_en_recepcion = lista_iterador_elemento_actual(simulador->entrenadores_sala_espera);
-	if (!entrenador_en_recepcion)
+	entrenador_t* proximo_entrenador = lista_iterador_elemento_actual(simulador->sala_espera_entrenadores);
+	if (!proximo_entrenador)
 		return ErrorSimulacion;
 
-	for (int i = 0; i < entrenador_en_recepcion->cantidad_pokemones; i++) {
-		pokemon_t* pokemon_en_sala_de_espera = lista_iterador_elemento_actual(simulador->pokemones_sala_espera);
+	bool recepcion_exitosa = agregar_pokemones_de_entrenador_a_recepcion(proximo_entrenador, simulador->sala_espera_pokemones, simulador->recepcion);
+	if (!recepcion_exitosa)
+		return ErrorSimulacion;
 
-		if (pokemon_en_sala_de_espera) {
-			pokemon_en_recepcion_t* pokemon_en_recepcion = preparar_pokemon_para_recepcion(pokemon_en_sala_de_espera, entrenador_en_recepcion->nombre);
-			if (!pokemon_en_recepcion)
-				return ErrorSimulacion;
-
-			heap_insertar(simulador->recepcion, pokemon_en_recepcion);
-		}
-
-		lista_iterador_avanzar(simulador->pokemones_sala_espera);
-	}
-
-	if (!hay_pokemon_en_consultorio(simulador->pokemon_en_consultorio)) {
-		pokemon_en_recepcion_t* pokemon_en_consultorio = heap_extraer_raiz(simulador->recepcion);
-		atender_pokemon_de_menor_nivel(&(simulador->pokemon_en_consultorio), pokemon_en_consultorio);
-		free(pokemon_en_consultorio->nombre);
-		free(pokemon_en_consultorio->nombre_entrenador);
-		free(pokemon_en_consultorio);
-	}
+	actualizar_pokemon_en_consultorio(simulador->pokemon_en_consultorio, simulador->recepcion);
 
 	simulador->estadisticas.pokemon_en_espera = (unsigned)heap_tamanio(simulador->recepcion);
 	simulador->estadisticas.entrenadores_atendidos++;
 
-	lista_iterador_avanzar(simulador->entrenadores_sala_espera);
+	lista_iterador_avanzar(simulador->sala_espera_entrenadores);
 
 	return ExitoSimulacion;
 }
@@ -144,15 +119,38 @@ ResultadoSimulacion obtener_informacion_pokemon_en_tratamiento(simulador_t simul
 		return ErrorSimulacion;
 
 	*informacion = (InformacionPokemon){
-		.nombre_pokemon = simulador.pokemon_en_consultorio.nombre_pokemon,
-		.nombre_entrenador = simulador.pokemon_en_consultorio.nombre_entrenador,
+		.nombre_pokemon = simulador.pokemon_en_consultorio->nombre_pokemon,
+		.nombre_entrenador = simulador.pokemon_en_consultorio->nombre_entrenador,
 	};
 
 	return ExitoSimulacion;
 }
 
-ResultadoSimulacion agregar_dificultad(simulador_t* simulador, DatosDificultad* dificultad) {
+ResultadoSimulacion adivinar_nivel_pokemon(simulador_t* simulador, Intento* intento) {
+	if (!simulador || !intento)
+		return ErrorSimulacion;
+
+	/* unsigned nivel_adivinado;
+	bool es_correcto;
+	const char* resultado_string; */
+
+	pokemon_en_recepcion_t* pokemon_en_consultorio = simulador->pokemon_en_consultorio;
+	intento->es_correcto = intento->nivel_adivinado == pokemon_en_consultorio->nivel;
+
+	if (intento->es_correcto) {
+	} else {
+		printf("Vuelve a intentar\n");
+	}
+
 	return ExitoSimulacion;
+}
+
+ResultadoSimulacion agregar_dificultad(simulador_t* simulador, DatosDificultad* datos_dificultad) {
+	return ErrorSimulacion;
+}
+
+ResultadoSimulacion obtener_informacion_dificultad(simulador_t* simulador, InformacionDificultad* info_dificultad) {
+	return ErrorSimulacion;
 }
 
 ResultadoSimulacion simulador_simular_evento(simulador_t* simulador, EventoSimulacion evento, void* datos) {
@@ -174,6 +172,7 @@ ResultadoSimulacion simulador_simular_evento(simulador_t* simulador, EventoSimul
 			res = obtener_informacion_pokemon_en_tratamiento(*simulador, datos);
 			break;
 		case AdivinarNivelPokemon:
+			res = adivinar_nivel_pokemon(simulador, datos);
 			break;
 		case AgregarDificultad:
 			res = agregar_dificultad(simulador, datos);
@@ -181,6 +180,7 @@ ResultadoSimulacion simulador_simular_evento(simulador_t* simulador, EventoSimul
 		case SeleccionarDificultad:
 			break;
 		case ObtenerInformacionDificultad:
+			res = obtener_informacion_dificultad(simulador, datos);
 			break;
 		case FinalizarSimulacion:
 			break;
@@ -196,12 +196,13 @@ void simulador_destruir(simulador_t* simulador) {
 	if (!simulador)
 		return;
 
-	free((char*)simulador->pokemon_en_consultorio.nombre_pokemon);
-	free((char*)simulador->pokemon_en_consultorio.nombre_entrenador);
+	free(simulador->pokemon_en_consultorio->nombre_pokemon);
+	free(simulador->pokemon_en_consultorio->nombre_entrenador);
+	free(simulador->pokemon_en_consultorio);
 
 	heap_destruir(simulador->recepcion, destructor_pokemon_en_recepcion);
-	lista_iterador_destruir(simulador->entrenadores_sala_espera);
-	lista_iterador_destruir(simulador->pokemones_sala_espera);
+	lista_iterador_destruir(simulador->sala_espera_entrenadores);
+	lista_iterador_destruir(simulador->sala_espera_pokemones);
 
 	hospital_destruir(simulador->hospital);
 

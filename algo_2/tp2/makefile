@@ -15,3 +15,7 @@ pruebas: pruebas.c src/*.c src/*.h
 
 clean:
 	rm pruebas 2>&1
+
+zip:
+	zip tp2.zip *
+	zip tp2.zip ./**/*
