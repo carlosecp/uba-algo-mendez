@@ -156,9 +156,18 @@ bool hospital_guardar_informacion(hospital_t* hospital, char* linea_archivo) {
 			return false;
 		}
 
-		// TODO: Validar estas inserciones
-		hospital->pokemones_orden_llegada = lista_insertar(hospital->pokemones_orden_llegada, nuevo_pokemon);
-		hospital->pokemones_orden_alfabetico = abb_insertar(hospital->pokemones_orden_alfabetico, nuevo_pokemon);
+		lista_t* pokemones_orden_llegada_aux = lista_insertar(hospital->pokemones_orden_llegada, nuevo_pokemon);
+		abb_t* pokemones_orden_alfabetico_aux = abb_insertar(hospital->pokemones_orden_alfabetico, nuevo_pokemon);
+
+		if (!pokemones_orden_llegada_aux || !pokemones_orden_alfabetico_aux) {
+			destruir_pokemon(nuevo_pokemon);
+			free_vector_strings(informacion_linea);
+			free(informacion_linea);
+			return false;
+		}
+
+		hospital->pokemones_orden_llegada = pokemones_orden_llegada_aux;
+		hospital->pokemones_orden_alfabetico = pokemones_orden_alfabetico_aux;
 
 		nuevo_entrenador->cantidad_pokemones++;
 	}

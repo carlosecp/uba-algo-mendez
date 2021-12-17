@@ -75,24 +75,27 @@ bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenado
 	return true;
 }
 
-void actualizar_pokemon_en_consultorio(pokemon_en_recepcion_t* pokemon_en_consultorio, heap_t* recepcion) {
-	if (!pokemon_en_consultorio)
+bool hay_pokemon_en_tratamiento(pokemon_en_recepcion_t pokemon_en_tratamiento) {
+	return pokemon_en_tratamiento.nombre_pokemon && pokemon_en_tratamiento.nombre_entrenador;
+}
+
+void actualizar_pokemon_en_tratamiento(pokemon_en_recepcion_t* pokemon_en_tratamiento, heap_t* recepcion) {
+	if (!pokemon_en_tratamiento)
 		return;
 
 	if (!recepcion)
 		return;
 
-	if (pokemon_en_consultorio->nombre_pokemon || pokemon_en_consultorio->nombre_entrenador)
-		// Hay un pokemon en el consultorio.
+	if (hay_pokemon_en_tratamiento(*pokemon_en_tratamiento))
 		return;
 
 	pokemon_en_recepcion_t* pokemon_de_menor_nivel = heap_extraer_raiz(recepcion);
 	if (!pokemon_de_menor_nivel)
 		return;
 
-	pokemon_en_consultorio->nombre_pokemon = pokemon_de_menor_nivel->nombre_pokemon;
-	pokemon_en_consultorio->nombre_entrenador = pokemon_de_menor_nivel->nombre_entrenador;
-	pokemon_en_consultorio->nivel = pokemon_de_menor_nivel->nivel;
+	pokemon_en_tratamiento->nombre_pokemon = pokemon_de_menor_nivel->nombre_pokemon;
+	pokemon_en_tratamiento->nombre_entrenador = pokemon_de_menor_nivel->nombre_entrenador;
+	pokemon_en_tratamiento->nivel = pokemon_de_menor_nivel->nivel;
 
 	free(pokemon_de_menor_nivel); // El nombre y el nivel se quedan guardados como copia. Luego se liberan.
 }

@@ -179,8 +179,6 @@ void dadoUnSimulador_alSimularUnEventoInvalido_seRetornaError() {
 	simulador_destruir(simulador);
 }
 
-/* Pruebas evento "ObtenerEstadisticas" */
-
 void dadoUnHospitalVacio_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas() {
 	hospital_t* hospital = hospital_crear();
 	simulador_t* simulador = simulador_crear(hospital);
@@ -215,8 +213,6 @@ void dadoUnHospital_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas(
 
 	simulador_destruir(simulador);
 }
-
-/* Pruebas evento "AtenderProximoEntrenador" */
 
 void dadoUnHospitalVacio_alAtenderAlProximoEntrenador_seRetornaError() {
 	hospital_t* hospital = hospital_crear();
@@ -262,8 +258,6 @@ void dadoUnHospital_alAtenderAlProximoEntrenador_seAtiendeCorrectamente() {
 	simulador_destruir(simulador);
 }
 
-/* Pruebas evento "ObtenerInformacionPokemonEnTratamiento" */
-
 void dadoUnHospitalVacio_alObtenerLaInformacionDelPokemonEnTratamiento_seObtieneLaInformacionEsperada() {
 	hospital_t* hospital = hospital_crear();
 	simulador_t* simulador = simulador_crear(hospital);
@@ -276,6 +270,54 @@ void dadoUnHospitalVacio_alObtenerLaInformacionDelPokemonEnTratamiento_seObtiene
 
 	pa2m_afirmar((informacion.nombre_pokemon == NULL) && (informacion.nombre_entrenador == NULL),
 			"Los datos del pokemon en tratamiento si no hay ningun pokemon en tratamiento son NULL");
+
+	simulador_destruir(simulador);
+}
+
+void dadoUnHospital_alAtenderAlProximoEntrenador_losPokemonesSeAtiendenConLaPrioridadCorrecta() {
+	hospital_t* hospital = hospital_crear();
+	hospital_leer_archivo(hospital, "ejemplos/varios_entrenadores.hospital");
+
+	simulador_t* simulador = simulador_crear(hospital);
+
+	// Luego de atender el primer entrenador el pokemon en tratamiento deberia ser rampardos
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+
+	InformacionPokemon informacion = {NULL};
+	ResultadoSimulacion res = simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &informacion);
+
+	pa2m_afirmar(res == ExitoSimulacion, "Atender al proximo entrenador cuando hay entrenadores disponibles retorna Exito");
+	pa2m_afirmar(strcmp(informacion.nombre_pokemon, "rampardos") == 0,
+			"Luego de atender al primer entrenador, el pokemon en tratamiento pasa a ser \"rampardos\", que es el que tiene el menor nivel");
+
+	/* Luego de atender a mas entrenadores sin haber terminado de atender al primer
+	   pokemon, el pokemon en tratamento deberia seguir siendo el mismo. */
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+
+	simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &informacion);
+
+	pa2m_afirmar(strcmp(informacion.nombre_pokemon, "rampardos") == 0,
+			"Luego de atender a varios entrenadores sin haber terminado de atender al pokemon en tratamiento, este ultimo se mentiene en tratamiento");
+
+	simulador_destruir(simulador);
+}
+
+void dadoUnSimuladorSinPokemonEnTratamiento_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seRetornaError() {
+	hospital_t* hospital = hospital_crear();
+	simulador_t* simulador = simulador_crear(hospital);
+
+	ResultadoSimulacion res = simulador_simular_evento(simulador, AdivinarNivelPokemon, NULL);
+
+	pa2m_afirmar(res == ErrorSimulacion, "Intentar adivinar el nivel del pokemon en tratamiento con un dato NULL retorna Error");
+
+	InformacionPokemon informacion;
+	res = simulador_simular_evento(simulador, AdivinarNivelPokemon, &informacion);
+
+	pa2m_afirmar(res == ErrorSimulacion, "Intentar adivinar el nivel del pokemon en un hospital sin pokemones retorna Error");
 
 	simulador_destruir(simulador);
 }
@@ -400,17 +442,17 @@ int main() {
 	dadoUnHospital_alCrearUnSimulador_seRetornaElSimulador();
 	dadoUnSimuladorNULL_alSimularUnEvento_seRetornarError();
 	dadoUnSimulador_alSimularUnEventoInvalido_seRetornaError();
-
-	pa2m_nuevo_grupo("Pruebas evento \"ObtenerEstadisticas\"");
 	dadoUnHospitalVacio_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas();
 	dadoUnHospital_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas();
 
-	pa2m_nuevo_grupo("Pruebas evento \"AtenderProximoEntrenador\"");
+	pa2m_nuevo_grupo("Pruebas atender entrenadores");
 	dadoUnHospitalVacio_alAtenderAlProximoEntrenador_seRetornaError();
 	dadoUnHospital_alAtenderAlProximoEntrenador_seAtiendeCorrectamente();
-
-	pa2m_nuevo_grupo("Pruebas evento \"ObtenerInformacionPokemonEnTratamiento\"");
 	dadoUnHospitalVacio_alObtenerLaInformacionDelPokemonEnTratamiento_seObtieneLaInformacionEsperada();
+	dadoUnHospital_alAtenderAlProximoEntrenador_losPokemonesSeAtiendenConLaPrioridadCorrecta();
+
+	pa2m_nuevo_grupo("Pruebas adivinar nivel pokemon");
+	dadoUnSimuladorSinPokemonEnTratamiento_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seRetornaError();
 
 	/* pa2m_nuevo_grupo("Pruebas heap");
 	dadoUnComparador_alCrearUnHeap_seCreaCorrectamente();

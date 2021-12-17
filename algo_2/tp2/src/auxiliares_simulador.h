@@ -20,6 +20,8 @@ void destructor_pokemon_en_recepcion(void* _pokemon);
 
 bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenador, lista_iterador_t* sala_de_espera_pokemones, heap_t* recepcion);
 
-void actualizar_pokemon_en_consultorio(pokemon_en_recepcion_t* pokemon_en_consultorio, heap_t* recepcion);
+bool hay_pokemon_en_tratamiento(pokemon_en_recepcion_t pokemon_en_tratamiento);
+
+void actualizar_pokemon_en_tratamiento(pokemon_en_recepcion_t* pokemon_en_tratamiento, heap_t* recepcion);
 
 #endif
