@@ -119,8 +119,8 @@ pokemon_en_recepcion_t* preparar_pokemon_para_recepcion(pokemon_t* pokemon, char
 	if (!copia_nombre)
 		return NULL;
 
+	strcpy(copia_nombre, pokemon->nombre);
 	pokemon_en_recepcion->nombre = copia_nombre;
-	strcpy(pokemon_en_recepcion->nombre, pokemon->nombre);
 
 	pokemon_en_recepcion->nivel = pokemon->nivel;
 
@@ -130,10 +130,22 @@ pokemon_en_recepcion_t* preparar_pokemon_para_recepcion(pokemon_t* pokemon, char
 		return NULL;
 	}
 
+	strcpy(copia_nombre_entrenador, nombre_entrenador);
 	pokemon_en_recepcion->nombre_entrenador = copia_nombre_entrenador;
-	strcpy(pokemon_en_recepcion->nombre_entrenador, nombre_entrenador);
 
 	return pokemon_en_recepcion;
+}
+
+bool hay_pokemon_en_consultorio(InformacionPokemon pokemon_en_consultorio) {
+	return pokemon_en_consultorio.nombre_pokemon && pokemon_en_consultorio.nombre_entrenador;
+}
+
+void atender_pokemon_de_menor_nivel(InformacionPokemon* pokemon_en_consultorio, pokemon_en_recepcion_t* pokemon_de_menor_nivel) {
+	pokemon_en_consultorio->nombre_pokemon = malloc(strlen(pokemon_de_menor_nivel->nombre) + 1);
+	pokemon_en_consultorio->nombre_entrenador = malloc(strlen(pokemon_de_menor_nivel->nombre_entrenador) + 1);
+
+	strcpy((char*)pokemon_en_consultorio->nombre_pokemon, pokemon_de_menor_nivel->nombre);
+	strcpy((char*)pokemon_en_consultorio->nombre_entrenador, pokemon_de_menor_nivel->nombre_entrenador);
 }
 
 ResultadoSimulacion atender_proximo_entrenador(simulador_t* simulador) {
@@ -156,6 +168,14 @@ ResultadoSimulacion atender_proximo_entrenador(simulador_t* simulador) {
 		}
 
 		lista_iterador_avanzar(simulador->pokemones_sala_espera);
+	}
+
+	if (!hay_pokemon_en_consultorio(simulador->pokemon_en_consultorio)) {
+		pokemon_en_recepcion_t* pokemon_en_consultorio = heap_extraer_raiz(simulador->recepcion);
+		atender_pokemon_de_menor_nivel(&(simulador->pokemon_en_consultorio), pokemon_en_consultorio);
+		free(pokemon_en_consultorio->nombre);
+		free(pokemon_en_consultorio->nombre_entrenador);
+		free(pokemon_en_consultorio);
 	}
 
 	simulador->estadisticas.pokemon_en_espera = (unsigned)heap_tamanio(simulador->recepcion);
@@ -222,6 +242,9 @@ ResultadoSimulacion simulador_simular_evento(simulador_t* simulador, EventoSimul
 void simulador_destruir(simulador_t* simulador) {
 	if (!simulador)
 		return;
+
+	free((char*)simulador->pokemon_en_consultorio.nombre_pokemon);
+	free((char*)simulador->pokemon_en_consultorio.nombre_entrenador);
 
 	heap_destruir(simulador->recepcion, destructor_pokemon_en_recepcion);
 	lista_iterador_destruir(simulador->entrenadores_sala_espera);

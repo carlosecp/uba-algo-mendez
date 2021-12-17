@@ -235,12 +235,30 @@ void dadoUnHospital_alAtenderAlProximoEntrenador_seAtiendeCorrectamente() {
 
 	simulador_t* simulador = simulador_crear(hospital);
 
+	ResultadoSimulacion res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+
+	pa2m_afirmar(res == ExitoSimulacion, "Al atender al proximo entrenador en un hospital se retorna Exito");
+
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+
 	EstadisticasSimulacion estadisticas;
 	simulador_simular_evento(simulador, ObtenerEstadisticas, &estadisticas);
+
+	pa2m_afirmar(estadisticas.entrenadores_atendidos == 2, "Al atender a un entrenador la cantidad total de entrenadores atendidos en el simulador aumenta en 1");
 
 	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+
+	simulador_simular_evento(simulador, ObtenerEstadisticas, &estadisticas);
+
+	// TODO: Tengo que verificar que la cantidad de atendidos sin haber adivinado
+	// ningun pokemon aun se igual a n-1, por el hecho de un pokemon va a estar 
+	// en el consultorio.
+	// TODO: Cambiar la descripcion de la prueba.
+	pa2m_afirmar(estadisticas.pokemon_en_espera == hospital_cantidad_pokemon(hospital),
+			"Luego de agregar todos los entrenadores del hospital la cantidad de pokemones en la recepcion es igual al total de pokemones")
+
 	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 
@@ -381,21 +399,21 @@ int main() {
 	dadosVariosArchivos_puedoAgregarlosTodosAlMismoHospital(); */
 
 	// Pruebas TP2
-	/* pa2m_nuevo_grupo("Pruebas simulador");
+	pa2m_nuevo_grupo("Pruebas simulador");
 	dadoUnHospital_alCrearUnSimulador_seRetornaElSimulador();
 	dadoUnSimuladorNULL_alSimularUnEvento_seRetornarError();
 	dadoUnSimulador_alSimularUnEventoInvalido_seRetornaError();
 
 	pa2m_nuevo_grupo("Pruebas evento \"ObtenerEstadisticas\"");
 	dadoUnHospitalVacio_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas();
-	dadoUnHospital_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas(); */
+	dadoUnHospital_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas();
 
 	pa2m_nuevo_grupo("Pruebas evento \"AtenderProximoEntrenador\"");
 	dadoUnHospitalVacio_alAtenderAlProximoEntrenador_seRetornaError();
 	dadoUnHospital_alAtenderAlProximoEntrenador_seAtiendeCorrectamente();
 
-	/* pa2m_nuevo_grupo("Pruebas evento \"ObtenerInformacionPokemonEnTratamiento\"");
-	dadoUnHospitalVacio_alObtenerLaInformacionDelPokemonEnTratamiento_seObtieneLaInformacionEsperada(); */
+	pa2m_nuevo_grupo("Pruebas evento \"ObtenerInformacionPokemonEnTratamiento\"");
+	dadoUnHospitalVacio_alObtenerLaInformacionDelPokemonEnTratamiento_seObtieneLaInformacionEsperada();
 
 	/* pa2m_nuevo_grupo("Pruebas heap");
 	dadoUnComparador_alCrearUnHeap_seCreaCorrectamente();
