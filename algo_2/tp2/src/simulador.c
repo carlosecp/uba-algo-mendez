@@ -19,6 +19,8 @@ struct _simulador_t {
 	heap_t* recepcion;
 	lista_iterador_t* sala_espera_entrenadores;
 	lista_iterador_t* sala_espera_pokemones;
+
+	lista_t* dificultades;
 };
 
 simulador_t* simulador_crear(hospital_t* hospital) {
@@ -51,7 +53,7 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 	lista_iterador_t* sala_espera_entrenadores = lista_iterador_crear(hospital->entrenadores);
 	if (!sala_espera_entrenadores) {
 		free(pokemon_en_tratamiento);
-		heap_destruir(recepcion, destructor_pokemon_en_recepcion);
+		heap_destruir(recepcion, destruir_pokemon_en_recepcion);
 		free(simulador);
 		return NULL;
 	}
@@ -59,11 +61,16 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 	lista_iterador_t* sala_espera_pokemones = lista_iterador_crear(hospital->pokemones_orden_llegada);
 	if (!sala_espera_pokemones) {
 		free(pokemon_en_tratamiento);
-		heap_destruir(recepcion, destructor_pokemon_en_recepcion);
+		heap_destruir(recepcion, destruir_pokemon_en_recepcion);
 		lista_iterador_destruir(sala_espera_entrenadores);
 		free(simulador);
 		return NULL;
 	}
+
+	// TODO: Mejorar estas validaciones
+	// lista_t* dificultades = lista_crear();
+
+	// agregar_dificultades_iniciales(dificultades);
 
 	simulador->hospital = hospital;
 	simulador->estadisticas = estadisticas;
@@ -145,7 +152,6 @@ ResultadoSimulacion adivinar_nivel_pokemon(simulador_t* simulador, Intento* inte
 		return ExitoSimulacion;
 	}
 
-
 	return ExitoSimulacion;
 }
 
@@ -201,13 +207,12 @@ void simulador_destruir(simulador_t* simulador) {
 	if (!simulador)
 		return;
 
-	free(simulador->pokemon_en_tratamiento->nombre_pokemon);
-	free(simulador->pokemon_en_tratamiento->nombre_entrenador);
-	free(simulador->pokemon_en_tratamiento);
+	destruir_pokemon_en_recepcion(simulador->pokemon_en_tratamiento);
+	heap_destruir(simulador->recepcion, destruir_pokemon_en_recepcion);
 
-	heap_destruir(simulador->recepcion, destructor_pokemon_en_recepcion);
 	lista_iterador_destruir(simulador->sala_espera_entrenadores);
 	lista_iterador_destruir(simulador->sala_espera_pokemones);
+	// lista_destruir(simulador->dificultades);
 
 	hospital_destruir(simulador->hospital);
 

@@ -17,7 +17,7 @@ int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b) {
 	return 0;
 }
 
-void destructor_pokemon_en_recepcion(void* _pokemon) {
+void destruir_pokemon_en_recepcion(void* _pokemon) {
 	pokemon_en_recepcion_t* pokemon = _pokemon;
 	free(pokemon->nombre_pokemon);
 	free(pokemon->nombre_entrenador);
@@ -100,3 +100,51 @@ void actualizar_pokemon_en_tratamiento(pokemon_en_recepcion_t* pokemon_en_tratam
 	free(pokemon_de_menor_nivel); // El nombre y el nivel se quedan guardados como copia. Luego se liberan.
 }
 
+/* typedef struct {
+	const char* nombre;
+	unsigned (*calcular_puntaje)(unsigned cantidad_intentos);
+	int (*verificar_nivel)(unsigned nivel_adivinado, unsigned nivel_pokemon);
+	const char* (*verificacion_a_string)(int resultado_verificacion);
+} DatosDificultad; */
+
+int verificar_nivel_facil(unsigned nivel_adivinado, unsigned nivel_pokemon) {
+	return (int)(nivel_pokemon - nivel_adivinado);
+}
+
+unsigned calcular_puntaje_facil(unsigned cantidad_intentos) {
+	return 0;
+}
+
+const char* verificacion_a_string_facil(int resultado_verificacion) {
+	if (resultado_verificacion >= 50)
+		return "Te quedaste corto por mas de 50 niveles";
+
+	if (resultado_verificacion < 50 && resultado_verificacion >= 25)
+		return "Te quedaste corto por entre 25 y 50 niveles";
+
+	if (resultado_verificacion < 25 && resultado_verificacion >= 10)
+		return "Te quedaste corto por entre 10 y 25 niveles";
+
+	if (resultado_verificacion < 10 && resultado_verificacion >= 5)
+		return "Te quedaste corto por entre 5 y 10 niveles";
+
+	if (resultado_verificacion > 0)
+		return "Te quedaste corto por entre 1 y 5 niveles";
+
+	if (resultado_verificacion < 0)
+		return "Te pasaste por entre 1 y 5 niveles";
+
+	return "Adivinaste Crack";
+}
+
+void agregar_dificultades_iniciales(lista_t* dificultades) {
+	DatosDificultad* dificultad_facil = malloc(sizeof(DatosDificultad));
+	if (!dificultad_facil)
+		return;
+
+	dificultad_facil->nombre = "Facil";
+	dificultad_facil->verificar_nivel = verificar_nivel_facil;
+	dificultad_facil->verificacion_a_string = verificacion_a_string_facil;
+
+	lista_insertar(dificultades, dificultad_facil);
+}

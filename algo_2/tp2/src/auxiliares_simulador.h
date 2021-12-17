@@ -5,7 +5,6 @@
 
 #include "hospital.h"
 #include "auxiliares_hospital.h"
-#include "simulador.h"
 #include "heap.h"
 
 typedef struct {
@@ -16,12 +15,14 @@ typedef struct {
 
 int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b);
 
-void destructor_pokemon_en_recepcion(void* _pokemon);
+void destruir_pokemon_en_recepcion(void* _pokemon);
 
 bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenador, lista_iterador_t* sala_de_espera_pokemones, heap_t* recepcion);
 
 bool hay_pokemon_en_tratamiento(pokemon_en_recepcion_t pokemon_en_tratamiento);
 
 void actualizar_pokemon_en_tratamiento(pokemon_en_recepcion_t* pokemon_en_tratamiento, heap_t* recepcion);
+
+void agregar_dificultades_iniciales(lista_t* dificultades);
 
 #endif
