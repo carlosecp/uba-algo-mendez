@@ -7,7 +7,7 @@
 #include "simulador.h"
 
 typedef struct {
-    simulador_t* simulador;  // simulador_t ya continene un hospital
+    simulador_t* simulador;
     bool jugando;
 } Juego;
 
@@ -15,7 +15,7 @@ void juego_inicializar(Juego* juego, hospital_t* hospital);
 
 void juego_titulo(const char* titulo);
 
-void juego_catch_error(const char* evento_simulado);
+void juego_error(const char* mensaje);
 
 void juego_terminar(Juego* juego);
 

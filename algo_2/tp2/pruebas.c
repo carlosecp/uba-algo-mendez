@@ -439,16 +439,16 @@ int main() {
 
 	// Pruebas TP2
 	pa2m_nuevo_grupo("Pruebas simulador");
-	/* dadoUnHospital_alCrearUnSimulador_seRetornaElSimulador();
+	dadoUnHospital_alCrearUnSimulador_seRetornaElSimulador();
 	dadoUnSimuladorNULL_alSimularUnEvento_seRetornarError();
 	dadoUnSimulador_alSimularUnEventoInvalido_seRetornaError();
 	dadoUnHospitalVacio_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas();
-	dadoUnHospital_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas(); */
+	dadoUnHospital_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas();
 
 	pa2m_nuevo_grupo("Pruebas atender entrenadores");
-	/* dadoUnHospitalVacio_alAtenderAlProximoEntrenador_seRetornaError();
+	dadoUnHospitalVacio_alAtenderAlProximoEntrenador_seRetornaError();
 	dadoUnHospital_alAtenderAlProximoEntrenador_seAtiendeCorrectamente();
-	dadoUnHospitalVacio_alObtenerLaInformacionDelPokemonEnTratamiento_seObtieneLaInformacionEsperada(); */
+	dadoUnHospitalVacio_alObtenerLaInformacionDelPokemonEnTratamiento_seObtieneLaInformacionEsperada();
 	dadoUnHospital_alAtenderAlProximoEntrenador_losPokemonesSeAtiendenConLaPrioridadCorrecta();
 
 	pa2m_nuevo_grupo("Pruebas adivinar nivel pokemon");

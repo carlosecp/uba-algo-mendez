@@ -8,7 +8,7 @@
 
 typedef struct {
     int id;
-    DatosDificultad datos_dificultad;
+    DatosDificultad datos;
 } DatosDificultadConId;
 
 abb_t* crear_dificultades_iniciales();
