@@ -3,17 +3,14 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "hash.h"
-#include "heap.h"
-#include "lista.h"
-
-#include "auxiliares_simulador.h"
+#include "aux_simulador_atencion_pokemon.h"
+#include "aux_simulador_dificultades.h"
 
 #define CANTIDAD_DIFICULTADES_INICIAL 3
 
 struct _simulador_t {
 	hospital_t* hospital;
-	pokemon_en_recepcion_t* pokemon_en_tratamiento;
+	PokemonEnRecepcion* pokemon_en_tratamiento;
 	EstadisticasSimulacion estadisticas;
 
 	heap_t* recepcion;
@@ -21,7 +18,30 @@ struct _simulador_t {
 	lista_iterador_t* sala_espera_pokemones;
 
 	abb_t* dificultades;
+	DatosDificultadConId dificultad_en_uso;
 };
+
+/**
+  * Pre: Recibe un simulador con todas sus estructuras de datos inicializadas
+  * por sus respetivos constructores. En caso contrario se esta enviando
+  * memoria invalida, lo que ocasiona un error en la liberacion.
+  *
+  * Libera la memoria de las estructuras de datos que componen
+  * un simulador en caso de que alguna de estas tenga un fallo durante
+  * su creacion.
+  */
+void simulador_destruir_en_fallo(simulador_t* simulador) {
+	if (!simulador)
+		return;
+
+	destruir_pokemon_en_recepcion(simulador->pokemon_en_tratamiento);
+	heap_destruir(simulador->recepcion, destruir_pokemon_en_recepcion);
+	lista_iterador_destruir(simulador->sala_espera_entrenadores);
+	lista_iterador_destruir(simulador->sala_espera_pokemones);
+
+	// TODO: liberar correctamente estas dificultades
+	simulador->dificultades = crear_dificultades_iniciales();
+}
 
 simulador_t* simulador_crear(hospital_t* hospital) {
 	if (!hospital)
@@ -31,62 +51,40 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 	if (!simulador)
 		return NULL;
 
-	pokemon_en_recepcion_t* pokemon_en_tratamiento = calloc(1, sizeof(pokemon_en_recepcion_t));
-	if (!pokemon_en_tratamiento) {
-		free(simulador);
-		return NULL;
-	}
+	bool error_creacion = false;
 
-	EstadisticasSimulacion estadisticas = (EstadisticasSimulacion){
+	simulador->hospital = hospital;
+
+	simulador->pokemon_en_tratamiento = calloc(1, sizeof(PokemonEnRecepcion));
+	if (!(simulador->pokemon_en_tratamiento))
+		error_creacion = true;
+
+	simulador->estadisticas = (EstadisticasSimulacion){
 		0,
 		.entrenadores_totales = (unsigned)hospital_cantidad_entrenadores(hospital),
 		.pokemon_totales = (unsigned)hospital_cantidad_pokemon(hospital),
 	};
 
-	heap_t* recepcion = heap_crear(comparador_nivel_pokemon);
-	if (!recepcion) {
-		free(pokemon_en_tratamiento);
-		free(simulador);
+	simulador->recepcion = heap_crear(comparador_nivel_pokemon);
+	if (!(simulador->recepcion))
+		error_creacion = true;
+
+	simulador->sala_espera_entrenadores = lista_iterador_crear(hospital->entrenadores);
+	if (!(simulador->sala_espera_entrenadores))
+		error_creacion = true;
+
+	simulador->sala_espera_pokemones = lista_iterador_crear(hospital->pokemones_orden_llegada);
+	if (!(simulador->sala_espera_pokemones))
+		error_creacion = true;
+
+	simulador->dificultades = crear_dificultades_iniciales();
+	if (!(simulador->dificultades))
+		error_creacion = true;
+
+	if (error_creacion) {
+		simulador_destruir_en_fallo(simulador);
 		return NULL;
 	}
-
-	lista_iterador_t* sala_espera_entrenadores = lista_iterador_crear(hospital->entrenadores);
-	if (!sala_espera_entrenadores) {
-		heap_destruir(recepcion, destruir_pokemon_en_recepcion);
-		free(pokemon_en_tratamiento);
-		free(simulador);
-		return NULL;
-	}
-
-	lista_iterador_t* sala_espera_pokemones = lista_iterador_crear(hospital->pokemones_orden_llegada);
-	if (!sala_espera_pokemones) {
-		heap_destruir(recepcion, destruir_pokemon_en_recepcion);
-		lista_iterador_destruir(sala_espera_entrenadores);
-
-		free(pokemon_en_tratamiento);
-		free(simulador);
-		return NULL;
-	}
-
-	abb_t* dificultades = crear_dificultades_iniciales();
-	if (!dificultades) {
-		heap_destruir(recepcion, destruir_pokemon_en_recepcion);
-		
-		lista_iterador_destruir(sala_espera_pokemones);
-		lista_iterador_destruir(sala_espera_entrenadores);
-
-		free(pokemon_en_tratamiento);
-		free(simulador);
-		return NULL;
-	}
-
-	simulador->hospital = hospital;
-	simulador->estadisticas = estadisticas;
-	simulador->pokemon_en_tratamiento = pokemon_en_tratamiento;
-	simulador->recepcion = recepcion;
-	simulador->sala_espera_entrenadores = sala_espera_entrenadores;
-	simulador->sala_espera_pokemones = sala_espera_pokemones;
-	simulador->dificultades = dificultades;
 
 	return simulador;
 }
@@ -147,15 +145,16 @@ ResultadoSimulacion adivinar_nivel_pokemon(simulador_t* simulador, Intento* inte
 		return ErrorSimulacion;
 
 	/* unsigned nivel_adivinado;
-	bool es_correcto;
-	const char* resultado_string; */
+	   bool es_correcto;
+	   const char* resultado_string; */
 
-	pokemon_en_recepcion_t* pokemon_en_tratamiento = simulador->pokemon_en_tratamiento;
+	PokemonEnRecepcion* pokemon_en_tratamiento = simulador->pokemon_en_tratamiento;
 	intento->es_correcto = intento->nivel_adivinado == pokemon_en_tratamiento->nivel;
 
 	if (!hay_pokemon_en_tratamiento(*pokemon_en_tratamiento))
 		return ErrorSimulacion;
 
+	// TODO: Tengo que cambiar esto a la interfaz en si
 	if (!(intento->es_correcto)) {
 		printf("Vuelve a intentar\n");
 		return ExitoSimulacion;
@@ -168,21 +167,23 @@ ResultadoSimulacion agregar_dificultad(simulador_t* simulador, DatosDificultad* 
 	return ErrorSimulacion;
 }
 
-ResultadoSimulacion obtener_informacion_dificultad(simulador_t* simulador, InformacionDificultad* info_dificultad) {
-	if (!simulador || !info_dificultad)
+ResultadoSimulacion obtener_informacion_dificultad(simulador_t* simulador, InformacionDificultad* dificultad_buscada) {
+	if (!simulador || !dificultad_buscada)
 		return ErrorSimulacion;
 
-	int id_buscado = info_dificultad->id;
-	DatosDificultadConId* dificultad_buscada = malloc(sizeof(DatosDificultadConId));
-	if (!dificultad_buscada)
+	DatosDificultadConId* datos_dificultad_buscada = calloc(1, sizeof(DatosDificultadConId));
+	if (!datos_dificultad_buscada)
 		return ErrorSimulacion;
 
-	dificultad_buscada->id = id_buscado;
+	datos_dificultad_buscada->id = dificultad_buscada->id;
 
-	DatosDificultadConId* dificultad_encontrada = abb_buscar(simulador->dificultades, dificultad_buscada);
-	printf("DIFICULTAD: %s\n", dificultad_encontrada->datos_dificultad.nombre);
+	DatosDificultadConId* dificultad_encontrada = abb_buscar(simulador->dificultades, datos_dificultad_buscada);
+	if (!dificultad_encontrada) {
+		dificultad_buscada->nombre_dificultad = dificultad_encontrada->datos_dificultad.nombre;
+		dificultad_buscada->en_uso = dificultad_esta_en_uso(simulador->dificultad_en_uso, *dificultad_encontrada);
+	}
 
-	free(dificultad_buscada);
+	free(datos_dificultad_buscada);
 
 	return ErrorSimulacion;
 }

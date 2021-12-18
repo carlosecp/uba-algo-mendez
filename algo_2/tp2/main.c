@@ -41,20 +41,16 @@ void mostrar_estadisticas(simulador_t* simulador) {
 void atender_proximo_entreandor(simulador_t* simulador) {
 	ResultadoSimulacion res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 
-	if (res == ErrorSimulacion) {
-		juego_catch_error("AtenderProximoEntrenador");
+	if (res == ErrorSimulacion)
 		return;
-	}
 }
 
 void mostrar_pokemon_en_tratamiento(simulador_t* simulador) {
 	InformacionPokemon i;
 	ResultadoSimulacion res = simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &i);
 
-	if (res == ErrorSimulacion) {
-		juego_catch_error("ObtenerInformacionPokemonEnTratamiento");
+	if (res == ErrorSimulacion)
 		return;
-	}
 
 	juego_titulo("POKEMON EN TRATAMIENTO");
 	printf("• Pokemon: %s\n", i.nombre_pokemon);
@@ -77,23 +73,24 @@ void adivinar_nivel_pokemon_en_consultorio(simulador_t* simulador) {
 
 	ResultadoSimulacion res = simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
 
-	if (res == ErrorSimulacion) {
-		juego_catch_error("AdivinarNivelPokemon");
+	if (res == ErrorSimulacion)
 		return;
-	}
 }
 
 void mostrar_informacion_dificultad(simulador_t* simulador) {
-	InformacionDificultad info_dificultad;
+	InformacionDificultad dificultad_buscada;
 
-	info_dificultad.id = 0;
+	printf("ID Dificultad: ");
+	scanf(" %i", &(dificultad_buscada.id));
+	printf("\n");
 
-	ResultadoSimulacion res = simulador_simular_evento(simulador, ObtenerInformacionDificultad, &info_dificultad);
+	ResultadoSimulacion res = simulador_simular_evento(simulador, ObtenerInformacionDificultad, &dificultad_buscada);
 
-	if (res == ErrorSimulacion) {
-		juego_catch_error("ObtenerInformacionDificultad");
+	if (res == ErrorSimulacion)
 		return;
-	}
+
+	printf("Dificultad Encontrada: {%s %i}\n", dificultad_buscada.nombre_dificultad, dificultad_buscada.id);
+	printf("Dificultad Esta En Uso: %s\n", dificultad_buscada.en_uso ? "Si" : "No");
 }
 
 void ejecutar_comando(Juego* juego, char comando) {
