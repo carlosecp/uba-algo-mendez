@@ -20,7 +20,7 @@ struct _simulador_t {
 	lista_iterador_t* sala_espera_entrenadores;
 	lista_iterador_t* sala_espera_pokemones;
 
-	lista_t* dificultades;
+	abb_t* dificultades;
 };
 
 simulador_t* simulador_crear(hospital_t* hospital) {
@@ -52,24 +52,33 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 
 	lista_iterador_t* sala_espera_entrenadores = lista_iterador_crear(hospital->entrenadores);
 	if (!sala_espera_entrenadores) {
-		free(pokemon_en_tratamiento);
 		heap_destruir(recepcion, destruir_pokemon_en_recepcion);
+		free(pokemon_en_tratamiento);
 		free(simulador);
 		return NULL;
 	}
 
 	lista_iterador_t* sala_espera_pokemones = lista_iterador_crear(hospital->pokemones_orden_llegada);
 	if (!sala_espera_pokemones) {
-		free(pokemon_en_tratamiento);
 		heap_destruir(recepcion, destruir_pokemon_en_recepcion);
 		lista_iterador_destruir(sala_espera_entrenadores);
+
+		free(pokemon_en_tratamiento);
 		free(simulador);
 		return NULL;
 	}
 
-	// TODO: Mejorar estas validaciones
-	lista_t* dificultades = lista_crear();
-	dificultades = agregar_dificultades_iniciales(dificultades);
+	abb_t* dificultades = crear_dificultades_iniciales();
+	if (!dificultades) {
+		heap_destruir(recepcion, destruir_pokemon_en_recepcion);
+		
+		lista_iterador_destruir(sala_espera_pokemones);
+		lista_iterador_destruir(sala_espera_entrenadores);
+
+		free(pokemon_en_tratamiento);
+		free(simulador);
+		return NULL;
+	}
 
 	simulador->hospital = hospital;
 	simulador->estadisticas = estadisticas;
@@ -160,6 +169,21 @@ ResultadoSimulacion agregar_dificultad(simulador_t* simulador, DatosDificultad* 
 }
 
 ResultadoSimulacion obtener_informacion_dificultad(simulador_t* simulador, InformacionDificultad* info_dificultad) {
+	if (!simulador || !info_dificultad)
+		return ErrorSimulacion;
+
+	int id_buscado = info_dificultad->id;
+	DatosDificultadConId* dificultad_buscada = malloc(sizeof(DatosDificultadConId));
+	if (!dificultad_buscada)
+		return ErrorSimulacion;
+
+	dificultad_buscada->id = id_buscado;
+
+	DatosDificultadConId* dificultad_encontrada = abb_buscar(simulador->dificultades, dificultad_buscada);
+	printf("DIFICULTAD: %s\n", dificultad_encontrada->datos_dificultad.nombre);
+
+	free(dificultad_buscada);
+
 	return ErrorSimulacion;
 }
 
@@ -213,8 +237,7 @@ void simulador_destruir(simulador_t* simulador) {
 	lista_iterador_destruir(simulador->sala_espera_entrenadores);
 	lista_iterador_destruir(simulador->sala_espera_pokemones);
 
-	lista_con_cada_elemento(simulador->dificultades, destruir_dificultad, NULL);
-	lista_destruir(simulador->dificultades);
+	abb_destruir_todo(simulador->dificultades, destruir_dificultad);
 
 	hospital_destruir(simulador->hospital);
 

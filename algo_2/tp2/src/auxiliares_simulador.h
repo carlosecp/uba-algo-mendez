@@ -9,6 +9,11 @@
 #include "simulador.h"
 
 typedef struct {
+	int id;
+	DatosDificultad datos_dificultad;
+} DatosDificultadConId;
+
+typedef struct {
 	char* nombre_pokemon;
 	char* nombre_entrenador;
 	size_t nivel;
@@ -18,7 +23,7 @@ int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b);
 
 void destruir_pokemon_en_recepcion(void* _pokemon);
 
-bool destruir_dificultad(void* _dificultad, void* aux);
+void destruir_dificultad(void* _dificultad);
 
 bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenador, lista_iterador_t* sala_de_espera_pokemones, heap_t* recepcion);
 
@@ -26,6 +31,6 @@ bool hay_pokemon_en_tratamiento(pokemon_en_recepcion_t pokemon_en_tratamiento);
 
 void actualizar_pokemon_en_tratamiento(pokemon_en_recepcion_t* pokemon_en_tratamiento, heap_t* recepcion);
 
-lista_t* agregar_dificultades_iniciales(lista_t* dificultades);
+abb_t* crear_dificultades_iniciales();
 
 #endif

@@ -298,7 +298,7 @@ void dadoUnHospital_alAtenderAlProximoEntrenador_losPokemonesSeAtiendenConLaPrio
 	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 
-	simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &informacion);
+	res = simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &informacion);
 
 	pa2m_afirmar(strcmp(informacion.nombre_pokemon, "rampardos") == 0,
 			"Luego de atender a varios entrenadores sin haber terminado de atender al pokemon en tratamiento, este ultimo se mentiene en tratamiento");

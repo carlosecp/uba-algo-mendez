@@ -86,6 +86,8 @@ void adivinar_nivel_pokemon_en_consultorio(simulador_t* simulador) {
 void mostrar_informacion_dificultad(simulador_t* simulador) {
 	InformacionDificultad info_dificultad;
 
+	info_dificultad.id = 0;
+
 	ResultadoSimulacion res = simulador_simular_evento(simulador, ObtenerInformacionDificultad, &info_dificultad);
 
 	if (res == ErrorSimulacion) {

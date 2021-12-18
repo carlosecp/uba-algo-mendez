@@ -1,4 +1,5 @@
 #include "auxiliares_simulador.h"
+#include "abb.h"
 #include "lista.h"
 #include "simulador.h"
 
@@ -137,22 +138,57 @@ const char* verificacion_a_string_facil(int resultado_verificacion) {
 	return "Adivinaste Crack";
 }
 
-lista_t* agregar_dificultades_iniciales(lista_t* dificultades) {
-	DatosDificultad* dificultad_facil = malloc(sizeof(DatosDificultad));
+int comparador_dificultades(void* _dificultad_1, void* _dificultad_2) {
+	DatosDificultadConId* dificultad_1 = _dificultad_1;
+	DatosDificultadConId* dificultad_2 = _dificultad_2;
+
+	if (dificultad_1->id > dificultad_2->id)
+		return 1;
+
+	if (dificultad_1->id < dificultad_2->id)
+		return -1;
+
+	return 0;
+}
+
+// TODO: Mejorar las validaciones
+// Probablemente sea mejor hacer todo esto en una funcion para cada dificultad
+// Tambien deberia estar usando agregar_dificultad (no en el juego, no se ni donde)
+abb_t* crear_dificultades_iniciales() {
+	abb_t* dificultades = abb_crear(comparador_dificultades);
+	if (!dificultades)
+		return NULL;
+
+	DatosDificultadConId* dificultad_facil = malloc(sizeof(DatosDificultadConId));
 	if (!dificultad_facil)
 		return NULL;
 
-	dificultad_facil->nombre = "Facil";
-	dificultad_facil->verificar_nivel = verificar_nivel_facil;
-	dificultad_facil->verificacion_a_string = verificacion_a_string_facil;
+	dificultad_facil->datos_dificultad = (DatosDificultad){
+		.nombre = "Facil",
+		.verificar_nivel = verificar_nivel_facil,
+		.verificacion_a_string = verificacion_a_string_facil,
+	};
 
-	dificultades = lista_insertar(dificultades, dificultad_facil);
+	dificultad_facil->id = (int)abb_tamanio(dificultades);
+	dificultades = abb_insertar(dificultades, dificultad_facil);
+
+	DatosDificultadConId* dificultad_media = malloc(sizeof(DatosDificultadConId));
+	if (!dificultad_media)
+		return NULL;
+
+	dificultad_media->datos_dificultad = (DatosDificultad){
+		.nombre = "Media",
+		.verificar_nivel = verificar_nivel_facil,
+		.verificacion_a_string = verificacion_a_string_facil,
+	};
+
+	dificultad_media->id = (int)abb_tamanio(dificultades);
+	dificultades = abb_insertar(dificultades, dificultad_media);
 
 	return dificultades;
 }
 
-bool destruir_dificultad(void* _dificultad, void* aux) {
-	DatosDificultad* dificultad = _dificultad;
+void destruir_dificultad(void* _dificultad) {
+	DatosDificultadConId* dificultad = _dificultad;
 	free(dificultad);
-	return true;
 }
