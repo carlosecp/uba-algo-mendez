@@ -73,6 +73,9 @@ bool actualizar_pokemon_en_tratamiento(PokemonEnRecepcion** pokemon_en_tratamien
 	if (!pokemon_en_tratamiento || !recepcion)
 		return false;
 
+	if (*pokemon_en_tratamiento)
+		return false;
+
 	*pokemon_en_tratamiento = heap_elemento_en_raiz(recepcion);
 	return true;
 }

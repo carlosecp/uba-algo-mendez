@@ -7,6 +7,8 @@
 #include "src/simulador.h"
 #include "string.h"
 
+#define PUNTAJE_INICIAL 100
+
 bool ignorar_pokemon(pokemon_t* p) {
 	p = p;
 	return true;
@@ -214,6 +216,23 @@ void dadoUnHospital_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas(
 	simulador_destruir(simulador);
 }
 
+void dadoUnSimulador_alFinalizarLaSimulacion_yaNoSePuedenSeguirSimulandoEventos() {
+	hospital_t* hospital = hospital_crear();
+	simulador_t* simulador = simulador_crear(hospital);
+
+	ResultadoSimulacion res = simulador_simular_evento(simulador, FinalizarSimulacion, NULL);
+
+	pa2m_afirmar(res == ExitoSimulacion, "Finalizar la simulacion de un simulador activo retorna Exito");
+
+	res = simulador_simular_evento(simulador, FinalizarSimulacion, NULL);
+	pa2m_afirmar(res == ErrorSimulacion, "Finalizar la simulacion de un simulador previamente finalizado retorna Error");
+
+	res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+	pa2m_afirmar(res == ErrorSimulacion, "Una vez se finaliza un simulador, al intentar simular mas eventos se retorna Error");
+
+	simulador_destruir(simulador);
+}
+
 void dadoUnHospitalVacio_alAtenderAlProximoEntrenador_seRetornaError() {
 	hospital_t* hospital = hospital_crear();
 	simulador_t* simulador = simulador_crear(hospital);
@@ -378,6 +397,7 @@ void dadoUnSimulador_alIntentarAdivinarElNivelDeVariosPokemones_seAdivinanCorrec
 
 	intento.nivel_adivinado = 69;
 	res = simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
+	res = simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
 
 	pa2m_afirmar(res == ErrorSimulacion, "Intentar adivinar el nivel de un pokemon cuando ya se han atendido todos retorna Error");
 	pa2m_afirmar(intento.es_correcto == false, "Intentar adivinar el nivel de un pokemon cuando ya se han atendido todos resulta en un intento fallido");
@@ -392,6 +412,122 @@ void dadoUnSimulador_alIntentarAdivinarElNivelDeVariosPokemones_seAdivinanCorrec
 }
 
 void dadoUnSimulador_alIntentarAdivinarElNivelConDiferentesDificultades_laDificultadelJuegoSeAjustaCorrectamente() {
+	hospital_t* hospital = hospital_crear();
+	hospital_leer_archivo(hospital, "ejemplos/varios_entrenadores");
+
+	simulador_t* simulador = simulador_crear(hospital);
+
+	ResultadoSimulacion res = simulador_simular_evento(simulador, SeleccionarDificultad, NULL);
+	pa2m_afirmar(res == ErrorSimulacion, "Al seleccionar una dificultad pasando un dato NULL resulta en Error");
+
+	int id_nueva_dificultad = 69;
+	res = simulador_simular_evento(simulador, SeleccionarDificultad, &id_nueva_dificultad);
+
+	pa2m_afirmar(res == ErrorSimulacion, "Seleccionar un dificultad con un ID inexistente resulta en Error");
+
+	id_nueva_dificultad = 1;
+	res = simulador_simular_evento(simulador, SeleccionarDificultad, &id_nueva_dificultad);
+
+	pa2m_afirmar(res == ExitoSimulacion, "Seleccionar una dificultad nueva resulta en Exito");
+
+	InformacionDificultad informacion;
+	informacion.id = 1;
+	simulador_simular_evento(simulador, ObtenerInformacionDificultad, &informacion);
+
+	pa2m_afirmar(informacion.en_uso == true, "Luego de seleccionar la dificultad con ID 1, esta dificultad pasa a estar en uso");
+
+	informacion.id = 0;
+	simulador_simular_evento(simulador, ObtenerInformacionDificultad, &informacion);
+
+	pa2m_afirmar(informacion.en_uso == false, "Luego de cambiar la dificultad, la dificultad que estaba en uso antes ahora ya no esta en uso");
+
+	simulador_destruir(simulador);
+}
+
+void dadoUnSimulador_alCrearElSimulador_esteTiene3DificultadesIniciales() {
+	hospital_t* hospital = hospital_crear();
+	hospital_leer_archivo(hospital, "ejemplos/varios_entrenadores.hospital");
+
+	simulador_t* simulador = simulador_crear(hospital);
+
+	ResultadoSimulacion res = simulador_simular_evento(simulador, ObtenerInformacionDificultad, NULL);
+
+	pa2m_afirmar(res == ErrorSimulacion, "Obtener la informacion de una dificultad pasando un dato NULL resulta en Error");
+
+	InformacionDificultad informacion;
+	informacion.id = 0;
+
+	res = simulador_simular_evento(simulador, ObtenerInformacionDificultad, &informacion);
+
+	pa2m_afirmar(res == ExitoSimulacion, "Obtener la informacion de una de las dificultades creadas retorna Exito");
+	pa2m_afirmar(strcmp(informacion.nombre_dificultad, "Facil") == 0, "La dificultad con ID 0 tiene el nombre \"Facil\"");
+	pa2m_afirmar(informacion.en_uso == true, "La dificultad \"Facil\" esta en uso por defecto");
+
+	informacion.id = 1;
+	simulador_simular_evento(simulador, ObtenerInformacionDificultad, &informacion);
+	pa2m_afirmar(strcmp(informacion.nombre_dificultad, "Media") == 0, "La dificultad con ID 1 tiene el nombre \"Media\"");
+
+	informacion.id = 2;
+	simulador_simular_evento(simulador, ObtenerInformacionDificultad, &informacion);
+	pa2m_afirmar(strcmp(informacion.nombre_dificultad, "Dificil") == 0, "La dificultad con ID 2 tiene el nombre \"Dificil\"");
+
+	informacion.id = 69;
+	res = simulador_simular_evento(simulador, ObtenerInformacionDificultad, &informacion);
+
+	pa2m_afirmar(res == ErrorSimulacion, "Buscar una dificultad con un ID que no existe retorna Error");
+	pa2m_afirmar(informacion.nombre_dificultad == NULL, "Al buscar una dificultad con un ID que no existe, el nombre de la dificultad buscada en el dato pasado pasa a ser NULL");
+	pa2m_afirmar(informacion.id == -1, "Al buscar una dificultad con un ID que no existe, el ID buscado en el dato pasado pasa a ser -1");
+
+	simulador_destruir(simulador);
+}
+
+unsigned calcular_puntaje_ultra_nightmare(unsigned cantidad_intentos) {
+	return PUNTAJE_INICIAL / cantidad_intentos + 1;
+}
+
+int verificar_nive_ultra_nightmare(unsigned nivel_adivinado, unsigned nivel_pokemon) {
+	return (int)nivel_pokemon - (int)nivel_adivinado;
+}
+
+const char* verificacion_a_string_ultra_nightmare(int resultado_verificacion) {
+	if (resultado_verificacion == 0)
+		return "Adivinaste Crack";
+
+	return "No Adivinaste Crack";
+}
+
+void dadaUnaDificultad_alAgregarlaAlSimulador_laDificultadSeAgregaCorrectamente() {
+	hospital_t* hospital = hospital_crear();
+	hospital_leer_archivo(hospital, "ejemplos/varios_entrenadores.hospital");
+
+	simulador_t* simulador = simulador_crear(hospital);
+
+	ResultadoSimulacion res = simulador_simular_evento(simulador, AgregarDificultad, NULL);
+
+	pa2m_afirmar(res == ErrorSimulacion, "Intentar agregar una nueva dificultad con un dato NULL resulta en Error");
+
+	// TODO: Tengo que probar que los datos que se le mandan a la dificultad sean validos tambien.
+
+	DatosDificultad nueva_dificultad = {
+		.nombre = "Ultra Nightmare",
+		.calcular_puntaje = calcular_puntaje_ultra_nightmare,
+		.verificar_nivel = verificar_nive_ultra_nightmare,
+		.verificacion_a_string = verificacion_a_string_ultra_nightmare 
+	};
+
+	res = simulador_simular_evento(simulador, AgregarDificultad, &nueva_dificultad);
+
+	pa2m_afirmar(res == ExitoSimulacion, "Agregar una nueva dificultad retorna Exito");
+
+	InformacionDificultad informacion;
+	informacion.id = 4;
+
+	simulador_simular_evento(simulador, ObtenerInformacionDificultad, &informacion);
+
+	pa2m_afirmar(strcmp(informacion.nombre_dificultad, nueva_dificultad.nombre) == 0,
+			"Se encuentra el nombre de la nueva dificultad agregada");
+
+	simulador_destruir(simulador);
 }
 
 /* Pruebas heap */
@@ -516,6 +652,7 @@ int main() {
 	dadoUnSimulador_alSimularUnEventoInvalido_seRetornaError();
 	dadoUnHospitalVacio_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas();
 	dadoUnHospital_alObtenerLasEstadisticas_seObtienenLasEstadisticasEsperadas();
+	dadoUnSimulador_alFinalizarLaSimulacion_yaNoSePuedenSeguirSimulandoEventos();
 
 	pa2m_nuevo_grupo("Pruebas atender entrenadores");
 	dadoUnHospitalVacio_alAtenderAlProximoEntrenador_seRetornaError();
@@ -527,7 +664,11 @@ int main() {
 	dadoUnSimuladorSinPokemonEnTratamiento_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seRetornaError();
 	dadoUnSimulador_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seAdivinaCorrectamente();
 	dadoUnSimulador_alIntentarAdivinarElNivelDeVariosPokemones_seAdivinanCorrectamente();
+
+	pa2m_nuevo_grupo("Pruebas dificultades");
 	dadoUnSimulador_alIntentarAdivinarElNivelConDiferentesDificultades_laDificultadelJuegoSeAjustaCorrectamente();
+	dadoUnSimulador_alCrearElSimulador_esteTiene3DificultadesIniciales();
+	dadaUnaDificultad_alAgregarlaAlSimulador_laDificultadSeAgregaCorrectamente();
 
 	/* pa2m_nuevo_grupo("Pruebas heap");
 	dadoUnComparador_alCrearUnHeap_seCreaCorrectamente();

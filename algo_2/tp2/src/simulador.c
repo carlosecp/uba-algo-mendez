@@ -22,6 +22,8 @@ struct _simulador_t {
 	abb_t* dificultades;
 	DatosDificultadConId dificultad_en_uso;
 	unsigned intentos_actuales;
+
+	bool en_curso;
 };
 
 /**
@@ -77,6 +79,8 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 	simulador->dificultades = crear_dificultades_iniciales(&(simulador->dificultad_en_uso));
 	if (!(simulador->dificultades))
 		exito = false;
+
+	simulador->en_curso = true;
 
 	if (!exito) {
 		simulador_destruir_en_fallo(simulador);
@@ -139,6 +143,9 @@ ResultadoSimulacion obtener_informacion_pokemon_en_tratamiento(simulador_t simul
 		.nombre_entrenador = nombre_entrenador,
 	};
 
+	if (!pokemon_en_tratamiento)
+		return ErrorSimulacion;
+
 	return ExitoSimulacion;
 }
 
@@ -168,8 +175,10 @@ ResultadoSimulacion adivinar_nivel_pokemon(simulador_t* simulador, Intento* inte
 		return ErrorSimulacion;
 
 	PokemonEnRecepcion* pokemon_en_tratamiento = simulador->pokemon_en_tratamiento;
-	if (!pokemon_en_tratamiento)
+	if (!pokemon_en_tratamiento) {
+		intento->es_correcto = false;
 		return ErrorSimulacion;
+	}
 
 	int (*verificar_nivel)(unsigned, unsigned) = simulador->dificultad_en_uso.verificar_nivel;
 	int resultado = verificar_nivel(intento->nivel_adivinado, (unsigned)pokemon_en_tratamiento->nivel);
@@ -187,27 +196,53 @@ ResultadoSimulacion adivinar_nivel_pokemon(simulador_t* simulador, Intento* inte
 	return ExitoSimulacion;
 }
 
-ResultadoSimulacion agregar_dificultad(simulador_t* simulador, DatosDificultad* datos_dificultad) {
-	return ErrorSimulacion;
+ResultadoSimulacion agregar_dificultad(simulador_t* simulador, DatosDificultad* nueva_dificultad) {
+	if (!simulador || !nueva_dificultad)
+		return ErrorSimulacion;
+
+	DatosDificultadConId* dificultad_creada =
+		crear_nueva_dificultad(4, nueva_dificultad->nombre, nueva_dificultad->calcular_puntaje, nueva_dificultad->verificar_nivel, nueva_dificultad->verificacion_a_string);
+
+	simulador->dificultades = abb_insertar(simulador->dificultades, dificultad_creada);
+
+	return ExitoSimulacion;
+}
+
+ResultadoSimulacion seleccionar_dificultad(simulador_t* simulador, int* id_dificultad) {
+	if (!id_dificultad)
+		return ErrorSimulacion;
+
+	DatosDificultadConId datos_dificultad_buscada = {
+		.id = *id_dificultad
+	};
+
+	DatosDificultadConId* dificultad_encontrada = abb_buscar(simulador->dificultades, &datos_dificultad_buscada);
+	if (!dificultad_encontrada)
+		return ErrorSimulacion;
+
+	simulador->dificultad_en_uso = *dificultad_encontrada;
+
+	return ExitoSimulacion;
 }
 
 ResultadoSimulacion obtener_informacion_dificultad(simulador_t* simulador, InformacionDificultad* dificultad_buscada) {
 	if (!simulador || !dificultad_buscada)
 		return ErrorSimulacion;
 
-	DatosDificultadConId* datos_dificultad_buscada = calloc(1, sizeof(DatosDificultadConId));
-	if (!datos_dificultad_buscada)
+	DatosDificultadConId datos_dificultad_buscada = {
+		.id = dificultad_buscada->id
+	};
+
+	DatosDificultadConId* dificultad_encontrada = abb_buscar(simulador->dificultades, &datos_dificultad_buscada);
+	if (!dificultad_encontrada) {
+		dificultad_buscada->id = -1;
+		dificultad_buscada->nombre_dificultad = NULL;
+		dificultad_buscada->en_uso = false;
 		return ErrorSimulacion;
-
-	datos_dificultad_buscada->id = dificultad_buscada->id;
-
-	DatosDificultadConId* dificultad_encontrada = abb_buscar(simulador->dificultades, datos_dificultad_buscada);
-	if (dificultad_encontrada) {
-		dificultad_buscada->nombre_dificultad = dificultad_encontrada->nombre;
-		dificultad_buscada->en_uso = dificultad_esta_en_uso(simulador->dificultad_en_uso, *dificultad_encontrada);
 	}
 
-	free(datos_dificultad_buscada);
+	dificultad_buscada->nombre_dificultad = dificultad_encontrada->nombre;
+	dificultad_buscada->en_uso = dificultad_esta_en_uso(simulador->dificultad_en_uso, *dificultad_encontrada);
 
 	return ExitoSimulacion;
 }
@@ -215,7 +250,7 @@ ResultadoSimulacion obtener_informacion_dificultad(simulador_t* simulador, Infor
 ResultadoSimulacion simulador_simular_evento(simulador_t* simulador, EventoSimulacion evento, void* datos) {
 	ResultadoSimulacion res = ErrorSimulacion;
 
-	if (!simulador)
+	if (!simulador || !(simulador->en_curso))
 		return res;
 
 	simulador->estadisticas.cantidad_eventos_simulados++;
@@ -237,11 +272,13 @@ ResultadoSimulacion simulador_simular_evento(simulador_t* simulador, EventoSimul
 			res = agregar_dificultad(simulador, datos);
 			break;
 		case SeleccionarDificultad:
+			res = seleccionar_dificultad(simulador, datos);
 			break;
 		case ObtenerInformacionDificultad:
 			res = obtener_informacion_dificultad(simulador, datos);
 			break;
 		case FinalizarSimulacion:
+			simulador->en_curso = false;
 			res = ExitoSimulacion;
 			break;
 		default:

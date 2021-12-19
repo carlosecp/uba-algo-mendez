@@ -37,9 +37,10 @@ void mostrar_estadisticas(simulador_t* simulador) {
 
 void atender_proximo_entreandor(simulador_t* simulador) {
 	ResultadoSimulacion res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
-
 	if (res == ErrorSimulacion)
 		return;
+
+	// Me falta poner algo como: Entrenador atendido o algo asi
 }
 
 void mostrar_pokemon_en_tratamiento(simulador_t* simulador) {
@@ -68,7 +69,6 @@ void adivinar_nivel_pokemon_en_tratamiento(simulador_t* simulador) {
 	scanf(" %i", &(intento.nivel_adivinado));
 
 	ResultadoSimulacion res = simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
-
 	if (res == ErrorSimulacion)
 		return;
 
@@ -77,6 +77,30 @@ void adivinar_nivel_pokemon_en_tratamiento(simulador_t* simulador) {
 	} else {
 		juego_prompt_error("INCORRECTO", intento.resultado_string);
 	}
+}
+
+void seleccionar_nueva_dificultad(simulador_t* simulador) {
+	if (!simulador)
+		return;
+
+	int id_nueva_dificultad;
+
+	printf("Seleccionar ID Dificultad: ");
+	scanf(" %i", &id_nueva_dificultad);
+
+	ResultadoSimulacion res = simulador_simular_evento(simulador, SeleccionarDificultad, &id_nueva_dificultad);
+	if (res == ErrorSimulacion)
+		return;
+
+	InformacionDificultad informacion_nueva_dificultad = {
+		.id = id_nueva_dificultad,
+	};
+
+	res = simulador_simular_evento(simulador, ObtenerInformacionDificultad, &informacion_nueva_dificultad);
+	if (res == ErrorSimulacion)
+		return;
+
+	printf("Dificultad Seleccionada: %s\n", informacion_nueva_dificultad.nombre_dificultad);
 }
 
 void mostrar_informacion_dificultad(simulador_t* simulador) {
@@ -90,7 +114,6 @@ void mostrar_informacion_dificultad(simulador_t* simulador) {
 	scanf(" %i", &(dificultad_buscada.id));
 
 	ResultadoSimulacion res = simulador_simular_evento(simulador, ObtenerInformacionDificultad, &dificultad_buscada);
-
 	if (res == ErrorSimulacion)
 		return;
 
@@ -120,6 +143,8 @@ void ejecutar_comando(Juego* juego, char comando) {
 			adivinar_nivel_pokemon_en_tratamiento(simulador);
 			break;
 		case 'd':
+			seleccionar_nueva_dificultad(simulador);
+			break;
 		case 'o':
 			mostrar_informacion_dificultad(simulador);
 			break;
