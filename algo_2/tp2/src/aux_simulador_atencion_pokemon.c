@@ -69,35 +69,29 @@ bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenado
 	return true;
 }
 
-bool hay_pokemon_en_tratamiento(PokemonEnRecepcion pokemon_en_tratamiento) {
-	return pokemon_en_tratamiento.nombre_pokemon && pokemon_en_tratamiento.nombre_entrenador;
+bool actualizar_pokemon_en_tratamiento(PokemonEnRecepcion** pokemon_en_tratamiento, heap_t* recepcion) {
+	if (!pokemon_en_tratamiento || !recepcion)
+		return false;
+
+	*pokemon_en_tratamiento = heap_elemento_en_raiz(recepcion);
+	return true;
 }
 
-void actualizar_pokemon_en_tratamiento(PokemonEnRecepcion* pokemon_en_tratamiento, heap_t* recepcion) {
-	if (!pokemon_en_tratamiento)
-		return;
+bool actualizar_cantidad_pokemones_en_recepcion(EstadisticasSimulacion* estadisticas, heap_t* recepcion) {
+	if (!estadisticas || !recepcion)
+		return false;
 
-	if (!recepcion)
-		return;
-
-	if (hay_pokemon_en_tratamiento(*pokemon_en_tratamiento))
-		return;
-
-	PokemonEnRecepcion* pokemon_de_menor_nivel = heap_extraer_raiz(recepcion);
-	if (!pokemon_de_menor_nivel)
-		return;
-
-	pokemon_en_tratamiento->nombre_pokemon = pokemon_de_menor_nivel->nombre_pokemon;
-	pokemon_en_tratamiento->nombre_entrenador = pokemon_de_menor_nivel->nombre_entrenador;
-	pokemon_en_tratamiento->nivel = pokemon_de_menor_nivel->nivel;
-
-	free(pokemon_de_menor_nivel); // El nombre y el nivel se quedan guardados como copia. Luego se liberan.
+	unsigned tamanio_recepcion = (unsigned)heap_tamanio(recepcion);
+	estadisticas->pokemon_en_espera = tamanio_recepcion > 0 ? tamanio_recepcion - 1 : tamanio_recepcion;
+	return true;
 }
 
 void destruir_pokemon_en_recepcion(void* _pokemon) {
+	if (!_pokemon)
+		return;
+
 	PokemonEnRecepcion* pokemon = _pokemon;
 	free(pokemon->nombre_pokemon);
 	free(pokemon->nombre_entrenador);
 	free(pokemon);
 }
-

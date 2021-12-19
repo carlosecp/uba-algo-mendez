@@ -17,6 +17,8 @@ heap_t* heap_crear(heap_comparador comparador);
 
 size_t heap_insertar(heap_t* heap, void* elemento);
 
+void* heap_elemento_en_raiz(heap_t* heap);
+
 void* heap_extraer_raiz(heap_t* heap);
 
 void heapify(void** elementos, size_t cantidad);

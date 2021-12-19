@@ -7,6 +7,7 @@
 #include "heap.h"
 #include "hospital.h"
 #include "lista.h"
+#include "simulador.h"
 
 typedef struct {
     char* nombre_pokemon;
@@ -39,9 +40,9 @@ PokemonEnRecepcion* asociar_pokemon_con_su_entrenador(pokemon_t* pokemon, char* 
  */
 bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenador, lista_iterador_t* sala_de_espera_pokemones, heap_t* recepcion);
 
-bool hay_pokemon_en_tratamiento(PokemonEnRecepcion pokemon_en_tratamiento);
+bool actualizar_pokemon_en_tratamiento(PokemonEnRecepcion** pokemon_en_tratamiento, heap_t* recepcion);
 
-void actualizar_pokemon_en_tratamiento(PokemonEnRecepcion* pokemon_en_tratamiento, heap_t* recepcion);
+bool actualizar_cantidad_pokemones_en_recepcion(EstadisticasSimulacion* estadisticas, heap_t* recepcion);
 
 /**
  * Destructor de pokemones almacenados en el heap, para los pokemones que

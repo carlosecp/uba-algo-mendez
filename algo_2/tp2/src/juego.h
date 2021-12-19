@@ -15,7 +15,7 @@ void juego_inicializar(Juego* juego, hospital_t* hospital);
 
 void juego_titulo(const char* titulo);
 
-void juego_error(const char* mensaje);
+void juego_prompt_exito(const char* prompt, const char* mensaje);
 
 void juego_terminar(Juego* juego);
 

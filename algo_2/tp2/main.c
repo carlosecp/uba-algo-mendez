@@ -43,7 +43,7 @@ void atender_proximo_entreandor(simulador_t* simulador) {
 }
 
 void mostrar_pokemon_en_tratamiento(simulador_t* simulador) {
-	InformacionPokemon i;
+	InformacionPokemon i = {NULL};
 	ResultadoSimulacion res = simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &i);
 
 	if (res == ErrorSimulacion)
@@ -54,7 +54,7 @@ void mostrar_pokemon_en_tratamiento(simulador_t* simulador) {
 	printf("• Entrenador: %s\n", i.nombre_entrenador);
 }
 
-void adivinar_nivel_pokemon_en_consultorio(simulador_t* simulador) {
+void adivinar_nivel_pokemon_en_tratamiento(simulador_t* simulador) {
 	if (!simulador)
 		return;
 
@@ -71,6 +71,12 @@ void adivinar_nivel_pokemon_en_consultorio(simulador_t* simulador) {
 
 	if (res == ErrorSimulacion)
 		return;
+
+	if (intento.es_correcto) {
+		juego_prompt_exito("CORRECTO", intento.resultado_string);
+	} else {
+		juego_prompt_error("INCORRECTO", intento.resultado_string);
+	}
 }
 
 void mostrar_informacion_dificultad(simulador_t* simulador) {
@@ -89,10 +95,10 @@ void mostrar_informacion_dificultad(simulador_t* simulador) {
 		return;
 
 	if (!dificultad_buscada.nombre_dificultad) {
-		juego_error("DIFICULTAD NO ENCONTRADA");
 		return;
 	}
 
+	// Make this prettier
 	printf("Dificultad Encontrada: {%s %i}\n", dificultad_buscada.nombre_dificultad, dificultad_buscada.id);
 	printf("Dificultad Esta En Uso: %s\n", dificultad_buscada.en_uso ? "Si" : "No");
 }
@@ -111,7 +117,7 @@ void ejecutar_comando(Juego* juego, char comando) {
 			mostrar_pokemon_en_tratamiento(simulador);
 			break;
 		case 'a':
-			adivinar_nivel_pokemon_en_consultorio(simulador);
+			adivinar_nivel_pokemon_en_tratamiento(simulador);
 			break;
 		case 'd':
 		case 'o':
