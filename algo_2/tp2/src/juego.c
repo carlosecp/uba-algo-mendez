@@ -5,6 +5,21 @@
 
 #define PUNTAJE_INICIAL 100
 
+unsigned calcular_puntaje_nightmare(unsigned cantidad_intentos) {
+	return PUNTAJE_INICIAL / cantidad_intentos + 1;
+}
+
+int verificar_nivel_nightmare(unsigned nivel_adivinado, unsigned nivel_pokemon) {
+	return (int)nivel_pokemon - (int)nivel_adivinado;
+}
+
+const char* verificacion_a_string_nightmare(int resultado_verificacion) {
+	if (resultado_verificacion == 0)
+		return "Adivinaste Crack";
+
+	return "No Adivinaste Crack";
+}
+
 unsigned calcular_puntaje_ultra_nightmare(unsigned cantidad_intentos) {
 	return PUNTAJE_INICIAL / cantidad_intentos + 1;
 }
@@ -28,13 +43,21 @@ void juego_inicializar(Juego* juego, hospital_t* hospital) {
     juego->simulador = simulador_crear(hospital);
     juego->jugando = true;
 
+	DatosDificultad dificultad_nightmare = {
+		.nombre = "Ultra Nightmare",
+		.calcular_puntaje = calcular_puntaje_nightmare,
+		.verificar_nivel = verificar_nivel_nightmare,
+		.verificacion_a_string = verificacion_a_string_nightmare,
+	};
+
 	DatosDificultad dificultad_ultra_nightmare = {
 		.nombre = "Ultra Nightmare",
 		.calcular_puntaje = calcular_puntaje_ultra_nightmare,
 		.verificar_nivel = verificar_nivel_ultra_nightmare,
-		.verificacion_a_string = verificacion_a_string_ultra_nightmare 
+		.verificacion_a_string = verificacion_a_string_ultra_nightmare,
 	};
 
+	simulador_simular_evento(juego->simulador, AgregarDificultad, &dificultad_nightmare);
 	simulador_simular_evento(juego->simulador, AgregarDificultad, &dificultad_ultra_nightmare);
 }
 

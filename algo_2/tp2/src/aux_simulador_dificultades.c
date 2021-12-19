@@ -15,6 +15,11 @@
 #define PENALIZACION_FALLO_MEDIA 5
 #define PENALIZACION_FALLO_DIFICIL 10
 
+typedef struct {
+	const char* nombre;
+	bool tiene_nombre_repetido;
+} DatosDificultadConNombreRepetido;
+
 int comparador_dificultades(void* _dificultad_1, void* _dificultad_2) {
 	DatosDificultadConId* dificultad_1 = _dificultad_1;
 	DatosDificultadConId* dificultad_2 = _dificultad_2;
@@ -28,11 +33,33 @@ int comparador_dificultades(void* _dificultad_1, void* _dificultad_2) {
 	return 0;
 }
 
+bool es_dificultad_con_nombre_repetido(void* _dificultad_existente, void* _nueva_dificultad) {
+	DatosDificultadConId* dificultad_existente = _dificultad_existente;
+	DatosDificultadConNombreRepetido* nueva_dificultad = _nueva_dificultad;
+
+	nueva_dificultad->tiene_nombre_repetido = strcmp(dificultad_existente->nombre, nueva_dificultad->nombre) == 0;
+
+	return !(nueva_dificultad->tiene_nombre_repetido);
+}
+
 DatosDificultadConId* crear_dificultad(abb_t* dificultades, DatosDificultad datos_dificultad) {
 	if (!dificultades)
 		return NULL;
 
-	if (datos_dificultad.nombre == NULL)
+	if (!(datos_dificultad.nombre) ||
+		!(datos_dificultad.calcular_puntaje) ||
+	    !(datos_dificultad.verificar_nivel) ||
+		!(datos_dificultad.verificacion_a_string))
+		return NULL;
+
+	DatosDificultadConNombreRepetido datos_dificultad_nombre_repetido = {
+		.nombre = datos_dificultad.nombre,
+		.tiene_nombre_repetido = false,
+	};
+
+	abb_con_cada_elemento(dificultades, PREORDEN, es_dificultad_con_nombre_repetido, &datos_dificultad_nombre_repetido);
+
+	if (datos_dificultad_nombre_repetido.tiene_nombre_repetido)
 		return NULL;
 
 	DatosDificultadConId* nueva_dificultad = malloc(sizeof(DatosDificultadConId));

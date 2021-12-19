@@ -504,15 +504,35 @@ void dadaUnaDificultad_alAgregarlaAlSimulador_laDificultadSeAgregaCorrectamente(
 
 	ResultadoSimulacion res = simulador_simular_evento(simulador, AgregarDificultad, NULL);
 
-	pa2m_afirmar(res == ErrorSimulacion, "Intentar agregar una nueva dificultad con un dato NULL resulta en Error");
+	pa2m_afirmar(res == ErrorSimulacion, "Intentar agregar una dificultad con un dato NULL resulta en Error");
 
-	// TODO: Tengo que probar que los datos que se le mandan a la dificultad sean validos tambien.
+	DatosDificultad dificultad_invalida = {
+		.nombre = NULL,
+		.calcular_puntaje = NULL,
+		.verificar_nivel = NULL,
+		.verificacion_a_string = NULL,
+	};
+
+	res = simulador_simular_evento(simulador, AgregarDificultad, &dificultad_invalida);
+
+	pa2m_afirmar(res == ErrorSimulacion, "Intentar agregar un dificultad con datos invalidos (como nombre NULL), resulta en Error");
+
+	DatosDificultad dificultad_con_nombre_repetido = {
+		.nombre = "Facil",
+		.calcular_puntaje = calcular_puntaje_dificultad_nueva,
+		.verificar_nivel = verificar_nivel_dificultad_nueva,
+		.verificacion_a_string = verificacion_a_string_dificultad_nueva,
+	};
+
+	res = simulador_simular_evento(simulador, AgregarDificultad, &dificultad_con_nombre_repetido);
+
+	pa2m_afirmar(res == ErrorSimulacion, "Al intentar agregar una dificultad con nombre repetido se retorna Error");
 
 	DatosDificultad nueva_dificultad = {
 		.nombre = "Nueva Dificultad",
 		.calcular_puntaje = calcular_puntaje_dificultad_nueva,
 		.verificar_nivel = verificar_nivel_dificultad_nueva,
-		.verificacion_a_string = verificacion_a_string_dificultad_nueva 
+		.verificacion_a_string = verificacion_a_string_dificultad_nueva,
 	};
 
 	res = simulador_simular_evento(simulador, AgregarDificultad, &nueva_dificultad);
@@ -646,7 +666,7 @@ int main() {
 	dadosVariosArchivos_puedoAgregarlosTodosAlMismoHospital(); */
 
 	// Pruebas TP2
-	/* pa2m_nuevo_grupo("Pruebas simulador");
+	pa2m_nuevo_grupo("Pruebas simulador");
 	dadoUnHospital_alCrearUnSimulador_seRetornaElSimulador();
 	dadoUnSimuladorNULL_alSimularUnEvento_seRetornarError();
 	dadoUnSimulador_alSimularUnEventoInvalido_seRetornaError();
@@ -663,17 +683,17 @@ int main() {
 	pa2m_nuevo_grupo("Pruebas adivinar nivel pokemon");
 	dadoUnSimuladorSinPokemonEnTratamiento_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seRetornaError();
 	dadoUnSimulador_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seAdivinaCorrectamente();
-	dadoUnSimulador_alIntentarAdivinarElNivelDeVariosPokemones_seAdivinanCorrectamente(); */
+	dadoUnSimulador_alIntentarAdivinarElNivelDeVariosPokemones_seAdivinanCorrectamente();
 
 	pa2m_nuevo_grupo("Pruebas dificultades");
-	// dadoUnSimulador_alIntentarAdivinarElNivelConDiferentesDificultades_laDificultadelJuegoSeAjustaCorrectamente();
+	dadoUnSimulador_alIntentarAdivinarElNivelConDiferentesDificultades_laDificultadelJuegoSeAjustaCorrectamente();
 	dadoUnSimulador_alCrearElSimulador_esteTiene3DificultadesIniciales();
 	dadaUnaDificultad_alAgregarlaAlSimulador_laDificultadSeAgregaCorrectamente();
 
-	/* pa2m_nuevo_grupo("Pruebas heap");
+	pa2m_nuevo_grupo("Pruebas heap");
 	dadoUnComparador_alCrearUnHeap_seCreaCorrectamente();
 	dadoUnHeap_alInsertarElementos_seInsertanCorrectamente();
-	dadoUnHeapMinimal_alQuitarElementos_seRetornaElMenorElementoDelHeap(); */
+	dadoUnHeapMinimal_alQuitarElementos_seRetornaElMenorElementoDelHeap();
 
 	return pa2m_mostrar_reporte();
 }

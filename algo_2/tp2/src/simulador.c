@@ -203,6 +203,9 @@ ResultadoSimulacion agregar_dificultad(simulador_t* simulador, DatosDificultad* 
 	DatosDificultadConId* dificultad =
 		crear_dificultad(simulador->dificultades, *datos_dificultad);
 
+	if (!dificultad)
+		return ErrorSimulacion;
+
 	abb_insertar(simulador->dificultades, dificultad);
 
 	return ExitoSimulacion;
