@@ -481,15 +481,15 @@ void dadoUnSimulador_alCrearElSimulador_esteTiene3DificultadesIniciales() {
 	simulador_destruir(simulador);
 }
 
-unsigned calcular_puntaje_ultra_nightmare(unsigned cantidad_intentos) {
+unsigned calcular_puntaje_dificultad_nueva(unsigned cantidad_intentos) {
 	return PUNTAJE_INICIAL / cantidad_intentos + 1;
 }
 
-int verificar_nive_ultra_nightmare(unsigned nivel_adivinado, unsigned nivel_pokemon) {
+int verificar_nivel_dificultad_nueva(unsigned nivel_adivinado, unsigned nivel_pokemon) {
 	return (int)nivel_pokemon - (int)nivel_adivinado;
 }
 
-const char* verificacion_a_string_ultra_nightmare(int resultado_verificacion) {
+const char* verificacion_a_string_dificultad_nueva(int resultado_verificacion) {
 	if (resultado_verificacion == 0)
 		return "Adivinaste Crack";
 
@@ -509,10 +509,10 @@ void dadaUnaDificultad_alAgregarlaAlSimulador_laDificultadSeAgregaCorrectamente(
 	// TODO: Tengo que probar que los datos que se le mandan a la dificultad sean validos tambien.
 
 	DatosDificultad nueva_dificultad = {
-		.nombre = "Ultra Nightmare",
-		.calcular_puntaje = calcular_puntaje_ultra_nightmare,
-		.verificar_nivel = verificar_nive_ultra_nightmare,
-		.verificacion_a_string = verificacion_a_string_ultra_nightmare 
+		.nombre = "Nueva Dificultad",
+		.calcular_puntaje = calcular_puntaje_dificultad_nueva,
+		.verificar_nivel = verificar_nivel_dificultad_nueva,
+		.verificacion_a_string = verificacion_a_string_dificultad_nueva 
 	};
 
 	res = simulador_simular_evento(simulador, AgregarDificultad, &nueva_dificultad);
@@ -520,7 +520,7 @@ void dadaUnaDificultad_alAgregarlaAlSimulador_laDificultadSeAgregaCorrectamente(
 	pa2m_afirmar(res == ExitoSimulacion, "Agregar una nueva dificultad retorna Exito");
 
 	InformacionDificultad informacion;
-	informacion.id = 4;
+	informacion.id = 3;
 
 	simulador_simular_evento(simulador, ObtenerInformacionDificultad, &informacion);
 
@@ -646,7 +646,7 @@ int main() {
 	dadosVariosArchivos_puedoAgregarlosTodosAlMismoHospital(); */
 
 	// Pruebas TP2
-	pa2m_nuevo_grupo("Pruebas simulador");
+	/* pa2m_nuevo_grupo("Pruebas simulador");
 	dadoUnHospital_alCrearUnSimulador_seRetornaElSimulador();
 	dadoUnSimuladorNULL_alSimularUnEvento_seRetornarError();
 	dadoUnSimulador_alSimularUnEventoInvalido_seRetornaError();
@@ -663,10 +663,10 @@ int main() {
 	pa2m_nuevo_grupo("Pruebas adivinar nivel pokemon");
 	dadoUnSimuladorSinPokemonEnTratamiento_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seRetornaError();
 	dadoUnSimulador_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seAdivinaCorrectamente();
-	dadoUnSimulador_alIntentarAdivinarElNivelDeVariosPokemones_seAdivinanCorrectamente();
+	dadoUnSimulador_alIntentarAdivinarElNivelDeVariosPokemones_seAdivinanCorrectamente(); */
 
 	pa2m_nuevo_grupo("Pruebas dificultades");
-	dadoUnSimulador_alIntentarAdivinarElNivelConDiferentesDificultades_laDificultadelJuegoSeAjustaCorrectamente();
+	// dadoUnSimulador_alIntentarAdivinarElNivelConDiferentesDificultades_laDificultadelJuegoSeAjustaCorrectamente();
 	dadoUnSimulador_alCrearElSimulador_esteTiene3DificultadesIniciales();
 	dadaUnaDificultad_alAgregarlaAlSimulador_laDificultadSeAgregaCorrectamente();
 

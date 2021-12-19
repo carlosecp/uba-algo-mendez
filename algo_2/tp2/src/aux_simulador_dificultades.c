@@ -1,9 +1,12 @@
 #include "aux_simulador_dificultades.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
+
+#include "abb.h"
+#include "simulador.h"
 
 #define PUNTAJE_INICIAL 100
 #define PUNTAJE_MINIMO 0
@@ -25,29 +28,32 @@ int comparador_dificultades(void* _dificultad_1, void* _dificultad_2) {
 	return 0;
 }
 
-DatosDificultadConId* crear_nueva_dificultad(int id, const char* nombre, unsigned (*calcular_puntaje)(unsigned cantidad_intentos), int (*verificar_nivel)(unsigned nivel_adivinado, unsigned nivel_pokemon), const char* (*verificacion_a_string)(int resultado_verificacion)) {
-	if (!nombre || !calcular_puntaje || !verificar_nivel || !verificacion_a_string)
+DatosDificultadConId* crear_dificultad(abb_t* dificultades, DatosDificultad datos_dificultad) {
+	if (!dificultades)
 		return NULL;
 
-	DatosDificultadConId* dificultad = malloc(sizeof(DatosDificultadConId));
-	if (!dificultad)
+	if (datos_dificultad.nombre == NULL)
 		return NULL;
 
-	char* copia_nombre = malloc(strlen(nombre) + 1);
+	DatosDificultadConId* nueva_dificultad = malloc(sizeof(DatosDificultadConId));
+	if (!nueva_dificultad)
+		return NULL;
+
+	char* copia_nombre = malloc(strlen(datos_dificultad.nombre) + 1);
 	if (!copia_nombre) {
-		free(dificultad);
+		free(nueva_dificultad);
 		return NULL;
 	}
 
-	strcpy(copia_nombre, nombre);
+	strcpy(copia_nombre, datos_dificultad.nombre);
 
-	dificultad->id = id;
-	dificultad->nombre = copia_nombre;
-	dificultad->calcular_puntaje = calcular_puntaje;
-	dificultad->verificar_nivel = verificar_nivel;
-	dificultad->verificacion_a_string = verificacion_a_string;
+	nueva_dificultad->id = (int)abb_tamanio(dificultades);
+	nueva_dificultad->nombre = copia_nombre;
+	nueva_dificultad->calcular_puntaje = datos_dificultad.calcular_puntaje;
+	nueva_dificultad->verificar_nivel = datos_dificultad.verificar_nivel;
+	nueva_dificultad->verificacion_a_string = datos_dificultad.verificacion_a_string;
 
-	return dificultad;
+	return nueva_dificultad;
 }
 
 int verificar_nivel(unsigned nivel_adivinado, unsigned nivel_pokemon) {
@@ -131,7 +137,34 @@ const char* verificacion_a_string_dificil(int resultado_verificacion) {
 	return "Adivinaste Crack";
 }
 
-abb_t* crear_dificultades_iniciales(DatosDificultadConId* dificultad_por_defecto) {
+DatosDificultad datos_dificultad_facil() {
+	return (DatosDificultad){
+		.nombre = "Facil",
+		.calcular_puntaje = calcular_puntaje_facil,
+		.verificar_nivel = verificar_nivel,
+		.verificacion_a_string = verificacion_a_string_facil,
+	};
+}
+
+DatosDificultad datos_dificultad_media() {
+	return (DatosDificultad){
+		.nombre = "Media",
+		.calcular_puntaje = calcular_puntaje_media,
+		.verificar_nivel = verificar_nivel,
+		.verificacion_a_string = verificacion_a_string_media,
+	};
+}
+
+DatosDificultad datos_dificultad_dificil() {
+	return (DatosDificultad){
+		.nombre = "Dificil",
+		.calcular_puntaje = calcular_puntaje_dificil,
+		.verificar_nivel = verificar_nivel,
+		.verificacion_a_string = verificacion_a_string_dificil,
+	};
+}
+
+abb_t* inicializar_dificultades(DatosDificultadConId* dificultad_por_defecto) {
 	if (!dificultad_por_defecto)
 		return NULL;
 
@@ -139,31 +172,20 @@ abb_t* crear_dificultades_iniciales(DatosDificultadConId* dificultad_por_defecto
 	if (!dificultades)
 		return NULL;
 
-	DatosDificultadConId* dificultad_facil = crear_nueva_dificultad(0, "Facil", calcular_puntaje_facil, verificar_nivel, verificacion_a_string_facil);
-	DatosDificultadConId* dificultad_media = crear_nueva_dificultad(1, "Media", calcular_puntaje_media, verificar_nivel, verificacion_a_string_media);
-	DatosDificultadConId* dificultad_dificil = crear_nueva_dificultad(2, "Dificil", calcular_puntaje_dificil, verificar_nivel, verificacion_a_string_dificil);
+	DatosDificultadConId* dificultad_facil =
+		crear_dificultad(dificultades, datos_dificultad_facil());
 
-	if (!dificultad_facil || !dificultad_media || !dificultad_dificil) {
-		destruir_dificultad(dificultad_facil);
-		destruir_dificultad(dificultad_media);
-		destruir_dificultad(dificultad_dificil);
+	abb_insertar(dificultades, dificultad_facil);
 
-		abb_destruir(dificultades);
-		return NULL;
-	}
+	DatosDificultadConId* dificultad_media =
+		crear_dificultad(dificultades, datos_dificultad_media());
 
-	abb_t* dificultades_aux = abb_insertar(dificultades, dificultad_facil);
-	dificultades_aux = abb_insertar(dificultades, dificultad_media);
-	dificultades_aux = abb_insertar(dificultades, dificultad_dificil);
+	abb_insertar(dificultades, dificultad_media);
 
-	if (!dificultades_aux) {
-		destruir_dificultad(dificultad_facil);
-		destruir_dificultad(dificultad_media);
-		destruir_dificultad(dificultad_dificil);
+	DatosDificultadConId* dificultad_dificil =
+		crear_dificultad(dificultades, datos_dificultad_dificil());
 
-		abb_destruir(dificultades);
-		return NULL;
-	}
+	abb_insertar(dificultades, dificultad_dificil);
 
 	*dificultad_por_defecto = *dificultad_facil;
 

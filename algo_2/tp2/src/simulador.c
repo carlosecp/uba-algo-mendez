@@ -76,7 +76,7 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 	if (!(simulador->sala_espera_pokemones))
 		exito = false;
 
-	simulador->dificultades = crear_dificultades_iniciales(&(simulador->dificultad_en_uso));
+	simulador->dificultades = inicializar_dificultades(&(simulador->dificultad_en_uso));
 	if (!(simulador->dificultades))
 		exito = false;
 
@@ -196,14 +196,14 @@ ResultadoSimulacion adivinar_nivel_pokemon(simulador_t* simulador, Intento* inte
 	return ExitoSimulacion;
 }
 
-ResultadoSimulacion agregar_dificultad(simulador_t* simulador, DatosDificultad* nueva_dificultad) {
-	if (!simulador || !nueva_dificultad)
+ResultadoSimulacion agregar_dificultad(simulador_t* simulador, DatosDificultad* datos_dificultad) {
+	if (!simulador || !datos_dificultad)
 		return ErrorSimulacion;
 
-	DatosDificultadConId* dificultad_creada =
-		crear_nueva_dificultad(4, nueva_dificultad->nombre, nueva_dificultad->calcular_puntaje, nueva_dificultad->verificar_nivel, nueva_dificultad->verificacion_a_string);
+	DatosDificultadConId* dificultad =
+		crear_dificultad(simulador->dificultades, *datos_dificultad);
 
-	simulador->dificultades = abb_insertar(simulador->dificultades, dificultad_creada);
+	abb_insertar(simulador->dificultades, dificultad);
 
 	return ExitoSimulacion;
 }
