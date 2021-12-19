@@ -18,7 +18,11 @@ void juego_titulo(const char* titulo) {
 }
 
 void juego_prompt_exito(const char* prompt, const char* mensaje) {
-	printf("\x1b[38;5;42m\x1b[1m%s\x1b[0m: %s", prompt, mensaje);
+	printf("\x1b[38;5;42m\x1b[1m%s\x1b[0m: %s\n", prompt, mensaje);
+}
+
+void juego_prompt_error(const char* prompt, const char* mensaje) {
+	printf("\x1b[38;5;160m\x1b[1m%s\x1b[0m: %s\n", prompt, mensaje);
 }
 
 void juego_terminar(Juego* juego) {

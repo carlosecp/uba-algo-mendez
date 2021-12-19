@@ -17,6 +17,8 @@ void juego_titulo(const char* titulo);
 
 void juego_prompt_exito(const char* prompt, const char* mensaje);
 
+void juego_prompt_error(const char* prompt, const char* mensaje);
+
 void juego_terminar(Juego* juego);
 
 void juego_destruir(Juego juego);

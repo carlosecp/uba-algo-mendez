@@ -173,17 +173,13 @@ ResultadoSimulacion adivinar_nivel_pokemon(simulador_t* simulador, Intento* inte
 	int resultado = verificar_nivel(intento->nivel_adivinado, (unsigned)pokemon_en_tratamiento->nivel);
 	intento->es_correcto = resultado == 0;
 
-	if (!(intento->es_correcto)) {
+	if (!(intento->es_correcto))
 		simulador->intentos_actuales++;
-		return ExitoSimulacion;
-	}
-
-	bool exito = avanzar_pokemon_atendido(simulador);
-	if (!exito)
-		return ErrorSimulacion;
 
 	intento->resultado_string = simulador->dificultad_en_uso.verificacion_a_string(resultado);
 	simulador->intentos_actuales = 0;
+
+	avanzar_pokemon_atendido(simulador);
 
 	return ExitoSimulacion;
 }
