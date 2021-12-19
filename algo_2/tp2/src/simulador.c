@@ -8,6 +8,7 @@
 #include "hospital.h"
 
 #define CANTIDAD_DIFICULTADES_INICIAL 3
+#define RESULTADO_CORRECTO 0
 
 struct _simulador_t {
 	hospital_t* hospital;
@@ -157,6 +158,7 @@ bool avanzar_pokemon_atendido(simulador_t* simulador) {
 
 	simulador->pokemon_en_tratamiento = NULL;
 	exito = actualizar_pokemon_en_tratamiento(&(simulador->pokemon_en_tratamiento), simulador->recepcion);
+	simulador->estadisticas.pokemon_atendidos++;
 
 	return exito;
 }
@@ -171,15 +173,16 @@ ResultadoSimulacion adivinar_nivel_pokemon(simulador_t* simulador, Intento* inte
 
 	int (*verificar_nivel)(unsigned, unsigned) = simulador->dificultad_en_uso.verificar_nivel;
 	int resultado = verificar_nivel(intento->nivel_adivinado, (unsigned)pokemon_en_tratamiento->nivel);
-	intento->es_correcto = resultado == 0;
+	intento->es_correcto = resultado == RESULTADO_CORRECTO;
 
-	if (!(intento->es_correcto))
+	if (intento->es_correcto) {
+		avanzar_pokemon_atendido(simulador);
+		simulador->intentos_actuales = 0;
+	} else {
 		simulador->intentos_actuales++;
+	}
 
 	intento->resultado_string = simulador->dificultad_en_uso.verificacion_a_string(resultado);
-	simulador->intentos_actuales = 0;
-
-	avanzar_pokemon_atendido(simulador);
 
 	return ExitoSimulacion;
 }

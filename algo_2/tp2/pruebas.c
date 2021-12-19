@@ -249,7 +249,7 @@ void dadoUnHospital_alAtenderAlProximoEntrenador_seAtiendeCorrectamente() {
 	simulador_simular_evento(simulador, ObtenerEstadisticas, &estadisticas);
 
 	pa2m_afirmar(estadisticas.pokemon_en_espera == hospital_cantidad_pokemon(hospital) - 1,
-			"Luego de agregar todos los pokemones del hospital y no haber atentido a ninguno, la cantidad de pokemones en la recepcion es igual al total de pokemones menos el pokemon en el consultorio")
+			"Luego de agregar todos los pokemones del hospital y no haber atendido a ninguno, la cantidad de pokemones en la recepcion es igual al total de pokemones menos el pokemon en el consultorio")
 
 	res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 
@@ -320,6 +320,78 @@ void dadoUnSimuladorSinPokemonEnTratamiento_alIntentarAdivinarElNivelDelPokemonE
 	pa2m_afirmar(res == ErrorSimulacion, "Intentar adivinar el nivel del pokemon en un hospital sin pokemones retorna Error");
 
 	simulador_destruir(simulador);
+}
+
+void dadoUnSimulador_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seAdivinaCorrectamente() {
+	hospital_t* hospital = hospital_crear();
+	hospital_leer_archivo(hospital, "ejemplos/varios_entrenadores.hospital");
+
+	simulador_t* simulador = simulador_crear(hospital);
+
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+
+	Intento intento;
+	intento.nivel_adivinado = 0;
+
+	ResultadoSimulacion res = simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
+
+	pa2m_afirmar(res == ExitoSimulacion, "Al intentar adivinar el nivel de un pokemon correctamente se retorna Exito");
+	pa2m_afirmar(intento.es_correcto == false, "Adivinar un invel incorrecto resulta en un intento fallido");
+	pa2m_afirmar(strcmp(intento.resultado_string, "Te quedaste corto por entre 10 y 25 niveles") == 0,
+			"Al fallar un intento se obtiene el mensaje de resultado esperado");
+
+	intento.nivel_adivinado = 10;
+	res = simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
+
+	pa2m_afirmar(intento.es_correcto == true, "Intentar adivinar el nivel del pokemon correctamente resulta en un intento exitoso");
+	pa2m_afirmar(strcmp(intento.resultado_string, "Adivinaste Crack") == 0,
+			"Al acertar un intento se obtiene el mensaje de resultado esperado");
+
+	EstadisticasSimulacion estadisticas;
+	simulador_simular_evento(simulador, ObtenerEstadisticas, &estadisticas);
+
+	pa2m_afirmar(estadisticas.pokemon_atendidos == 1, "Al adivinar el nivel de un pokemon, la cantidad de atendidos aumenta en 1");
+
+	simulador_destruir(simulador);
+}
+
+void dadoUnSimulador_alIntentarAdivinarElNivelDeVariosPokemones_seAdivinanCorrectamente() {
+	hospital_t* hospital = hospital_crear();
+	hospital_leer_archivo(hospital, "ejemplos/varios_entrenadores.hospital");
+
+	simulador_t* simulador = simulador_crear(hospital);
+
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
+
+	Intento intento;
+	intento.nivel_adivinado = 10;
+	ResultadoSimulacion res = simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
+
+	intento.nivel_adivinado = 20;
+	simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
+
+	intento.nivel_adivinado = 43;
+	simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
+
+	intento.nivel_adivinado = 85;
+	simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
+
+	intento.nivel_adivinado = 69;
+	res = simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
+
+	pa2m_afirmar(res == ErrorSimulacion, "Intentar adivinar el nivel de un pokemon cuando ya se han atendido todos retorna Error");
+	pa2m_afirmar(intento.es_correcto == false, "Intentar adivinar el nivel de un pokemon cuando ya se han atendido todos resulta en un intento fallido");
+
+	EstadisticasSimulacion estadisticas;
+	simulador_simular_evento(simulador, ObtenerEstadisticas, &estadisticas);
+
+	pa2m_afirmar(estadisticas.pokemon_atendidos == 4, "Al adivinar el nivel de todos los pokemones posibles, la cantidad de atendidos es el total de pokemones que habian en la recepcion");
+	pa2m_afirmar(estadisticas.pokemon_en_espera == 0, "Al haber atendido a todos los pokemones la cantidad de pokemenes en espera es 0");
+
+	simulador_destruir(simulador);
+}
+
+void dadoUnSimulador_alIntentarAdivinarElNivelConDiferentesDificultades_laDificultadelJuegoSeAjustaCorrectamente() {
 }
 
 /* Pruebas heap */
@@ -452,7 +524,10 @@ int main() {
 	dadoUnHospital_alAtenderAlProximoEntrenador_losPokemonesSeAtiendenConLaPrioridadCorrecta();
 
 	pa2m_nuevo_grupo("Pruebas adivinar nivel pokemon");
-	// dadoUnSimuladorSinPokemonEnTratamiento_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seRetornaError();
+	dadoUnSimuladorSinPokemonEnTratamiento_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seRetornaError();
+	dadoUnSimulador_alIntentarAdivinarElNivelDelPokemonEnTratamiento_seAdivinaCorrectamente();
+	dadoUnSimulador_alIntentarAdivinarElNivelDeVariosPokemones_seAdivinanCorrectamente();
+	dadoUnSimulador_alIntentarAdivinarElNivelConDiferentesDificultades_laDificultadelJuegoSeAjustaCorrectamente();
 
 	/* pa2m_nuevo_grupo("Pruebas heap");
 	dadoUnComparador_alCrearUnHeap_seCreaCorrectamente();

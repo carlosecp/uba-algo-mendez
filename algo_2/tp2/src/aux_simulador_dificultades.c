@@ -54,8 +54,6 @@ int verificar_nivel(unsigned nivel_adivinado, unsigned nivel_pokemon) {
 	return (int)nivel_pokemon - (int)nivel_adivinado;
 }
 
-/* Dificultad Facil */
-
 unsigned calcular_puntaje_facil(unsigned cantidad_intentos) {
 	int puntaje = (int)PUNTAJE_INICIAL - ((int)cantidad_intentos * PENALIZACION_FALLO_FACIL);
 	return puntaje > PUNTAJE_MINIMO ? (unsigned)puntaje : PUNTAJE_MINIMO;
@@ -92,8 +90,6 @@ const char* verificacion_a_string_facil(int resultado_verificacion) {
 	return "Adivinaste Crack";
 }
 
-/* Dificultad Media */
-
 unsigned calcular_puntaje_media(unsigned cantidad_intentos) {
 	int puntaje = (int)PUNTAJE_INICIAL - ((int)cantidad_intentos * PENALIZACION_FALLO_MEDIA);
 	return puntaje > PUNTAJE_MINIMO ? (unsigned)puntaje : PUNTAJE_MINIMO;
@@ -114,8 +110,6 @@ const char* verificacion_a_string_media(int resultado_verificacion) {
 
 	return "Adivinaste Crack";
 }
-
-/* Dificultad Dificil */
 
 unsigned calcular_puntaje_dificil(unsigned cantidad_intentos) {
 	int puntaje = (int)PUNTAJE_INICIAL - ((int)cantidad_intentos * PENALIZACION_FALLO_DIFICIL);
@@ -171,8 +165,7 @@ abb_t* crear_dificultades_iniciales(DatosDificultadConId* dificultad_por_defecto
 		return NULL;
 	}
 
-	// *dificultad_por_defecto = *dificultad_facil;
-	*dificultad_por_defecto = *dificultad_dificil;
+	*dificultad_por_defecto = *dificultad_facil;
 
 	return dificultades;
 }
