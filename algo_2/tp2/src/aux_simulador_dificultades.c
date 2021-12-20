@@ -47,9 +47,9 @@ DatosDificultadConId* crear_dificultad(abb_t* dificultades, DatosDificultad dato
 		return NULL;
 
 	if (!(datos_dificultad.nombre) ||
-		!(datos_dificultad.calcular_puntaje) ||
-	    !(datos_dificultad.verificar_nivel) ||
-		!(datos_dificultad.verificacion_a_string))
+			!(datos_dificultad.calcular_puntaje) ||
+			!(datos_dificultad.verificar_nivel) ||
+			!(datos_dificultad.verificacion_a_string))
 		return NULL;
 
 	DatosDificultadConNombreRepetido datos_dificultad_nombre_repetido = {

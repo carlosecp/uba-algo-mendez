@@ -27,13 +27,12 @@ struct _simulador_t {
 };
 
 /**
- * Pre: Recibe un simulador con todas sus estructuras de datos inicializadas
- * por sus respetivos constructores. En caso contrario se esta enviando
- * memoria invalida, lo que ocasiona un error en la liberacion.
+ * Recibe un simulador con todas sus estructuras de datos inicializadas por sus
+ * respetivos constructores. En caso contrario se esta enviando memoria
+ * invalida, lo que ocasiona un error en la liberacion.
  *
- * Libera la memoria de las estructuras de datos que componen
- * un simulador en caso de que alguna de estas tenga un fallo durante
- * su creacion.
+ * Libera la memoria de las estructuras de datos que componen un simulador en
+ * caso de que alguna de estas tenga un fallo durante su creacion.
  */
 void simulador_destruir_en_fallo(simulador_t* simulador) {
 	if (!simulador)
@@ -90,7 +89,11 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 	return simulador;
 }
 
-ResultadoSimulacion obtener_estadisticas(simulador_t simulador, EstadisticasSimulacion* estadisticas) {
+/**
+ * Recibe un simulador y un puntero valido a las estadisticas a llenar.
+ * Simula el evento "ObtenerEstadisticas".
+ */
+ResultadoSimulacion simulador_obtener_estadisticas(simulador_t simulador, EstadisticasSimulacion* estadisticas) {
 	if (!estadisticas)
 		return ErrorSimulacion;
 
@@ -108,8 +111,10 @@ ResultadoSimulacion obtener_estadisticas(simulador_t simulador, EstadisticasSimu
 }
 
 /**
-*/
-ResultadoSimulacion atender_proximo_entrenador(simulador_t* simulador) {
+ * Recibe un puntero a simulador valido.
+ * Simula el evento "AtenderProximoEntrenador".
+ */
+ResultadoSimulacion simulador_atender_proximo_entrenador(simulador_t* simulador) {
 	if (!simulador)
 		return ErrorSimulacion;
 
@@ -121,8 +126,14 @@ ResultadoSimulacion atender_proximo_entrenador(simulador_t* simulador) {
 	if (!recepcion_exitosa)
 		return ErrorSimulacion;
 
-	actualizar_pokemon_en_tratamiento(&(simulador->pokemon_en_tratamiento), simulador->recepcion);
-	actualizar_cantidad_pokemones_en_recepcion(&(simulador->estadisticas), simulador->recepcion);
+	bool exito = false;
+	exito = actualizar_pokemon_en_tratamiento(&(simulador->pokemon_en_tratamiento), simulador->recepcion);
+	if (!exito)
+		return ErrorSimulacion;
+
+	exito = actualizar_cantidad_pokemones_en_recepcion(&(simulador->estadisticas), simulador->recepcion);
+	if (!exito)
+		return ErrorSimulacion;
 
 	simulador->estadisticas.entrenadores_atendidos++;
 	lista_iterador_avanzar(simulador->sala_espera_entrenadores);
@@ -130,7 +141,11 @@ ResultadoSimulacion atender_proximo_entrenador(simulador_t* simulador) {
 	return ExitoSimulacion;
 }
 
-ResultadoSimulacion obtener_informacion_pokemon_en_tratamiento(simulador_t simulador, InformacionPokemon* informacion) {
+/**
+ * Recibe un puntero a simulador valido.
+ * Simula el evento "AtenderProximoEntrenador".
+ */
+ResultadoSimulacion simulador_obtener_informacion_pokemon_en_tratamiento(simulador_t simulador, InformacionPokemon* informacion) {
 	if (!informacion)
 		return ErrorSimulacion;
 
@@ -149,7 +164,11 @@ ResultadoSimulacion obtener_informacion_pokemon_en_tratamiento(simulador_t simul
 	return ExitoSimulacion;
 }
 
-bool avanzar_pokemon_atendido(simulador_t* simulador) {
+/**
+ * Recibe un puntero a simulador valido.
+ * Simula el evento "AtenderProximoEntrenador".
+ */
+bool simulador_avanzar_pokemon_atendido(simulador_t* simulador) {
 	if (!simulador)
 		return false;
 
@@ -170,7 +189,7 @@ bool avanzar_pokemon_atendido(simulador_t* simulador) {
 	return exito;
 }
 
-ResultadoSimulacion adivinar_nivel_pokemon(simulador_t* simulador, Intento* intento) {
+ResultadoSimulacion simulador_adivinar_nivel_pokemon(simulador_t* simulador, Intento* intento) {
 	if (!simulador || !intento)
 		return ErrorSimulacion;
 
@@ -180,12 +199,15 @@ ResultadoSimulacion adivinar_nivel_pokemon(simulador_t* simulador, Intento* inte
 		return ErrorSimulacion;
 	}
 
+	unsigned (*calcular_puntaje)(unsigned cantidad_intentos) = simulador->dificultad_en_uso.calcular_puntaje;
 	int (*verificar_nivel)(unsigned, unsigned) = simulador->dificultad_en_uso.verificar_nivel;
+
 	int resultado = verificar_nivel(intento->nivel_adivinado, (unsigned)pokemon_en_tratamiento->nivel);
 	intento->es_correcto = resultado == RESULTADO_CORRECTO;
 
 	if (intento->es_correcto) {
-		avanzar_pokemon_atendido(simulador);
+		simulador_avanzar_pokemon_atendido(simulador);
+		simulador->estadisticas.puntos += calcular_puntaje(simulador->intentos_actuales);
 		simulador->intentos_actuales = 0;
 	} else {
 		simulador->intentos_actuales++;
@@ -196,7 +218,7 @@ ResultadoSimulacion adivinar_nivel_pokemon(simulador_t* simulador, Intento* inte
 	return ExitoSimulacion;
 }
 
-ResultadoSimulacion agregar_dificultad(simulador_t* simulador, DatosDificultad* datos_dificultad) {
+ResultadoSimulacion simulador_agregar_dificultad(simulador_t* simulador, DatosDificultad* datos_dificultad) {
 	if (!simulador || !datos_dificultad)
 		return ErrorSimulacion;
 
@@ -211,13 +233,12 @@ ResultadoSimulacion agregar_dificultad(simulador_t* simulador, DatosDificultad* 
 	return ExitoSimulacion;
 }
 
-ResultadoSimulacion seleccionar_dificultad(simulador_t* simulador, int* id_dificultad) {
+ResultadoSimulacion simulador_seleccionar_dificultad(simulador_t* simulador, int* id_dificultad) {
 	if (!id_dificultad)
 		return ErrorSimulacion;
 
 	DatosDificultadConId datos_dificultad_buscada = {
-		.id = *id_dificultad
-	};
+		.id = *id_dificultad};
 
 	DatosDificultadConId* dificultad_encontrada = abb_buscar(simulador->dificultades, &datos_dificultad_buscada);
 	if (!dificultad_encontrada)
@@ -228,13 +249,12 @@ ResultadoSimulacion seleccionar_dificultad(simulador_t* simulador, int* id_dific
 	return ExitoSimulacion;
 }
 
-ResultadoSimulacion obtener_informacion_dificultad(simulador_t* simulador, InformacionDificultad* dificultad_buscada) {
+ResultadoSimulacion simulador_obtener_informacion_dificultad(simulador_t* simulador, InformacionDificultad* dificultad_buscada) {
 	if (!simulador || !dificultad_buscada)
 		return ErrorSimulacion;
 
 	DatosDificultadConId datos_dificultad_buscada = {
-		.id = dificultad_buscada->id
-	};
+		.id = dificultad_buscada->id};
 
 	DatosDificultadConId* dificultad_encontrada = abb_buscar(simulador->dificultades, &datos_dificultad_buscada);
 	if (!dificultad_encontrada) {
@@ -260,25 +280,25 @@ ResultadoSimulacion simulador_simular_evento(simulador_t* simulador, EventoSimul
 
 	switch (evento) {
 		case ObtenerEstadisticas:
-			res = obtener_estadisticas(*simulador, datos);
+			res = simulador_obtener_estadisticas(*simulador, datos);
 			break;
 		case AtenderProximoEntrenador:
-			res = atender_proximo_entrenador(simulador);
+			res = simulador_atender_proximo_entrenador(simulador);
 			break;
 		case ObtenerInformacionPokemonEnTratamiento:
-			res = obtener_informacion_pokemon_en_tratamiento(*simulador, datos);
+			res = simulador_obtener_informacion_pokemon_en_tratamiento(*simulador, datos);
 			break;
 		case AdivinarNivelPokemon:
-			res = adivinar_nivel_pokemon(simulador, datos);
+			res = simulador_adivinar_nivel_pokemon(simulador, datos);
 			break;
 		case AgregarDificultad:
-			res = agregar_dificultad(simulador, datos);
+			res = simulador_agregar_dificultad(simulador, datos);
 			break;
 		case SeleccionarDificultad:
-			res = seleccionar_dificultad(simulador, datos);
+			res = simulador_seleccionar_dificultad(simulador, datos);
 			break;
 		case ObtenerInformacionDificultad:
-			res = obtener_informacion_dificultad(simulador, datos);
+			res = simulador_obtener_informacion_dificultad(simulador, datos);
 			break;
 		case FinalizarSimulacion:
 			simulador->en_curso = false;

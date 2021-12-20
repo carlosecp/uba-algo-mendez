@@ -41,21 +41,9 @@ PokemonEnRecepcion* asociar_pokemon_con_su_entrenador(pokemon_t* pokemon, char* 
 bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenador, lista_iterador_t* sala_de_espera_pokemones, heap_t* recepcion);
 
 /**
- * Actualiza la el pokemon en tratamiento cuando se agregan los primeros
- * pokemones al simulador o cuando se ha adivinado el nivel del pokemon que
- * estaba anteriormente en tratamiento. Siempre pasa al pokemon de menor
- * nivel disponible.
- *
- * En caso de erorr no hace ningun cambio.
- */
+  */
 bool actualizar_pokemon_en_tratamiento(PokemonEnRecepcion** pokemon_en_tratamiento, heap_t* recepcion);
 
-/**
- * Actualiza la cantidad de pokemones en recepcion cuando se agregan nuevos
- * pokemones o cuando un nuevo pokemon pasa a estar en tratamiento.
- *
- * En caso de error no hace ningun cambio.
- */
 bool actualizar_cantidad_pokemones_en_recepcion(EstadisticasSimulacion* estadisticas, heap_t* recepcion);
 
 /**

@@ -8,12 +8,15 @@
 
 typedef struct {
     int id;
-	const char* nombre;
-	unsigned (*calcular_puntaje)(unsigned cantidad_intentos);
-	int (*verificar_nivel)(unsigned nivel_adivinado, unsigned nivel_pokemon);
-	const char* (*verificacion_a_string)(int resultado_verificacion);
+    const char* nombre;
+    unsigned (*calcular_puntaje)(unsigned cantidad_intentos);
+    int (*verificar_nivel)(unsigned nivel_adivinado, unsigned nivel_pokemon);
+    const char* (*verificacion_a_string)(int resultado_verificacion);
 } DatosDificultadConId;
 
+/**
+ *
+ */
 DatosDificultadConId* crear_dificultad(abb_t* dificultades, DatosDificultad datos_dificultad);
 
 abb_t* inicializar_dificultades(DatosDificultadConId* dificultad_por_defecto);

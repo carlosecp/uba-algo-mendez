@@ -11,16 +11,44 @@ typedef struct {
     bool jugando;
 } Juego;
 
+/**
+  * Toma un hospital valido e inicializa el juego y su simulador. Durante la
+  * inicializacion tambien se crean dos dificultades adicionales.
+  */
 void juego_inicializar(Juego* juego, hospital_t* hospital);
 
+/**
+  * Funcion auxiliar utilizada como herramienta para estandarizar la forma
+  * en la que se muestran los titulos en la interfaz. Se consideran como
+  * titulo los mensajes que se quieran que tengan la mayor notoriedad posible.
+  */
 void juego_titulo(const char* titulo);
 
+/**
+  * Funcion auxiliar utilizada como herramienta para estandarizar la forma
+  * en la que se muestran los mensajes de exito. Estos mensajes no tienen
+  * tanta notoriedad como los titulos.
+  */
 void juego_prompt_exito(const char* prompt, const char* mensaje);
 
+/**
+  * Funcion auxiliar utilizada como herramienta para estandarizar la forma
+  * en la que se muestran los mensajes de error. Estos mensajes no tienen
+  * tanta notoriedad como los titulos.
+  */
 void juego_prompt_error(const char* prompt, const char* mensaje);
 
+/**
+  * Recibe un juego inicalizado.
+  * Da un juego por terminado.
+  */
 void juego_terminar(Juego* juego);
 
+/**
+  * Recibe un juego.
+  * Se encarga de la destruccion del simulador y la limpieza de todos los
+  * datos que sean necesarios.
+  */
 void juego_destruir(Juego juego);
 
 #endif
