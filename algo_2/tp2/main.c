@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "src/hospital.h"
 #include "src/juego.h"
@@ -16,6 +17,39 @@ char leer_comando() {
 	while (*leido == ' ')
 		leido++;
 	return (char)tolower(*leido);
+}
+
+/**
+ * Muestra un menu con los posibles comandos que pueden ser ejecutados en el
+ * juego. Se muestra una sola vez al iniciar la partida.
+ */
+void juego_mostrar_menu() {
+	juego_titulo("Menu");
+	printf(" • [e] Mostrar Estadisticas\n");
+	printf(" • [p] Atender Proximo Entrenador\n");
+	printf(" • [i] Mostrar Pokemon en Tratamiento\n");
+	printf(" • [a] Adivinar Nivel Pokemon\n");
+	printf(" • [o] Mostrar Dificultades Disponibles\n");
+	printf(" • [d] Cambiar Dificultad\n");
+	printf(" • [h] Ayuda\n");
+	printf(" • [q] Salir\n");
+}
+
+/**
+ * Muestra las mismas opciones que el menu pero con mas informacion sobre que
+ * hace cada uno de los comandos disponibles. Este menu de ayuda puede ser
+ * mostrado en cualquier momento del juego.
+ */
+void juego_mostrar_ayuda() {
+	juego_titulo("Ayuda");
+	printf(" • \x1b[1m[e] Mostrar Estadisticas:\x1b[0m Echa un vistazo al estado actual de la partida y los datos sobre entrenadores y pokemones disponibles.\n");
+	printf(" • \x1b[1m[p] Atender Proximo Entrenador:\x1b[0m Agrega los pokemones del siguiente entrenador en espera al consultorio.\n");
+	printf(" • \x1b[1m[i] Mostrar Pokemon en Tratamiento:\x1b[0m Muestra los datos del pokemon que esta en tratamiento actualmente.\n");
+	printf(" • \x1b[1m[a] Adivinar Nivel Pokemon:\x1b[0m Intenta ver si puedes adivinar el nivel del pokemon en tratamiento con la dificultad actual.\n");
+	printf(" • \x1b[1m[o] Mostrar Dificultades Disponibles:\x1b[0m Muestra un listado de todas las dificultades disponibles con sus IDs, y cual es la dificultad activa.\n");
+	printf(" • \x1b[1m[d] Cambiar Dificultad:\x1b[0m ¿Te parece muy facil la dificultad actual? Prueba a ver si aun puedes con otras dificultades.\n");
+	printf(" • \x1b[1m[h] Ayuda:\x1b[0m Muestra este menu de ayuda.\n");
+	printf(" • \x1b[1m[q] Salir:\x1b[0m Termina el juego.\n");
 }
 
 /**
@@ -79,7 +113,7 @@ void juego_adivinar_nivel_pokemon_en_tratamiento(simulador_t* simulador) {
 	};
 
 	while (!intento.es_correcto) {
-		printf("Nivel Pokemon: ");
+		juego_input_prompt("Nivel Pokemon");
 		scanf(" %i", &(intento.nivel_adivinado));
 
 		ResultadoSimulacion res = simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
@@ -94,7 +128,7 @@ void juego_adivinar_nivel_pokemon_en_tratamiento(simulador_t* simulador) {
 }
 
 /**
- * Se encarga de llamar al evento "SeleccionarDificultad". Le permite al 
+ * Se encarga de llamar al evento "SeleccionarDificultad". Le permite al
  * usuario cambiar la dificultad de las pistas que se dan al intentar adivinar
  * el nivel de un pokemon.
  */
@@ -104,7 +138,7 @@ void juego_seleccionar_nueva_dificultad(simulador_t* simulador) {
 
 	int id_nueva_dificultad;
 
-	printf("Seleccionar ID Dificultad: ");
+	juego_input_prompt("ID Dificultad");
 	scanf(" %i", &id_nueva_dificultad);
 
 	ResultadoSimulacion res = simulador_simular_evento(simulador, SeleccionarDificultad, &id_nueva_dificultad);
@@ -119,7 +153,7 @@ void juego_seleccionar_nueva_dificultad(simulador_t* simulador) {
 	if (res == ErrorSimulacion)
 		return;
 
-	juego_prompt_exito("DIFICULTAD SELECCIONADA", informacion_nueva_dificultad.nombre_dificultad);
+	juego_prompt_exito("Dificultad Seleccionada", informacion_nueva_dificultad.nombre_dificultad);
 }
 
 /**
@@ -146,7 +180,7 @@ void juego_mostrar_informacion_dificultad(simulador_t* simulador) {
 
 		if (dificultad_buscada.en_uso)
 			printf(" • \x1b[38;5;42m\x1b[1m\x1b[4m[%i] %s (en uso)\x1b[0m\n", dificultad_buscada.id, dificultad_buscada.nombre_dificultad);
-		else 
+		else
 			printf(" • [%i] %s\n", dificultad_buscada.id, dificultad_buscada.nombre_dificultad);
 
 		dificultad_buscada.id++;
@@ -181,6 +215,9 @@ void juego_ejecutar_comando(Juego* juego, char comando) {
 		case 'o':
 			juego_mostrar_informacion_dificultad(simulador);
 			break;
+		case 'h':
+			juego_mostrar_ayuda();
+			break;
 		case 'q':
 			juego_terminar(juego);
 			break;
@@ -194,7 +231,10 @@ int main(int argc, char* argv[]) {
 	hospital_leer_archivo(hospital, "ejemplos/varios_entrenadores.hospital");
 
 	Juego juego;
+	srand((unsigned)time(NULL));
 	juego_inicializar(&juego, hospital);
+
+	juego_mostrar_menu();
 
 	do {
 		printf("> ");

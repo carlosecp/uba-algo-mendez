@@ -28,6 +28,23 @@ struct _simulador_t {
 };
 
 /**
+ * Actualiza la el pokemon en tratamiento cuando se agregan los primeros
+ * pokemones al simulador o cuando se ha adivinado el nivel del pokemon que
+ * estaba anteriormente en tratamiento. Siempre pasa al pokemon de menor
+ * nivel disponible.
+ *
+ * En caso de error no hace ningun cambio.
+ */
+void simulador_atender_pokemon_de_menor_nivel(simulador_t* simulador) {
+	if (!simulador)
+		return;
+
+	PokemonEnRecepcion* pokemon = simulador->pokemon_en_tratamiento;
+	simulador->pokemon_en_tratamiento = heap_extraer_raiz(simulador->recepcion);
+	aux_destruir_pokemon_en_recepcion(pokemon);
+}
+
+/**
  * Recibe un simulador con todas sus estructuras de datos inicializadas por sus
  * respetivos constructores. En caso contrario se esta enviando memoria
  * invalida, lo que ocasiona un error en la liberacion.
@@ -130,11 +147,9 @@ ResultadoSimulacion simulador_atender_proximo_entrenador(simulador_t* simulador)
 	if (!recepcion_exitosa)
 		return ErrorSimulacion;
 
-	if (!(simulador->pokemon_en_tratamiento)) {
-		PokemonEnRecepcion* pokemon_de_menor_nivel = heap_extraer_raiz(simulador->recepcion);
-		simulador->pokemon_en_tratamiento = pokemon_de_menor_nivel;
-	}
-	
+	if (!(simulador->pokemon_en_tratamiento))
+		simulador_atender_pokemon_de_menor_nivel(simulador);
+
 	simulador->estadisticas.pokemon_en_espera = (unsigned)heap_tamanio(simulador->recepcion);
 
 	simulador->estadisticas.entrenadores_atendidos++;
@@ -167,34 +182,6 @@ ResultadoSimulacion simulador_obtener_informacion_pokemon_en_tratamiento(simulad
 }
 
 /**
- * Recibe un puntero a simulador valido.
- * Maneja el proceso posterior a haber adivinado el nivel de un pokemon. Primero
- * libera el pokemon adivina de memoria, ya que este es considera atendido y 
- * no sera utilizado de nuevo por el simulador. Luego actualiza el pokemon
- * en tratamiento a uno nuevo y actualiza la cantidad de pokemones en recepcion
- * y pokemones atendidos.
- */
-bool simulador_avanzar_pokemon_atendido(simulador_t* simulador) {
-	if (!simulador)
-		return false;
-
-	PokemonEnRecepcion* pokemon_adivinado = heap_extraer_raiz(simulador->recepcion);
-	if (!pokemon_adivinado)
-		return true;
-
-	aux_destruir_pokemon_en_recepcion(pokemon_adivinado);
-
-	simulador->pokemon_en_tratamiento = heap_elemento_en_raiz(simulador->recepcion);
-
-	if (simulador->pokemon_en_tratamiento)
-		printf("POKEMON EN TRATAMIENTO: %s\n", simulador->pokemon_en_tratamiento->nombre_pokemon);
-
-	simulador->estadisticas.pokemon_atendidos++;
-
-	return true;
-}
-
-/**
  * Recibe un simulador y un puntero valido a del intento a probar.
  * Simula el evento "AdivinarNivelPokemon".
  */
@@ -215,11 +202,8 @@ ResultadoSimulacion simulador_adivinar_nivel_pokemon(simulador_t* simulador, Int
 	intento->es_correcto = resultado == RESULTADO_CORRECTO;
 
 	if (intento->es_correcto) {
-		// TODO: Refactorizar esto
-		PokemonEnRecepcion* pokemon_adivinado = simulador->pokemon_en_tratamiento;
-		simulador->pokemon_en_tratamiento = heap_extraer_raiz(simulador->recepcion);
+		simulador_atender_pokemon_de_menor_nivel(simulador);
 		simulador->estadisticas.pokemon_en_espera = (unsigned)heap_tamanio(simulador->recepcion);
-		aux_destruir_pokemon_en_recepcion(pokemon_adivinado);
 
 		simulador->estadisticas.puntos += calcular_puntaje(simulador->intentos_actuales);
 		simulador->intentos_actuales = 0;

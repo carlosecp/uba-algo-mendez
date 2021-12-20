@@ -69,26 +69,6 @@ bool aux_agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entre
 	return true;
 }
 
-bool aux_actualizar_pokemon_en_tratamiento(PokemonEnRecepcion** pokemon_en_tratamiento, heap_t* recepcion) {
-	if (!pokemon_en_tratamiento || !recepcion)
-		return false;
-
-	if (*pokemon_en_tratamiento)
-		return true;
-
-	*pokemon_en_tratamiento = heap_elemento_en_raiz(recepcion);
-	return true;
-}
-
-bool aux_actualizar_cantidad_pokemones_en_recepcion(EstadisticasSimulacion* estadisticas, heap_t* recepcion) {
-	if (!estadisticas || !recepcion)
-		return false;
-
-	unsigned tamanio_recepcion = (unsigned)heap_tamanio(recepcion);
-	estadisticas->pokemon_en_espera = tamanio_recepcion > 0 ? tamanio_recepcion - 1 : tamanio_recepcion;
-	return true;
-}
-
 void aux_destruir_pokemon_en_recepcion(void* _pokemon) {
 	if (!_pokemon)
 		return;
