@@ -20,6 +20,12 @@ typedef struct {
 	bool tiene_nombre_repetido;
 } DatosDificultadConNombreRepetido;
 
+/**
+ * Toma dos dificultades validas del tipo DatosDificultadConId.
+ *
+ * Comparador utilizado para almacenar las dificultades agregadas al simulador
+ * en base al id de cada dificultad.
+ */
 int comparador_dificultades(void* _dificultad_1, void* _dificultad_2) {
 	DatosDificultadConId* dificultad_1 = _dificultad_1;
 	DatosDificultadConId* dificultad_2 = _dificultad_2;
@@ -33,6 +39,16 @@ int comparador_dificultades(void* _dificultad_1, void* _dificultad_2) {
 	return 0;
 }
 
+/**
+ * Toma dos dificultades. Una de ellas del tipo DatosDificultadConId que es
+ * cada una de las dificultades ya guardadas previamente. La otra es una
+ * estructura auxiliar del tipo DatosDificultadConNombreRepetido que permite
+ * saber de manera externa si ya se ha encontrado algun conflico o no.
+ *
+ * Determina si una dificultad tiene el nombre de otra que ya ha sido agregada
+ * previamente al simulador. Esto para evitar que se inserten dificultades con
+ * datos que tenga este conflicto (nombres repetidos).
+ */
 bool es_dificultad_con_nombre_repetido(void* _dificultad_existente, void* _nueva_dificultad) {
 	DatosDificultadConId* dificultad_existente = _dificultad_existente;
 	DatosDificultadConNombreRepetido* nueva_dificultad = _nueva_dificultad;
@@ -83,15 +99,30 @@ DatosDificultadConId* crear_dificultad(abb_t* dificultades, int id, DatosDificul
 	return nueva_dificultad;
 }
 
+/**
+ * Funcion auxiliar utilizada para verificar el nivel de las tres dificultades
+ * agregadas al simulador por defecto. Todas las dificultades por defecto
+ * comparten este mismo verificador.
+ */
 int verificar_nivel(unsigned nivel_adivinado, unsigned nivel_pokemon) {
 	return (int)nivel_pokemon - (int)nivel_adivinado;
 }
 
+/**
+ * Funcion calcular_puntaje utilizada en la dificultad "facil".
+ * Calcula el puntaje final en base a la resta de la cantidad de intentos sobre
+ * el puntaje inicial.
+ */
 unsigned calcular_puntaje_facil(unsigned cantidad_intentos) {
 	int puntaje = (int)PUNTAJE_INICIAL - ((int)cantidad_intentos * PENALIZACION_FALLO_FACIL);
 	return puntaje > PUNTAJE_MINIMO ? (unsigned)puntaje : PUNTAJE_MINIMO;
 }
 
+/**
+ * Funcion verificacion_a_string que genera una string que describe el
+ * resultado de un intento de adivinar el nivel del pokemon en tratamiento
+ * para la dificultad por defecto "facil".
+ */
 const char* verificacion_a_string_facil(int resultado_verificacion) {
 	if (resultado_verificacion >= 50)
 		return "Te quedaste corto por mas de 50 niveles";
@@ -123,11 +154,21 @@ const char* verificacion_a_string_facil(int resultado_verificacion) {
 	return "Adivinaste Crack";
 }
 
+/**
+ * Funcion calcular_puntaje utilizada en la dificultad "media".
+ * Calcula el puntaje final que toma de la cantidad de intentos amplificada por
+ * un multiplicador de penlizacion y se la resta al puntaje inicial.
+ */
 unsigned calcular_puntaje_media(unsigned cantidad_intentos) {
 	int puntaje = (int)PUNTAJE_INICIAL - ((int)cantidad_intentos * PENALIZACION_FALLO_MEDIA);
 	return puntaje > PUNTAJE_MINIMO ? (unsigned)puntaje : PUNTAJE_MINIMO;
 }
 
+/**
+ * Funcion verificacion_a_string que genera una string que describe el
+ * resultado de un intento de adivinar el nivel del pokemon en tratamiento
+ * para la dificultad por defecto "media".
+ */
 const char* verificacion_a_string_media(int resultado_verificacion) {
 	if (resultado_verificacion >= 50)
 		return "Te quedaste corto por bastante";
@@ -144,11 +185,21 @@ const char* verificacion_a_string_media(int resultado_verificacion) {
 	return "Adivinaste Crack";
 }
 
+/**
+ * Funcion calcular_puntaje utilizada en la dificultad "dificil".
+ * Calcula el puntaje final que toma de la cantidad de intentos amplificada por
+ * un multiplicador de penlizacion y se la resta al puntaje inicial.
+ */
 unsigned calcular_puntaje_dificil(unsigned cantidad_intentos) {
 	int puntaje = (int)PUNTAJE_INICIAL - ((int)cantidad_intentos * PENALIZACION_FALLO_DIFICIL);
 	return puntaje > PUNTAJE_MINIMO ? (unsigned)puntaje : PUNTAJE_MINIMO;
 }
 
+/**
+ * Funcion verificacion_a_string que genera una string que describe el
+ * resultado de un intento de adivinar el nivel del pokemon en tratamiento
+ * para la dificultad por defecto "dificil".
+ */
 const char* verificacion_a_string_dificil(int resultado_verificacion) {
 	int diferencia_intento = abs(resultado_verificacion);
 
@@ -164,6 +215,10 @@ const char* verificacion_a_string_dificil(int resultado_verificacion) {
 	return "Adivinaste Crack";
 }
 
+/**
+ * Funcion auxiliar que prepara los datos de la dificultad por defecto "facil"
+ * para que esta sea agregada en el simulador al momento de su creacion.
+ */
 DatosDificultad datos_dificultad_facil() {
 	return (DatosDificultad){
 		.nombre = "Facil",
@@ -173,6 +228,10 @@ DatosDificultad datos_dificultad_facil() {
 	};
 }
 
+/**
+ * Funcion auxiliar que prepara los datos de la dificultad por defecto "media"
+ * para que esta sea agregada en el simulador al momento de su creacion.
+ */
 DatosDificultad datos_dificultad_media() {
 	return (DatosDificultad){
 		.nombre = "Media",
@@ -182,6 +241,10 @@ DatosDificultad datos_dificultad_media() {
 	};
 }
 
+/**
+ * Funcion auxiliar que prepara los datos de la dificultad por defecto "dificil"
+ * para que esta sea agregada en el simulador al momento de su creacion.
+ */
 DatosDificultad datos_dificultad_dificil() {
 	return (DatosDificultad){
 		.nombre = "Dificil",
