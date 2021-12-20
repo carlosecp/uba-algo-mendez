@@ -5,6 +5,7 @@
 
 #include "aux_simulador_atencion_pokemon.h"
 #include "aux_simulador_dificultades.h"
+#include "heap.h"
 #include "hospital.h"
 
 #define CANTIDAD_DIFICULTADES_INICIAL 3
@@ -129,14 +130,12 @@ ResultadoSimulacion simulador_atender_proximo_entrenador(simulador_t* simulador)
 	if (!recepcion_exitosa)
 		return ErrorSimulacion;
 
-	bool exito = false;
-	exito = aux_actualizar_pokemon_en_tratamiento(&(simulador->pokemon_en_tratamiento), simulador->recepcion);
-	if (!exito)
-		return ErrorSimulacion;
-
-	exito = aux_actualizar_cantidad_pokemones_en_recepcion(&(simulador->estadisticas), simulador->recepcion);
-	if (!exito)
-		return ErrorSimulacion;
+	if (!(simulador->pokemon_en_tratamiento)) {
+		PokemonEnRecepcion* pokemon_de_menor_nivel = heap_extraer_raiz(simulador->recepcion);
+		simulador->pokemon_en_tratamiento = pokemon_de_menor_nivel;
+	}
+	
+	simulador->estadisticas.pokemon_en_espera = (unsigned)heap_tamanio(simulador->recepcion);
 
 	simulador->estadisticas.entrenadores_atendidos++;
 	lista_iterador_avanzar(simulador->sala_espera_entrenadores);
@@ -185,15 +184,10 @@ bool simulador_avanzar_pokemon_atendido(simulador_t* simulador) {
 
 	aux_destruir_pokemon_en_recepcion(pokemon_adivinado);
 
-	bool exito = true;
-	exito = aux_actualizar_cantidad_pokemones_en_recepcion(&(simulador->estadisticas), simulador->recepcion);
-	if (!exito)
-		return false;
+	simulador->pokemon_en_tratamiento = heap_elemento_en_raiz(simulador->recepcion);
 
-	simulador->pokemon_en_tratamiento = NULL;
-	exito = aux_actualizar_pokemon_en_tratamiento(&(simulador->pokemon_en_tratamiento), simulador->recepcion);
-	if (!exito)
-		return false;
+	if (simulador->pokemon_en_tratamiento)
+		printf("POKEMON EN TRATAMIENTO: %s\n", simulador->pokemon_en_tratamiento->nombre_pokemon);
 
 	simulador->estadisticas.pokemon_atendidos++;
 
@@ -221,9 +215,15 @@ ResultadoSimulacion simulador_adivinar_nivel_pokemon(simulador_t* simulador, Int
 	intento->es_correcto = resultado == RESULTADO_CORRECTO;
 
 	if (intento->es_correcto) {
-		simulador_avanzar_pokemon_atendido(simulador);
+		// TODO: Refactorizar esto
+		PokemonEnRecepcion* pokemon_adivinado = simulador->pokemon_en_tratamiento;
+		simulador->pokemon_en_tratamiento = heap_extraer_raiz(simulador->recepcion);
+		simulador->estadisticas.pokemon_en_espera = (unsigned)heap_tamanio(simulador->recepcion);
+		aux_destruir_pokemon_en_recepcion(pokemon_adivinado);
+
 		simulador->estadisticas.puntos += calcular_puntaje(simulador->intentos_actuales);
 		simulador->intentos_actuales = 0;
+		simulador->estadisticas.pokemon_atendidos++;
 	} else {
 		simulador->intentos_actuales++;
 	}
@@ -330,6 +330,7 @@ void simulador_destruir(simulador_t* simulador) {
 	if (!simulador)
 		return;
 
+	aux_destruir_pokemon_en_recepcion(simulador->pokemon_en_tratamiento);
 	heap_destruir(simulador->recepcion, aux_destruir_pokemon_en_recepcion);
 	lista_iterador_destruir(simulador->sala_espera_entrenadores);
 	lista_iterador_destruir(simulador->sala_espera_pokemones);
