@@ -21,7 +21,7 @@ typedef struct {
  * pokemones ordenados de tal forma que el pokemon de menor nivel siempre este
  * de primero en el heap (en la raiz).
  */
-int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b);
+int aux_comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b);
 
 /**
  * Toma un pokemon directamente desde el hospital y crea una nueva estructura
@@ -29,7 +29,7 @@ int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b);
  * su entrenador. Realiza una copia de los valores de los nombres para prevenir
  * errores si estos valores son cambiados por el usuario.
  */
-PokemonEnRecepcion* asociar_pokemon_con_su_entrenador(pokemon_t* pokemon, char* nombre_entrenador);
+PokemonEnRecepcion* aux_asociar_pokemon_con_su_entrenador(pokemon_t* pokemon, char* nombre_entrenador);
 
 /**
  * Toma el entrenador pokemon que esta ingresando en el hospital y pasa a todos
@@ -38,7 +38,7 @@ PokemonEnRecepcion* asociar_pokemon_con_su_entrenador(pokemon_t* pokemon, char* 
  * los pokemones correspondientes al entrenador actual en base a la cantidad
  * de pokemones del entrenador.
  */
-bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenador, lista_iterador_t* sala_de_espera_pokemones, heap_t* recepcion);
+bool aux_agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenador, lista_iterador_t* sala_de_espera_pokemones, heap_t* recepcion);
 
 /**
  * Actualiza la el pokemon en tratamiento cuando se agregan los primeros
@@ -48,7 +48,7 @@ bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenado
  *
  * En caso de erorr no hace ningun cambio.
  */
-bool actualizar_pokemon_en_tratamiento(PokemonEnRecepcion** pokemon_en_tratamiento, heap_t* recepcion);
+bool aux_actualizar_pokemon_en_tratamiento(PokemonEnRecepcion** pokemon_en_tratamiento, heap_t* recepcion);
 
 /**
  * Actualiza la cantidad de pokemones en recepcion cuando se agregan nuevos
@@ -56,13 +56,13 @@ bool actualizar_pokemon_en_tratamiento(PokemonEnRecepcion** pokemon_en_tratamien
  *
  * En caso de error no hace ningun cambio.
  */
-bool actualizar_cantidad_pokemones_en_recepcion(EstadisticasSimulacion* estadisticas, heap_t* recepcion);
+bool aux_actualizar_cantidad_pokemones_en_recepcion(EstadisticasSimulacion* estadisticas, heap_t* recepcion);
 
 /**
  * Destructor de pokemones almacenados en el heap, para los pokemones que
  * no pasaron a ser atendidos si finaliza la ejecucion del juego o tambien
  * utilizado para liberar de memoria a un pokemon que ya ha sido atentido.
  */
-void destruir_pokemon_en_recepcion(void* _pokemon);
+void aux_destruir_pokemon_en_recepcion(void* _pokemon);
 
 #endif

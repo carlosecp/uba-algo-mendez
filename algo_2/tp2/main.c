@@ -19,9 +19,9 @@ char leer_comando() {
 }
 
 /**
-  * Se encarga de llamar al evento "ObtenerEstadisticas" y muestra los
-  * resultados obtenidos por pantalla. En caso de error no muestra nada.
-  */
+ * Se encarga de llamar al evento "ObtenerEstadisticas" y muestra los
+ * resultados obtenidos por pantalla. En caso de error no muestra nada.
+ */
 void juego_mostrar_estadisticas(simulador_t* simulador) {
 	EstadisticasSimulacion e;
 	ResultadoSimulacion res = simulador_simular_evento(simulador, ObtenerEstadisticas, &e);
@@ -40,29 +40,20 @@ void juego_mostrar_estadisticas(simulador_t* simulador) {
 }
 
 /**
-  * Se encarga de llamar al evento "AtenderProximoEntrenador".
-  * En caso de exito se retorna al usuario al menu principal y en caso de error
-  * se muestra un mensaje indicando que hubo un error.
-  */
+ * Se encarga de llamar al evento "AtenderProximoEntrenador".
+ */
 void juego_atender_proximo_entreandor(simulador_t* simulador) {
-	ResultadoSimulacion res = simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
-	if (res == ErrorSimulacion) {
-		juego_prompt_error("Error", "No se pudo atender al proximo entrenador");
-		return;
-	}
+	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 }
 
 /**
-  * Se encarga de llamar al evento "ObtenerInformacionPokemonEnTratamiento".
-  * En caso de que haya un pokemon en tratamiento, muestra la informacion de
-  * ese pokemon.
-  */
+ * Se encarga de llamar al evento "ObtenerInformacionPokemonEnTratamiento".
+ * En caso de que haya un pokemon en tratamiento, muestra la informacion de
+ * ese pokemon.
+ */
 void juego_mostrar_pokemon_en_tratamiento(simulador_t* simulador) {
 	InformacionPokemon i = {};
-	ResultadoSimulacion res = simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &i);
-
-	if (res == ErrorSimulacion)
-		return;
+	simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &i);
 
 	juego_titulo("Pokemon en Tratamiento");
 	printf(" • Pokemon: %s\n", i.nombre_pokemon);
@@ -70,13 +61,13 @@ void juego_mostrar_pokemon_en_tratamiento(simulador_t* simulador) {
 }
 
 /**
-  * Se encarga de llamar al evento "AdivinarNivelPokemon". Se le pide al
-  * usuario que ingrese un numero correspondiente al nivel del pokemon que
-  * actualmente esta en tratamiento. En caso que no haber adivinado, se sigue
-  * pidiendo el ingreso de un numero hasta dar con el nivel correcto. Cuando
-  * se adivina o se erra el nivel del pokemon se muestra la pista
-  * correspondiente.
-  */
+ * Se encarga de llamar al evento "AdivinarNivelPokemon". Se le pide al
+ * usuario que ingrese un numero correspondiente al nivel del pokemon que
+ * actualmente esta en tratamiento. En caso que no haber adivinado, se sigue
+ * pidiendo el ingreso de un numero hasta dar con el nivel correcto. Cuando
+ * se adivina o se erra el nivel del pokemon se muestra la pista
+ * correspondiente.
+ */
 void juego_adivinar_nivel_pokemon_en_tratamiento(simulador_t* simulador) {
 	if (!simulador)
 		return;
@@ -103,10 +94,10 @@ void juego_adivinar_nivel_pokemon_en_tratamiento(simulador_t* simulador) {
 }
 
 /**
-  * Se encarga de llamar al evento "SeleccionarDificultad". Le permite al 
-  * usuario cambiar la dificultad de las pistas que se dan al intentar
-  * adivinar el nivel de un pokemon.
-  */
+ * Se encarga de llamar al evento "SeleccionarDificultad". Le permite al 
+ * usuario cambiar la dificultad de las pistas que se dan al intentar adivinar
+ * el nivel de un pokemon.
+ */
 void juego_seleccionar_nueva_dificultad(simulador_t* simulador) {
 	if (!simulador)
 		return;
@@ -132,10 +123,10 @@ void juego_seleccionar_nueva_dificultad(simulador_t* simulador) {
 }
 
 /**
-  * Se encarga de llamar al evento "ObtenerInformacionDificultad" para todas
-  * las dificultades disponibles o hasta que el evento retorne error. Muestra
-  * en pantalla las dificultades y si cual es la dificultad activa actualmente.
-  */
+ * Se encarga de llamar al evento "ObtenerInformacionDificultad" para todas
+ * las dificultades disponibles o hasta que el evento retorne error. Muestra
+ * en pantalla las dificultades y si cual es la dificultad activa actualmente.
+ */
 void juego_mostrar_informacion_dificultad(simulador_t* simulador) {
 	InformacionDificultad dificultad_buscada = {
 		.nombre_dificultad = NULL,
@@ -165,9 +156,9 @@ void juego_mostrar_informacion_dificultad(simulador_t* simulador) {
 }
 
 /**
-  * Recibe un juego inicializado.
-  * Toma un comando y ejecuta el evento correspondiente.
-  */
+ * Recibe un juego inicializado.
+ * Toma un comando y ejecuta el evento correspondiente.
+ */
 void juego_ejecutar_comando(Juego* juego, char comando) {
 	simulador_t* simulador = juego->simulador;
 

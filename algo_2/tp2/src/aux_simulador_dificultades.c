@@ -42,7 +42,7 @@ bool es_dificultad_con_nombre_repetido(void* _dificultad_existente, void* _nueva
 	return !(nueva_dificultad->tiene_nombre_repetido);
 }
 
-DatosDificultadConId* crear_dificultad(abb_t* dificultades, DatosDificultad datos_dificultad) {
+DatosDificultadConId* crear_dificultad(abb_t* dificultades, int id, DatosDificultad datos_dificultad) {
 	if (!dificultades)
 		return NULL;
 
@@ -74,7 +74,7 @@ DatosDificultadConId* crear_dificultad(abb_t* dificultades, DatosDificultad dato
 
 	strcpy(copia_nombre, datos_dificultad.nombre);
 
-	nueva_dificultad->id = (int)abb_tamanio(dificultades);
+	nueva_dificultad->id = id;
 	nueva_dificultad->nombre = copia_nombre;
 	nueva_dificultad->calcular_puntaje = datos_dificultad.calcular_puntaje;
 	nueva_dificultad->verificar_nivel = datos_dificultad.verificar_nivel;
@@ -200,17 +200,17 @@ abb_t* inicializar_dificultades(DatosDificultadConId* dificultad_por_defecto) {
 		return NULL;
 
 	DatosDificultadConId* dificultad_facil =
-		crear_dificultad(dificultades, datos_dificultad_facil());
+		crear_dificultad(dificultades, 0, datos_dificultad_facil());
 
 	abb_insertar(dificultades, dificultad_facil);
 
 	DatosDificultadConId* dificultad_media =
-		crear_dificultad(dificultades, datos_dificultad_media());
+		crear_dificultad(dificultades, 1, datos_dificultad_media());
 
 	abb_insertar(dificultades, dificultad_media);
 
 	DatosDificultadConId* dificultad_dificil =
-		crear_dificultad(dificultades, datos_dificultad_dificil());
+		crear_dificultad(dificultades, 2, datos_dificultad_dificil());
 
 	abb_insertar(dificultades, dificultad_dificil);
 

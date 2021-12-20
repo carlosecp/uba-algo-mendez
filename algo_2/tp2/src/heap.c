@@ -39,7 +39,7 @@ void sift_up(void** elementos, size_t pos_elemento, heap_comparador comparador) 
     void* elemento_padre = elementos[pos_padre];
 
     int comparacion = comparador(elemento, elemento_padre);
-    if (comparacion < 0) {
+    if (comparacion <= 0) {
         swap(elementos, pos_elemento, pos_padre);
         sift_up(elementos, pos_padre, comparador);
     }

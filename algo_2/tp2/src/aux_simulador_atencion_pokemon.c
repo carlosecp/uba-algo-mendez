@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b) {
+int aux_comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b) {
 	PokemonEnRecepcion* pokemon_a = _pokemon_a;
 	PokemonEnRecepcion* pokemon_b = _pokemon_b;
 
@@ -15,7 +15,7 @@ int comparador_nivel_pokemon(void* _pokemon_a, void* _pokemon_b) {
 	return 0;
 }
 
-PokemonEnRecepcion* asociar_pokemon_con_su_entrenador(pokemon_t* pokemon, char* nombre_entrenador) {
+PokemonEnRecepcion* aux_asociar_pokemon_con_su_entrenador(pokemon_t* pokemon, char* nombre_entrenador) {
 	if (!pokemon || !nombre_entrenador)
 		return NULL;
 
@@ -47,14 +47,14 @@ PokemonEnRecepcion* asociar_pokemon_con_su_entrenador(pokemon_t* pokemon, char* 
 	return pokemon_en_recepcion;
 }
 
-bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenador, lista_iterador_t* sala_de_espera_pokemones, heap_t* recepcion) {
+bool aux_agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenador, lista_iterador_t* sala_de_espera_pokemones, heap_t* recepcion) {
 	if (!proximo_entrenador)
 		return false;
 
 	for (int i = 0; i < proximo_entrenador->cantidad_pokemones; i++) {
 		pokemon_t* proximo_pokemon = lista_iterador_elemento_actual(sala_de_espera_pokemones);
 		if (proximo_pokemon) {
-			PokemonEnRecepcion* pokemon_en_recepcion = asociar_pokemon_con_su_entrenador(proximo_pokemon, proximo_entrenador->nombre);
+			PokemonEnRecepcion* pokemon_en_recepcion = aux_asociar_pokemon_con_su_entrenador(proximo_pokemon, proximo_entrenador->nombre);
 			if (!pokemon_en_recepcion)
 				return false;
 
@@ -69,18 +69,18 @@ bool agregar_pokemones_de_entrenador_a_recepcion(entrenador_t* proximo_entrenado
 	return true;
 }
 
-bool actualizar_pokemon_en_tratamiento(PokemonEnRecepcion** pokemon_en_tratamiento, heap_t* recepcion) {
+bool aux_actualizar_pokemon_en_tratamiento(PokemonEnRecepcion** pokemon_en_tratamiento, heap_t* recepcion) {
 	if (!pokemon_en_tratamiento || !recepcion)
 		return false;
 
 	if (*pokemon_en_tratamiento)
-		return false;
+		return true;
 
 	*pokemon_en_tratamiento = heap_elemento_en_raiz(recepcion);
 	return true;
 }
 
-bool actualizar_cantidad_pokemones_en_recepcion(EstadisticasSimulacion* estadisticas, heap_t* recepcion) {
+bool aux_actualizar_cantidad_pokemones_en_recepcion(EstadisticasSimulacion* estadisticas, heap_t* recepcion) {
 	if (!estadisticas || !recepcion)
 		return false;
 
@@ -89,7 +89,7 @@ bool actualizar_cantidad_pokemones_en_recepcion(EstadisticasSimulacion* estadist
 	return true;
 }
 
-void destruir_pokemon_en_recepcion(void* _pokemon) {
+void aux_destruir_pokemon_en_recepcion(void* _pokemon) {
 	if (!_pokemon)
 		return;
 

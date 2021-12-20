@@ -299,28 +299,37 @@ void dadoUnHospital_alAtenderAlProximoEntrenador_losPokemonesSeAtiendenConLaPrio
 
 	simulador_t* simulador = simulador_crear(hospital);
 
-	// Luego de atender el primer entrenador el pokemon en tratamiento deberia ser rampardos
 	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 
-	InformacionPokemon informacion = {NULL};
+	InformacionPokemon informacion = {};
 	ResultadoSimulacion res = simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &informacion);
 
 	pa2m_afirmar(res == ExitoSimulacion, "Atender al proximo entrenador cuando hay entrenadores disponibles retorna Exito");
 	pa2m_afirmar(strcmp(informacion.nombre_pokemon, "rampardos") == 0,
 			"Luego de atender al primer entrenador, el pokemon en tratamiento pasa a ser \"rampardos\", que es el que tiene el menor nivel");
 
-	/* Luego de atender a mas entrenadores sin haber terminado de atender al primer
-	   pokemon, el pokemon en tratamento deberia seguir siendo el mismo. */
-	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
-	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
-	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
-	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 	simulador_simular_evento(simulador, AtenderProximoEntrenador, NULL);
 
 	res = simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &informacion);
 
 	pa2m_afirmar(strcmp(informacion.nombre_pokemon, "rampardos") == 0,
 			"Luego de atender a varios entrenadores sin haber terminado de atender al pokemon en tratamiento, este ultimo se mentiene en tratamiento");
+
+	Intento intento = {
+		.nivel_adivinado = 10,
+	};
+
+	simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
+	simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &informacion);
+
+	pa2m_afirmar(strcmp(informacion.nombre_pokemon, "charizard") == 0, "Luego de atender \"rampardos\" el pokemon que pasa a ser atentido es \"charizard\"");
+
+	intento.nivel_adivinado = 20;
+
+	simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
+	simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &informacion);
+
+	pa2m_afirmar(strcmp(informacion.nombre_pokemon, "toxicroak") == 0, "Luego de atender \"rampardos\" el pokemon que pasa a ser atentido es \"charizard\"");
 
 	simulador_destruir(simulador);
 }

@@ -38,8 +38,8 @@ void simulador_destruir_en_fallo(simulador_t* simulador) {
 	if (!simulador)
 		return;
 
-	destruir_pokemon_en_recepcion(simulador->pokemon_en_tratamiento);
-	heap_destruir(simulador->recepcion, destruir_pokemon_en_recepcion);
+	aux_destruir_pokemon_en_recepcion(simulador->pokemon_en_tratamiento);
+	heap_destruir(simulador->recepcion, aux_destruir_pokemon_en_recepcion);
 	lista_iterador_destruir(simulador->sala_espera_entrenadores);
 	lista_iterador_destruir(simulador->sala_espera_pokemones);
 	abb_destruir_todo(simulador->dificultades, destruir_dificultad);
@@ -63,7 +63,7 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 		.pokemon_totales = (unsigned)hospital_cantidad_pokemon(hospital),
 	};
 
-	simulador->recepcion = heap_crear(comparador_nivel_pokemon);
+	simulador->recepcion = heap_crear(aux_comparador_nivel_pokemon);
 	if (!(simulador->recepcion))
 		exito = false;
 
@@ -112,7 +112,10 @@ ResultadoSimulacion simulador_obtener_estadisticas(simulador_t simulador, Estadi
 
 /**
  * Recibe un puntero a simulador valido.
- * Simula el evento "AtenderProximoEntrenador".
+ * Simula el evento "AtenderProximoEntrenador". Actualiza la cantidad de
+ * pokemones en la sala de espera / recepcion cada vez que se atiende un
+ * nuevo entrenador y actualiza el pokemon en tratamiento de ser necesario
+ * (en el caso en que no haya pokemones agregados en la recepcion).
  */
 ResultadoSimulacion simulador_atender_proximo_entrenador(simulador_t* simulador) {
 	if (!simulador)
@@ -122,16 +125,16 @@ ResultadoSimulacion simulador_atender_proximo_entrenador(simulador_t* simulador)
 	if (!proximo_entrenador)
 		return ErrorSimulacion;
 
-	bool recepcion_exitosa = agregar_pokemones_de_entrenador_a_recepcion(proximo_entrenador, simulador->sala_espera_pokemones, simulador->recepcion);
+	bool recepcion_exitosa = aux_agregar_pokemones_de_entrenador_a_recepcion(proximo_entrenador, simulador->sala_espera_pokemones, simulador->recepcion);
 	if (!recepcion_exitosa)
 		return ErrorSimulacion;
 
 	bool exito = false;
-	exito = actualizar_pokemon_en_tratamiento(&(simulador->pokemon_en_tratamiento), simulador->recepcion);
+	exito = aux_actualizar_pokemon_en_tratamiento(&(simulador->pokemon_en_tratamiento), simulador->recepcion);
 	if (!exito)
 		return ErrorSimulacion;
 
-	exito = actualizar_cantidad_pokemones_en_recepcion(&(simulador->estadisticas), simulador->recepcion);
+	exito = aux_actualizar_cantidad_pokemones_en_recepcion(&(simulador->estadisticas), simulador->recepcion);
 	if (!exito)
 		return ErrorSimulacion;
 
@@ -142,8 +145,8 @@ ResultadoSimulacion simulador_atender_proximo_entrenador(simulador_t* simulador)
 }
 
 /**
- * Recibe un puntero a simulador valido.
- * Simula el evento "AtenderProximoEntrenador".
+ * Recibe un simulador y un puntero valido a la informacion a llenar.
+ * Simula el evento "ObtenerInformacionPokemonEnTratamiento".
  */
 ResultadoSimulacion simulador_obtener_informacion_pokemon_en_tratamiento(simulador_t simulador, InformacionPokemon* informacion) {
 	if (!informacion)
@@ -166,7 +169,11 @@ ResultadoSimulacion simulador_obtener_informacion_pokemon_en_tratamiento(simulad
 
 /**
  * Recibe un puntero a simulador valido.
- * Simula el evento "AtenderProximoEntrenador".
+ * Maneja el proceso posterior a haber adivinado el nivel de un pokemon. Primero
+ * libera el pokemon adivina de memoria, ya que este es considera atendido y 
+ * no sera utilizado de nuevo por el simulador. Luego actualiza el pokemon
+ * en tratamiento a uno nuevo y actualiza la cantidad de pokemones en recepcion
+ * y pokemones atendidos.
  */
 bool simulador_avanzar_pokemon_atendido(simulador_t* simulador) {
 	if (!simulador)
@@ -176,19 +183,27 @@ bool simulador_avanzar_pokemon_atendido(simulador_t* simulador) {
 	if (!pokemon_adivinado)
 		return true;
 
-	destruir_pokemon_en_recepcion(pokemon_adivinado);
+	aux_destruir_pokemon_en_recepcion(pokemon_adivinado);
 
-	bool exito = actualizar_cantidad_pokemones_en_recepcion(&(simulador->estadisticas), simulador->recepcion);
+	bool exito = true;
+	exito = aux_actualizar_cantidad_pokemones_en_recepcion(&(simulador->estadisticas), simulador->recepcion);
 	if (!exito)
 		return false;
 
 	simulador->pokemon_en_tratamiento = NULL;
-	exito = actualizar_pokemon_en_tratamiento(&(simulador->pokemon_en_tratamiento), simulador->recepcion);
+	exito = aux_actualizar_pokemon_en_tratamiento(&(simulador->pokemon_en_tratamiento), simulador->recepcion);
+	if (!exito)
+		return false;
+
 	simulador->estadisticas.pokemon_atendidos++;
 
-	return exito;
+	return true;
 }
 
+/**
+ * Recibe un simulador y un puntero valido a del intento a probar.
+ * Simula el evento "AdivinarNivelPokemon".
+ */
 ResultadoSimulacion simulador_adivinar_nivel_pokemon(simulador_t* simulador, Intento* intento) {
 	if (!simulador || !intento)
 		return ErrorSimulacion;
@@ -223,7 +238,7 @@ ResultadoSimulacion simulador_agregar_dificultad(simulador_t* simulador, DatosDi
 		return ErrorSimulacion;
 
 	DatosDificultadConId* dificultad =
-		crear_dificultad(simulador->dificultades, *datos_dificultad);
+		crear_dificultad(simulador->dificultades, (int)abb_tamanio(simulador->dificultades), *datos_dificultad);
 
 	if (!dificultad)
 		return ErrorSimulacion;
@@ -315,7 +330,7 @@ void simulador_destruir(simulador_t* simulador) {
 	if (!simulador)
 		return;
 
-	heap_destruir(simulador->recepcion, destruir_pokemon_en_recepcion);
+	heap_destruir(simulador->recepcion, aux_destruir_pokemon_en_recepcion);
 	lista_iterador_destruir(simulador->sala_espera_entrenadores);
 	lista_iterador_destruir(simulador->sala_espera_pokemones);
 	abb_destruir_todo(simulador->dificultades, destruir_dificultad);
