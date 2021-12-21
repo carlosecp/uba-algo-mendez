@@ -90,17 +90,6 @@ size_t heap_insertar(heap_t* heap, void* elemento) {
     return heap->tamanio;
 }
 
-// TODO: Hacer pruebas de esto
-void* heap_elemento_en_raiz(heap_t* heap) {
-	if (!heap)
-		return NULL;
-
-	if (heap->tamanio == 0)
-		return NULL;
-
-	return heap->elementos[0];
-}
-
 void* heap_extraer_raiz(heap_t* heap) {
     if (!heap)
         return NULL;

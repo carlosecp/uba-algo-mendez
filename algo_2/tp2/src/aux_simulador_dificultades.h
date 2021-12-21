@@ -20,7 +20,7 @@ typedef struct {
  * en caso de exito para que esta sea agregada a las dificultades ya existentes o 
  * NULL en caso de error.
  */
-DatosDificultadConId* crear_dificultad(abb_t* dificultades, int id, DatosDificultad datos_dificultad);
+DatosDificultadConId* aux_crear_dificultad(abb_t* dificultades, int id, DatosDificultad datos_dificultad);
 
 /**
  * Genera las dificultades iniciales que existen en el simulador: Facil, Media y
@@ -28,16 +28,16 @@ DatosDificultadConId* crear_dificultad(abb_t* dificultades, int id, DatosDificul
  * 
  * En caso de exito retorna las nuevas dificultades y en caso de errror NULL.
  */
-abb_t* inicializar_dificultades(DatosDificultadConId* dificultad_por_defecto);
+abb_t* aux_inicializar_dificultades(DatosDificultadConId* dificultad_por_defecto);
 
 /*
  * Evalua si la dificultad recibida esta actualmente en uso o no.
  */
-bool dificultad_esta_en_uso(DatosDificultadConId dificultad_en_uso, DatosDificultadConId dificultad_buscada);
+bool aux_dificultad_esta_en_uso(DatosDificultadConId dificultad_en_uso, DatosDificultadConId dificultad_buscada);
 
 /*
  * Libera de memoria las dificultades almacenadas una vez se dejan de utilizar.
  */
-void destruir_dificultad(void* _dificultad);
+void aux_destruir_dificultad(void* _dificultad);
 
 #endif

@@ -18,8 +18,8 @@
 \newcommand{\LastName}{Castillo}
 \newcommand{\StudentID}{108535}
 \newcommand{\StudentEmail}{ccastillo@fi.uba.ar}
-% \newcommand{\ProjectName}{Trabajo Práctico n — NombreTP}
-\newcommand{\ProjectName}{TDA 3 — Hash}
+\newcommand{\ProjectName}{Trabajo Práctico 2 — Simulador}
+% \newcommand{\ProjectName}{TDA 3 — Hash}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -78,87 +78,25 @@
 
 \section{Introducción}\label{sec:intro}
 
-Muchos lenguajes de programación permiten al usuario extender los tipos de datos
-nativos del lenguaje con para facilitar la implementación de características y
-funcionalidades más complejas. De esta forma, el programador tiene la capacidad
-de combinar diferentes primitivas del lenguaje y así generar nuevos tipos
-compuestos para crear interfaces abstractas que faciliten el manejo y
-organización de la información mediante diferentes estructuras de datos.
+El trabajo practico presenta un hospital pokemon en el que los diferentes
+entrenadores pueden atender a sus pokemones. Inicialmente se provee la
+información de los entrenadores ingresantes y sus pokemones a traves de un
+archivo de texto. El objetivo es implementar la funcionalidad de atencion de
+los pokemones en el hospital a traves de un simulador que permita gestionar
+a los pacientes internados.
 
-El objetivo de este trabajo práctico es implementar una de las estructuras de
-datos más utilizadas, la tabla de hash. 
+Dicho simulador toma control de la informacion del hospital y permite simular
+una serie de eventos a traves de diferentes comandos, que ayudan a las
+enfermeras del hospital a atender a cada pokemon adivinando su nivel.
 
-                                    % TEORIA
+Para la construcción del simulador del el hospital de pokemones se deben
+utilizar algunas de las diferentes estructuras de datos estudiadas durante
+el curso de la materia, identificando cual tda resulta mas conveniente para
+implementar cada funcionalidad del simulador.
 
-\section{Teoría}\label{sec:teoria}
+                          % DETALLES DE IMPLEMENTACION
 
-\subsection{Tabla de Hash}
-
-El concepto de tabla de hash se deriva de la estructura de datos conocida como
-diccionario, una colección de pares clave-valor, en la que cada elemento está
-asociado con una clave única con la que es identificado una vez es almacenado en
-el diccionario. De esta forma para acceder a los elementos contenidos en el
-diccionario se utiliza la misma clave con la que se insertó. Esta estructura de
-datos y sus derivados son utilizados principalmente por su capacidad de acceder
-rápidamente a la información y evitar la duplicidad de entradas.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{img/1_diccionario.png}
-\caption{\label{fig:seq01}Estructura de Datos Diccionario.}
-\end{figure}
-
-En particular una tabla de hash implementa un arreglo asociativo en el que la
-ubicación de cada elemento agregado es calculada a traves de una función de
-hash, la cual genera un índice dentro del arreglo a partir de la clave
-indicada.  Así para insertar, acceder o quitar un elemento almacenado en la
-tabla, se toma la clave provista, se encuentra su índice a través de la función
-de hash y finalmente se accede a esa posición dentro de la tabla. 
-
-Sin embargo, a medida se van agregando elementos a la tabla, se va aumentando
-la probabilidad de que para dos claves distintas se genere un mismo indice de
-hash. Cuando esto sucede se dice que hay una ''colisión''. Existen muchas
-alternativas para resolver estas colisiones, la mayoría de las cuales implican
-cambiar ligeramente la estructura de la tabla o requieren de algún tipo de
-reorganización de la información ya almacenada. Las variantes de tablas de hash
-más comunes para lidiar con colisiones son la tabla de ''hash abierto'' y tabla
-de ''hash cerrado''. 
-
-													 \subsection{Hash Abierto}
-
-Una tabla de hash abierto consiste en una tabla de hash capaz de hacer
-encadenamiento o ''chaining'' a los elementos con un mismo indice de hash. Para
-esto se suele implementar una estructura de datos secundaria en la que se
-almacenarán los elementos que colisionen, generalmente listas enlazadas. De
-esta forma la tabla de hash en sí solamente contiene referencias a las
-diferentes listas en las que se guardan los elementos. Cada indice de hash
-apunta más bien a cada una de estas listas y en caso de colisión, dos pares
-clave-valor con el mismo indice de hash van a ser almacenados en la misma
-posición en la tabla de hash y encadenados al final de la lista en esa
-posición.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{img/2_hash_abierto.png}
-\caption{\label{fig:seq02}Hash Abierto con Listas Enlazadas.}
-\end{figure}
-
-Sin embargo uno de los puntos negativos de utilizar este tipo de hash es que
-si se van insertando varios elementos con el mismo indice de hash, las listas
-enlazadas van a ir aumentando su longitud, haciendo que el tiempo de acceso a
-los elementos se tienda a ser $O(n)$ en vez de conservarse como $O(1)$ como es
-característico de las estructuras de datos diccionarios. Para evitar esto se
-suele hacer una operación conocida como ''rehash'' cuando la cantidad de
-elementos en una tabla de hash sobrepasa cierto umbral. Esta operación consiste
-en incrementar el número de listas en la tabla y reinsertar nuevamente los
-elementos almacenados, ya que al si el indice producido por la función de hash
-depende de la cantidad de listas disponibles, al incrementar dicha cantidad,
-los indices de elementos previamente almacenados deberán ser reasignados en
-base a la nueva cantidad de listas disponibles.
-
-													% DETALLES DE IMPLEMENTACION
-
-				 \section{Detalles de implementación}\label{sec:implementacion}
+\section{Detalles de implementación}\label{sec:implementacion}
 
 La implementación de esta estructura de datos fue escrita en el lenguaje de
 programación C, siguiendo la especificación del lenguaje detallada en el
@@ -171,19 +109,213 @@ programa o en la asignación, manejo y liberación de memoria dinámica. Para es
 se utiliza \textbf{gcc} como compilador y \textbf{valgrind} como herramienta de
 análisis de memoria.
 
-La estructura de tabla de hash propuesta para esta implementación es la
-siguiente:
+El trabajo practico se encuentra dividio en dos componentes principales: la
+interfaz y el simulador. La implementacion de la interfaz abarca los archivos
+\textbf{main.c} y \textbf{juego.c}. Por otra parte, la implementacion del
+simulador se divide en los archivos \textbf{simulador.c}, en donde se encuentra
+la funcionalidad base del simulador, y los archivos auxiliares
+\textbf{aux\_simulador\_atencion\_pokemon.c} y
+\textbf{aux\_simulador\_dificultades.c}, que almacenan funcionalidad comun
+utilizada en bastantes partes del simulador.
+
+\subsection{Simulador}
+
+El simulador provee tres funciones principales: \lstinline{simulador_crear},
+que se encarga de la creacion e inicialización de un nuevo simulador con su
+respectivo hospital, \lstinline{simulador_simular_evento}, que evalua los
+diferentes comandos enviados al simulador y ejecuta el evento correspondiente
+a dicho comando, y finalmente \lstinline{simulador_destruir} que se encarga de
+la destruccion del simulador y liberacion de la memoria ocupada por el mismo.
+
+La estructura propuesta para el simulador es la siguiente:
 
 \begin{lstlisting}[language=C]
-struct hash {
-	casilla_t** casillas;
-	size_t cantidad_casillas;
-	size_t cantidad_elementos;
-	hash_destruir_dato_t destruir_elemento;
+struct simulador {
+	hospital_t* hospital;
+	EstadisticasSimulacion estadisticas;
+
+	heap_t* recepcion;
+	lista_iterador_t* sala_espera_entrenadores;
+	lista_iterador_t* sala_espera_pokemones;
+	PokemonEnRecepcion* pokemon_en_tratamiento;
+
+	abb_t* dificultades;
+	DatosDificultadConId dificultad_en_uso;
+	unsigned intentos_actuales;
+
+	bool en_curso;
 };
 \end{lstlisting}
 
-El campo \lstinline{casillas} de cada hash es un vector de listas simplemente enlazadas y puramente recursiva, implementadas de la siguiente forma:
+El primer campo \lstinline{hospital} hace referencia al hospital que se utiliza
+con el simulador. Este ultimo obtiene la informacion de los registros de
+ingresos de entrenadores y pokemones guardados previamente en el hospital antes
+de que estos sean cargados por turnos a la simulacion. El campo
+\lstinline{estadisticas} le permite al simulador llevar control sobre los
+el estado actual de la simulacion, almacenando datos como el numero total de
+entrenadores y pokemones, la cantidad de pokemones atendidos y en espera, entre
+otras estadisticas de la simulacion en curso.
+
+Los campos \lstinline{dificultad_en_uso}, \lstinline{intentos_actuales} y
+\lstinline{en_curso} permiten al simulador mantener una referencia a ciertos
+datos del estado actual de la simulacion que son de utilidad en algunos de los
+eventos registrados en el simulador.
+
+\subsection{Atención de Pokemones}
+
+\subsubsection{Registro en Hospital}
+
+Inicialmente los entrenadores esperan pacientemente junto con sus pokemones en
+la sala de espera del hospital. Para almacenar esta informacion en el hospital
+se utilizan tres estructuras de datos diferentes: dos listas enlazadas y un
+árbol binario de búsqueda. Las listas enlazadas son de utilidad para guardar un
+registro de los entrenadores que van ingresando al simulador en el orden de
+llegada de los mismos al hospital, que es el mismo orden en el que los
+entrenadores son cargados al simulador. Al utilizar una lista enlazada este
+orden se respeta, ya que los elementos se almacenan en nodos dispuestos uno
+tras otro de manera consecutiva, en el orden en el que van siendo insertados.
+Precisamente por esta razón, en este caso la operación de inserción en la lista
+enlazada solamente se hace al final de la lista para cada nuevo elemento, en vez
+de hacer una inserción en posiciones específicas.
+
+Además de un registro lineal de los entrenadores se necesita un registro lineal
+de los pokemones, de tal manera que sea facil relacionar un rango de pokemones
+con un mismo entrenador, en base a la cantidad de pokemones que registró cada
+entrenador al ingresar al hospital. Para esto se utiliza la segunda lista
+enlazada. Finalmente, el árbol binario de búsqueda se utiliza para facilitar
+la tarea de recorrer los pokemones en orden alfabético, utilizando un árbol
+binario que implemente un comparador basado en los nombres de los pokemones para
+que al realizar un recorrido ''inorden'' resulte en un recorrido en orden
+alfabético de todos los pokemones. Si bien esta decisión implica duplicar los
+datos de los pokemones almacenados, se decidieron priorizar las optimizaciones
+en cuanto a la complejidad temporal sobre la complejidad de memoria, esto
+haciendo referencia al alto costo temporal que tendría ordenar una lista
+enlazada de pokemones solo para recorrerlos en orden alfabético.
+
+\subsubsection{Ingreso de Entrenadores}
+
+Como fue mencionado anteriormente, el orden en el que ''entran'' los
+entrenadores en el hospital es el mismo orden en el que estos van a ser
+cargados, junto con sus pokemones, en el simulador. El simulador cuenta con un
+evento llamado ''AtenderProximoEntrenador'' el cual carga la
+información del siguiente entrenador no atendido cada vez que se invoca dicho
+evento, es decir, de cierta forma se va avanzando sobre el listado de
+entrenadores en orden de llegada, cada vez que se atiende un entrenador, se
+avanza al siguiente, y luego al siguiente, así hasta haber atendido a todos los
+entrenadores posibles. Como el registro de entrenadores en el hospital está
+implementado utilizando una lista enlazada que respeta este mismo orden, resulta
+conveniente utilizar un iterador de lista enlazada que permita replicar esta
+acción de avanzar al próximo entrenador de la lista cada vez que se termine de
+atender a un entrenador. Dicho iterador corresponde al campo
+\lstinline{sala_espera_entrenadores} presente en el simulador.
+
+Esta funcionalidad está implementada en la función \lstinline{simulador_atender_proximo_entrenador} que toma el elemento actual del iterador
+de entrenadores, es decir, el próximo entrenador a atender, y agrega todos sus
+pokemones a la recepción del simulador. Para identificar cuáles son los
+pokemones del hospital que pertenecen a cada entrenador, al momento de registrar
+a cada entrenador se almacena como dato la cantidad de pokemones que trajo
+consigo cuando ingresó al hospital. De esta forma, para un entrenador con $x$
+pokemones, se pueden realizar $x$ iteraciones sobre la segunda lista enlazada
+que almacena los pokemones del hospital en orden de ingreso, nuevamente
+utilizando un iterador de lista enlazada, en este caso almacenado en el
+campo \lstinline{sala_espera_pokemones}. Al utilizar un iterador sobre la lista
+enlazada de pokemones, se evitan posibles problemas que podrían ocurrir si se
+usaran índices para acceder a los pokemones por entrenador en una sola lista, ya
+que cada vez que se avanza el iterador, el elemento actual del mismo se deja en
+la posición que corresponde al inicio del rango de pokemones del siguiente
+entrenador, asegurando así que los pokemones de un entrenador ''interfieran''
+con los pokemones de otro por un error de indexado. Además, esta implementación
+de iterador + contador de pokemones (por entrenador) permite reducir la
+complejidad del código y la complejidad temporal que se tendría de utilizarse 
+otra estructura de datos como una doble lista enlazada (una lista enlazada de
+pokemones por cada entrenador en una lista enlazada de entrenadores). Para esto
+último se utilizan las funciones auxiliares
+\lstinline{simulador_atender_pokemon_de_menor_nivel} y
+\lstinline{aux_agregar_pokemones_de_entrenador_a_recepcion} que ayudan a
+modularizar	un poco el proceso de guardado de los pokemones de cada entrenador.
+
+\subsubsection{Recepción de Pokemones}
+
+El simulador está diseñado para que cada vez que se atienda a un nuevo pokemon,
+siempre se elija aquel pokemon que tenga el menor nivel posible entre todos los
+ya cargados al simulador. Esto implica que cada vez que se atiendan nuevos
+entrenadores y estos pasen sus pokemones al simulador, dichos pokemones se 
+deben almacenar en una estructura de datos que sea capaz de mantener el orden
+tras cada inserción, de tal forma que se garantice que en cuanto haya espacio
+disponible en el consultorio para atender a un pokemon, sea efectivamente el 
+pokemon de menor nivel el que pase a ser atendido, sin verse afectado por otros
+factores que podría afectar el orden en ciertas estructuras de datos como el
+orden de llegada del pokemon.
+
+Una vez establecida la necesidad de cumplir con este criterio, se hace evidente
+que la estructura de datos que encaja mejor con la funcionalidad requerida es 
+el heap binario minimal. Esta estructura de datos es un árbol binario que
+mantiene en su raíz al menor de todos los elementos basados en el criterio de
+comparación deseado, en este caso el nivel del pokemon. De esta forma, cada vez
+que se desea seleccionar el próximo pokemon a ser atendido, solo se extrae la
+raíz del heap, que en el caso del simulador corresponde al campo
+\lstinline{recepcion}, y directamente se asegura que dicha elemento extraído
+es el pokemon de menor nivel entre los pokemones disponibles en toda la
+recepción.
+
+Para atender a un pokemon enlistado cuando hay espacio disponible en el
+consultorio, se utiliza la función auxiliar
+\lstinline{simulador_atender_pokemon_de_menor_nivel}, que tal y como su nombre
+indica, una vez que se tiene espacio disponible para avanzar al pokemon de menor
+nivel para que este sea atendido, se encarga de destruir el pokemon que estaba
+actualmente en el consultorio (si es que había uno), extrae la raíz del heap
+que almacena todos los pokemones disponibles, y posiciona al pokemon de menor
+nivel como nuevo pokemon en tratamiento. En el caso del simulador, este pokemon
+es almacenado en el campo \lstinline{pokemon_en_tratamiento}.
+
+\subsection{Manejo de Dificultades}
+
+El objetivo del simulador es permitir que el usuario adivine el nivel de un
+pokemon cuando este está siendo atendido. Esto es posible a través del evento
+''AdivinarNivelPokemonEnTratamiento''. Este evento utiliza las funciones
+específicas de la dificultad que esta activa en el momento en el simulador para
+determinar si el intento de adivinar el nivel del pokemon hecho por el usuario
+es correcto o incorrecto. Para esto es necesario tener una forma de identificar
+cuál es la dificultad que se encuentra activa en el momento de realizar el
+intento y cuales son las funciones de esa dificultad para calcular los puntajes, 
+generar pistas y verificar los resultados de cada intento.
+
+El simulador cuenta con un registro de las diferentes dificultades agregadas
+al mismo, teniendo siempre como mínimo tres dificultades: ''Facil'', ''Media'' y 
+''Dificil''. Para almacenar estas dificultades en el campo
+\lstinline{dificultades} del simulador, se hace uso de un árbol binario de
+búsqueda, principalmente por la eficiencia de esta estructura de datos para
+buscar cierto elemento en base al criterio de ordenamiento, en este caso, buscar
+dificultades en base al ID de las mismas. Sin embargo si bien sobre el papel
+esta estructura presenta esta ventaja, en la práctica no resulta ni más ni
+menos eficiente para la búsqueda que lo que hubiera resultado si se utilizara
+una lista enlazada, dado a que a como están construidas las funciones que ayudan
+a la creacion de una nueva dificultad, \lstinline{simulador_agregar_dificultad}
+junto con otros auxiliares como \lstinline{crear_dificultad}, el ID de cada
+nueva dificultad agregada se auto-genera a partir de la cantidad de dificultades
+ya existentes, de tal manera que el ID de la nueva dificultad siempre va a ser
+mayor que los IDs existentes y por lo tanto el árbol binario de búsqueda se 
+termina degenerando en una lista enlazada. Sin embargo se decidió conservar la
+implementación de árbol binario en caso de que se desee cambiar la
+auto-generación de los IDs en un futuro y también porque provee directamente
+la primitiva \lstinline{abb_buscar}, para buscar una dificultad por ID cuando se 
+desea cambiar la dificultad del simulador.
+
+Una vez se cambia la dificultad del simulador, al momento de intentar adivinar
+el nivel del pokemon en tratamiento nuevamente, el evento tomará en consideración
+las funciones de verificación del intento correspondientes a la dificultad con
+el ID de la dificultad activa, almacenado en el simulador dentro del campo
+\lstinline{dificultad_en_uso}. El simulador también lleva control sobre la
+cantidad de intentos requeridos hasta adivinar el nivel de un pokemon cada vez
+que se inicia dicho evento. Este datos es requerido por algunas dificultades
+para calcular el puntaje final.
+
+\subsection{Interfaz}
+
+La parte de la interfaz hace las veces de cliente para el simulador. 
+
+El campo \lstinline{casillas} de cada hash es un vector de listas simplemente
+enlazadas y puramente recursiva, implementadas de la siguiente forma:
 
 \begin{lstlisting}[language=C]
 typedef struct casilla {
@@ -192,98 +324,6 @@ typedef struct casilla {
 	struct casilla* siguiente;
 } casilla_t;
 \end{lstlisting}
-
-Al estar utilizando esta segunda estructura de datos, la mayoría de las operaciones de la tabla de hash son fundamentalmente auxiliares que trabajan
-con operaciones de lista enlazada, por lo que el funcionamiento de las mismas es muy similar al de las operaciones regulares para una lista enlazada.
-
-                         \subsection{Insertar Elemento}
-
-Para insertar elementos en el hash se provee la función
-\lstinline{hash_insertar} que recibe la clave y el elemento a insertar. Lo
-primero que se hace en este caso es determinar la posición en la que se va a
-insertar el elemento dentro de las posiciones disponibles en el vector de
-casillas de la tabla de hash. Para esto se utiliza como auxiliar la función
-\lstinline{calcular_indice_hash}, que toma la clave dada y retorna la sumatoria
-de los valores ASCII de cada uno de los caracteres de esta clave. A este
-resultado luego se le aplica la operación módulo respecto del tamaño actual del
-vector de casilleros del hash, para así limitar el índice de hash a un rango
-válido para este vector.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{img/3_hash_insercion.png}
-\caption{\label{fig:seq03}Inserción de clave con función de hash.}
-\end{figure}
-
-Una vez se determina el indice correspondiente, se llama a la operación insertar
-de la lista enlazada ubicada en ese índice. Para esto se utiliza la función
-\lstinline{casilla_insertar} que recorre la lista deseada de manera recursiva
-hasta encontrar la clave dada o hasta llegar al final de la lista. Si encuentra
-la clave dada antes de llegar al final de la lista, significa que esa clave ya
-tenía asignado un elemento previamente, así que destruye ese elemento para
-actualizar la clave en cuestión con el nuevo elemento que se desea guardar.  En
-el caso de que se llegue al final de la lista sin haber encontrado la clave, se
-crea un nuevo nodo/casilla en la que se guarda una copia de la clave y se
-almacena el elemento.
-
-                             \subsubsection{Rehash}
-
-Para evitar la degeneración excesiva causada por la continua inserción de
-múltiples claves con el mismo valor de hash, se implementa también una operación
-interna de rehash. Esta se encarga de reorganizar el hash original,
-incrementando la cantidad de listas disponibles y volviendo a insertar los
-elementos almacenados. Esta función primero crea una copia del estado original
-del hash. Luego agranda el tamaño del vector de casillas y le asigna una nueva
-ubicación en memoria, lo suficientemente grande para el nuevo tamaño del hash.
-Sin embargo al reasignar la memoria, el vector en cuestión pierde toda la
-información que estaba almacenada, por lo que se debe recurrir a la copia hecha
-previamente para ir insertando los elementos uno a uno. Esto se hace con la
-ayuda de la función \lstinline{casilla_copiar_casillas}, la cual va recorriendo
-cada una de las listas recursivamente y llamando a la función
-\lstinline{casilla_insertar} para cada elemento.
-
-La operación de rehash es computacionalmente costosa, así que solo se manda aplica cuando la cantidad de elementos almacenados en el hash supera determinado umbral en relación con la capacidad total del mismo. En este caso el umbral es:
-
-$$
-\frac{\textnormal{cantidad\_elementos}}{\textnormal{cantidad\_casillas}} \ge 0.75
-$$
-
-Y el factor de incremento al aumentar la cantidad de espacios disponibles en el hash anterior es igual a $2$, es decir, cada vez que se hace rehash, la cantidad de listas en el hash se duplica.
-
-                          \subsection{Quitar Elemento}
-
-La operación de quitar un elemento se asemeja a la de insertar. En esta
-operación nuevamente lo primero que se hace es calcular el índice de hash que
-corresponde con la clave dada. Luego se ubica la lista que se encuentra en ese
-índice y se utiliza la función \lstinline{casilla_quitar} para eliminar la clave
-deseada de la lista.  La operación de quitar un elemento se asemeja a la de
-insertar. En esta operación nuevamente lo primero que se hace es calcular el
-índice de hash que corresponde con la clave dada. Luego se ubica la lista que se
-encuentra en ese índice y se utiliza la función \lstinline{casilla_quitar} para
-eliminar la clave deseada de la lista.
-
-                         \subsection{Iterador Interno}
-
-La función \lstinline{hash_con_cada_clave} permite recorrer los elementos de un hash y aplicarles un función a cada elemento. Para esto se utiliza una función auxiliar \lstinline{casilla_con_cada_clave} que simplemente recorre cada lista enlazada de manera recursiva. Esta función se manda a llamar para cada lista almacenada en el vector de casillas del hash. En caso de que la función aplicada sobre un elemento retorne \lstinline{true} se detiene el recorrido del hash.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{img/4_recorrido.png}
-\caption{\label{fig:seq04}Recorrido hasta que función retorne \lstinline{true}.}
-\end{figure}
-
-                         \subsection{Otra Operaciones}
-
-Además de las operaciones de insertar y quitar se provee la función
-\lstinline{hash_contiene} que solamente verifica si existe una clave dada en el
-hash, los getters \lstinline{hash_obtener} y \lstinline{hash_cantidad}, la
-primera de estas funciones se encarga de buscar un elemento por su clave y
-retornarlo si lo encuentra, la segunda devuelve la cantidad total de elementos
-almacenados actualmente en el hash. Tanto \lstinline{hash_contiene} como
-\lstinline{hash_obtener} utilizan funciones auxiliares recursivas que recorren
-las listas enlazadas para encontrar la clave dada.
-
-También se proveen las funciones encargadas de la creación y destrucción de una tabla de hash. La función \lstinline{hash_crear} toma una cantidad inicial de casillas mayor a $3$ o directamente el valor $3$ si el valor dado es menor. En base a la cantidad inicial de casillas también se asigna la memoria correspondiente, inicializando todas las listas enlazadas (todas inician como NULL). Finalmente se guarda una función \lstinline{destruir_elemento} que va a ser utilizada al momento de la liberación de un elemento, y se inicia la cantidad actual de elementos insertados en $0$. Por otra parte, la función \lstinline{hash_destruir} utiliza la función auxiliar \lstinline{casilla_destruir} para destruir cada lista enlazada recursivamente, destruyendo cada uno de los elementos con la función \lstinline{destruir_elemento} que se asigna en la creación del hash.
 
 \end{document}
 

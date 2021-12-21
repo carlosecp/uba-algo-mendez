@@ -31,7 +31,10 @@ struct _simulador_t {
  * Actualiza la el pokemon en tratamiento cuando se agregan los primeros
  * pokemones al simulador o cuando se ha adivinado el nivel del pokemon que
  * estaba anteriormente en tratamiento. Siempre pasa al pokemon de menor
- * nivel disponible.
+ * nivel disponible. En caso de que no haya ningun pokemon actualmente en 
+ * tratamiento, igual agrega el proximo pokemon de menor nivel en la recepcion
+ * como nuevo pokemon en tratamiento. Esto debido a que la funcion auxiliar de
+ * destruccion tambien previene estos casos.
  *
  * En caso de error no hace ningun cambio.
  */
@@ -60,7 +63,7 @@ void simulador_destruir_en_fallo(simulador_t* simulador) {
 	heap_destruir(simulador->recepcion, aux_destruir_pokemon_en_recepcion);
 	lista_iterador_destruir(simulador->sala_espera_entrenadores);
 	lista_iterador_destruir(simulador->sala_espera_pokemones);
-	abb_destruir_todo(simulador->dificultades, destruir_dificultad);
+	abb_destruir_todo(simulador->dificultades, aux_destruir_dificultad);
 }
 
 simulador_t* simulador_crear(hospital_t* hospital) {
@@ -93,7 +96,7 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 	if (!(simulador->sala_espera_pokemones))
 		exito = false;
 
-	simulador->dificultades = inicializar_dificultades(&(simulador->dificultad_en_uso));
+	simulador->dificultades = aux_inicializar_dificultades(&(simulador->dificultad_en_uso));
 	if (!(simulador->dificultades))
 		exito = false;
 
@@ -109,7 +112,10 @@ simulador_t* simulador_crear(hospital_t* hospital) {
 
 /**
  * Recibe un simulador y un puntero valido a las estadisticas a llenar.
+ *
  * Simula el evento "ObtenerEstadisticas".
+ *
+ * En caso de exito retorna ExitoSimulacion y en caso de error ErrorSimulacion.
  */
 ResultadoSimulacion simulador_obtener_estadisticas(simulador_t simulador, EstadisticasSimulacion* estadisticas) {
 	if (!estadisticas)
@@ -130,10 +136,14 @@ ResultadoSimulacion simulador_obtener_estadisticas(simulador_t simulador, Estadi
 
 /**
  * Recibe un puntero a simulador valido.
- * Simula el evento "AtenderProximoEntrenador". Actualiza la cantidad de
- * pokemones en la sala de espera / recepcion cada vez que se atiende un
- * nuevo entrenador y actualiza el pokemon en tratamiento de ser necesario
- * (en el caso en que no haya pokemones agregados en la recepcion).
+ *
+ * Simula el evento "AtenderProximoEntrenador" cargando todos los pokemones de
+ * un entrenador en el simulador. Además actualiza la cantidad de pokemones en
+ * la sala de espera / recepcion cada vez que se atiende un nuevo entrenador y
+ * actualiza el pokemon en tratamiento de ser necesario (en el caso en que no
+ * haya pokemones agregados en la recepcion).
+ * 
+ * En caso de exito retorna ExitoSimulacion y en caso de error ErrorSimulacion.
  */
 ResultadoSimulacion simulador_atender_proximo_entrenador(simulador_t* simulador) {
 	if (!simulador)
@@ -160,7 +170,12 @@ ResultadoSimulacion simulador_atender_proximo_entrenador(simulador_t* simulador)
 
 /**
  * Recibe un simulador y un puntero valido a la informacion a llenar.
- * Simula el evento "ObtenerInformacionPokemonEnTratamiento".
+ *
+ * Simula el evento "ObtenerInformacionPokemonEnTratamiento" llenando el
+ * struct pasada por puntero con los datos actualizados del estado de la
+ * simulación.
+ *
+ * En caso de exito retorna ExitoSimulacion y en caso de error ErrorSimulacion.
  */
 ResultadoSimulacion simulador_obtener_informacion_pokemon_en_tratamiento(simulador_t simulador, InformacionPokemon* informacion) {
 	if (!informacion)
@@ -183,7 +198,12 @@ ResultadoSimulacion simulador_obtener_informacion_pokemon_en_tratamiento(simulad
 
 /**
  * Recibe un simulador y un puntero valido a del intento a probar.
- * Simula el evento "AdivinarNivelPokemon".
+ *
+ * Simula el evento "AdivinarNivelPokemon" comprobando los datos ingresados
+ * en el intento actual para ver si se ha adivinado el nivel del pokemon en
+ * tratamiento.
+ *
+ * En caso de exito retorna ExitoSimulacion y en caso de error ErrorSimulacion.
  */
 ResultadoSimulacion simulador_adivinar_nivel_pokemon(simulador_t* simulador, Intento* intento) {
 	if (!simulador || !intento)
@@ -217,12 +237,23 @@ ResultadoSimulacion simulador_adivinar_nivel_pokemon(simulador_t* simulador, Int
 	return ExitoSimulacion;
 }
 
+/**
+ * Recibe un simulador valido y un puntero con los datos de la nueva
+ * dificultad.
+ *
+ * Simula el evento "AgregarDificultad" tomando los datos de la dificultad que
+ * se desea agregar, comprobando su validez, y si los datos resultan ser
+ * válidos, se agrega la dificultad a la lista de dificultades existentes en
+ * el simulador.
+ *
+ * En caso de exito retorna ExitoSimulacion y en caso de error ErrorSimulacion.
+ */
 ResultadoSimulacion simulador_agregar_dificultad(simulador_t* simulador, DatosDificultad* datos_dificultad) {
 	if (!simulador || !datos_dificultad)
 		return ErrorSimulacion;
 
 	DatosDificultadConId* dificultad =
-		crear_dificultad(simulador->dificultades, (int)abb_tamanio(simulador->dificultades), *datos_dificultad);
+		aux_crear_dificultad(simulador->dificultades, (int)abb_tamanio(simulador->dificultades), *datos_dificultad);
 
 	if (!dificultad)
 		return ErrorSimulacion;
@@ -232,6 +263,16 @@ ResultadoSimulacion simulador_agregar_dificultad(simulador_t* simulador, DatosDi
 	return ExitoSimulacion;
 }
 
+/*
+ * Recibe un simulador valido y un puntero con los datos de la dificultad
+ * a la que se desea cambiar.
+ *
+ * Simula el evento "SeleccionarDificultad" tomando los datos de la dificultad
+ * que se desea seleccionar y cambiando la dificultad actual a la dificultad
+ * indicada.
+ *
+ * En caso de exito retorna ExitoSimulacion y en caso de error ErrorSimulacion.
+ */
 ResultadoSimulacion simulador_seleccionar_dificultad(simulador_t* simulador, int* id_dificultad) {
 	if (!id_dificultad)
 		return ErrorSimulacion;
@@ -248,6 +289,18 @@ ResultadoSimulacion simulador_seleccionar_dificultad(simulador_t* simulador, int
 	return ExitoSimulacion;
 }
 
+/*
+ * Recibe un simulador valido y un puntero con los datos de la dificultad
+ * buscada.
+ *
+ * Simula el evento "ObtenerInformacionDificultad" tomando los datos los datos
+ * basicos de la dificultad buscada y completando los datos faltantes en caso
+ * de que esta dificultad haya sido encontrada. En caso de no haber encontrado
+ * la dificultad buscada, se llenan los datos con valores de error
+ * preestablecidos.
+ *
+ * En caso de exito retorna ExitoSimulacion y en caso de error ErrorSimulacion.
+ */
 ResultadoSimulacion simulador_obtener_informacion_dificultad(simulador_t* simulador, InformacionDificultad* dificultad_buscada) {
 	if (!simulador || !dificultad_buscada)
 		return ErrorSimulacion;
@@ -264,7 +317,7 @@ ResultadoSimulacion simulador_obtener_informacion_dificultad(simulador_t* simula
 	}
 
 	dificultad_buscada->nombre_dificultad = dificultad_encontrada->nombre;
-	dificultad_buscada->en_uso = dificultad_esta_en_uso(simulador->dificultad_en_uso, *dificultad_encontrada);
+	dificultad_buscada->en_uso = aux_dificultad_esta_en_uso(simulador->dificultad_en_uso, *dificultad_encontrada);
 
 	return ExitoSimulacion;
 }
@@ -318,7 +371,7 @@ void simulador_destruir(simulador_t* simulador) {
 	heap_destruir(simulador->recepcion, aux_destruir_pokemon_en_recepcion);
 	lista_iterador_destruir(simulador->sala_espera_entrenadores);
 	lista_iterador_destruir(simulador->sala_espera_pokemones);
-	abb_destruir_todo(simulador->dificultades, destruir_dificultad);
+	abb_destruir_todo(simulador->dificultades, aux_destruir_dificultad);
 	hospital_destruir(simulador->hospital);
 
 	free(simulador);

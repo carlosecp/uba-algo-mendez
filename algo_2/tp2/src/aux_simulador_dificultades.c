@@ -58,7 +58,7 @@ bool es_dificultad_con_nombre_repetido(void* _dificultad_existente, void* _nueva
 	return !(nueva_dificultad->tiene_nombre_repetido);
 }
 
-DatosDificultadConId* crear_dificultad(abb_t* dificultades, int id, DatosDificultad datos_dificultad) {
+DatosDificultadConId* aux_crear_dificultad(abb_t* dificultades, int id, DatosDificultad datos_dificultad) {
 	if (!dificultades)
 		return NULL;
 
@@ -254,7 +254,7 @@ DatosDificultad datos_dificultad_dificil() {
 	};
 }
 
-abb_t* inicializar_dificultades(DatosDificultadConId* dificultad_por_defecto) {
+abb_t* aux_inicializar_dificultades(DatosDificultadConId* dificultad_por_defecto) {
 	if (!dificultad_por_defecto)
 		return NULL;
 
@@ -263,17 +263,17 @@ abb_t* inicializar_dificultades(DatosDificultadConId* dificultad_por_defecto) {
 		return NULL;
 
 	DatosDificultadConId* dificultad_facil =
-		crear_dificultad(dificultades, 0, datos_dificultad_facil());
+		aux_crear_dificultad(dificultades, 0, datos_dificultad_facil());
 
 	abb_insertar(dificultades, dificultad_facil);
 
 	DatosDificultadConId* dificultad_media =
-		crear_dificultad(dificultades, 1, datos_dificultad_media());
+		aux_crear_dificultad(dificultades, 1, datos_dificultad_media());
 
 	abb_insertar(dificultades, dificultad_media);
 
 	DatosDificultadConId* dificultad_dificil =
-		crear_dificultad(dificultades, 2, datos_dificultad_dificil());
+		aux_crear_dificultad(dificultades, 2, datos_dificultad_dificil());
 
 	abb_insertar(dificultades, dificultad_dificil);
 
@@ -282,11 +282,11 @@ abb_t* inicializar_dificultades(DatosDificultadConId* dificultad_por_defecto) {
 	return dificultades;
 }
 
-bool dificultad_esta_en_uso(DatosDificultadConId dificultad_en_uso, DatosDificultadConId dificultad_buscada) {
+bool aux_dificultad_esta_en_uso(DatosDificultadConId dificultad_en_uso, DatosDificultadConId dificultad_buscada) {
 	return dificultad_en_uso.id == dificultad_buscada.id;
 }
 
-void destruir_dificultad(void* _dificultad) {
+void aux_destruir_dificultad(void* _dificultad) {
 	if (!_dificultad)
 		return;
 

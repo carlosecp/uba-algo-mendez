@@ -322,14 +322,14 @@ void dadoUnHospital_alAtenderAlProximoEntrenador_losPokemonesSeAtiendenConLaPrio
 	simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
 	simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &informacion);
 
-	pa2m_afirmar(strcmp(informacion.nombre_pokemon, "charizard") == 0, "Luego de atender \"rampardos\" el pokemon que pasa a ser atentido es \"charizard\"");
+	pa2m_afirmar(strcmp(informacion.nombre_pokemon, "toxicroak") == 0, "Luego de atender \"rampardos\" el pokemon que pasa a ser atentido es \"toxicroak\"");
 
 	intento.nivel_adivinado = 20;
 
 	simulador_simular_evento(simulador, AdivinarNivelPokemon, &intento);
 	simulador_simular_evento(simulador, ObtenerInformacionPokemonEnTratamiento, &informacion);
 
-	pa2m_afirmar(strcmp(informacion.nombre_pokemon, "toxicroak") == 0, "Luego de atender \"rampardos\" el pokemon que pasa a ser atentido es \"charizard\"");
+	pa2m_afirmar(strcmp(informacion.nombre_pokemon, "charizard") == 0, "Luego de atender \"toxicroak\" el pokemon que pasa a ser atentido es \"charizard\"");
 
 	simulador_destruir(simulador);
 }
