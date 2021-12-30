@@ -178,6 +178,12 @@ Precisamente por esta razón, en este caso la operación de inserción en la lis
 enlazada solamente se hace al final de la lista para cada nuevo elemento, en vez
 de hacer una inserción en posiciones específicas.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{img/1_hospital.png}
+\caption{\label{fig:seq01}Estructura del hospital.}
+\end{figure}
+
 Además de un registro lineal de los entrenadores se necesita un registro lineal
 de los pokemones, de tal manera que sea facil relacionar un rango de pokemones
 con un mismo entrenador, en base a la cantidad de pokemones que registró cada
@@ -209,6 +215,12 @@ acción de avanzar al próximo entrenador de la lista cada vez que se termine de
 atender a un entrenador. Dicho iterador corresponde al campo
 \lstinline{sala_espera_entrenadores} presente en el simulador.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{img/2_iterador_entrenadores.png}
+\caption{\label{fig:seq02}Registro de entrenadores con iterador de lista.}
+\end{figure}
+
 Esta funcionalidad está implementada en la función \lstinline{simulador_atender_proximo_entrenador} que toma el elemento actual del iterador
 de entrenadores, es decir, el próximo entrenador a atender, y agrega todos sus
 pokemones a la recepción del simulador. Para identificar cuáles son los
@@ -218,7 +230,15 @@ consigo cuando ingresó al hospital. De esta forma, para un entrenador con $x$
 pokemones, se pueden realizar $x$ iteraciones sobre la segunda lista enlazada
 que almacena los pokemones del hospital en orden de ingreso, nuevamente
 utilizando un iterador de lista enlazada, en este caso almacenado en el
-campo \lstinline{sala_espera_pokemones}. Al utilizar un iterador sobre la lista
+campo \lstinline{sala_espera_pokemones}. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{img/3_pokemones_de_entrenador.png}
+\caption{\label{fig:seq03}Utilización de contador e iterador de pokemones.}
+\end{figure}
+
+Al utilizar un iterador sobre la lista
 enlazada de pokemones, se evitan posibles problemas que podrían ocurrir si se
 usaran índices para acceder a los pokemones por entrenador en una sola lista, ya
 que cada vez que se avanza el iterador, el elemento actual del mismo se deja en
@@ -257,6 +277,12 @@ raíz del heap, que en el caso del simulador corresponde al campo
 \lstinline{recepcion}, y directamente se asegura que dicha elemento extraído
 es el pokemon de menor nivel entre los pokemones disponibles en toda la
 recepción.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{img/4_heap_pokemones.png}
+\caption{\label{fig:seq04}Recepción de pokemones con heap binario.}
+\end{figure}
 
 Para atender a un pokemon enlistado cuando hay espacio disponible en el
 consultorio, se utiliza la función auxiliar
@@ -301,10 +327,16 @@ auto-generación de los IDs en un futuro y también porque provee directamente
 la primitiva \lstinline{abb_buscar}, para buscar una dificultad por ID cuando se 
 desea cambiar la dificultad del simulador.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{img/5_dificultades.png}
+\caption{\label{fig:seq05}Dificultades del simulador.}
+\end{figure}
+
 Una vez se cambia la dificultad del simulador, al momento de intentar adivinar
-el nivel del pokemon en tratamiento nuevamente, el evento tomará en consideración
-las funciones de verificación del intento correspondientes a la dificultad con
-el ID de la dificultad activa, almacenado en el simulador dentro del campo
+el nivel del pokemon en tratamiento nuevamente, el evento tomará en
+consideración las funciones de verificación del intento correspondientes a la
+dificultad con la dificultad activa, almacenada en el simulador dentro del campo
 \lstinline{dificultad_en_uso}. El simulador también lleva control sobre la
 cantidad de intentos requeridos hasta adivinar el nivel de un pokemon cada vez
 que se inicia dicho evento. Este datos es requerido por algunas dificultades
@@ -312,18 +344,36 @@ para calcular el puntaje final.
 
 \subsection{Interfaz}
 
-La parte de la interfaz hace las veces de cliente para el simulador. 
+La parte de la interfaz (tambien llamado juego) hace las veces de cliente para
+el simulador. Provee al usuario una forma de ingresar comandos y controlar el
+simulador, asi como tambien intentar adivinar el pokemon en tratamiento, sin
+embargo el simulador sigue siendo independiente de la interfaz y puede funcionar
+perfectamente sin la misma.
 
-El campo \lstinline{casillas} de cada hash es un vector de listas simplemente
-enlazadas y puramente recursiva, implementadas de la siguiente forma:
+El iniciarse el juego primero se cargan los datos del hospital correspondiente
+al archivo de registros de ingresos dado y luego se inicializa una instancia del
+simulador con estos datos, todo esto utilizando la funcion
+\lstinline{juego_inicializar}. También se agregan dos dificultades adicionales: 
+''Nightmare'' y ''Ultranightmare'' para hacer mas entretenido el intentar
+adivinar el nivel del pokemon que esté en tratamiento. El funcionamiento basico
+de este juego consiste en una linea de comandos que luego de ejecutar el comando
+anterior o el primer comando sigue pidiendo input del usuario para ejecutar otro
+comando de entre las opciones disponibles.
 
-\begin{lstlisting}[language=C]
-typedef struct casilla {
-	char* clave;
-	void* elemento;
-	struct casilla* siguiente;
-} casilla_t;
-\end{lstlisting}
+La mayoría de los comandos presentados corresponden a un único evento del
+simulador, sin embargo algunos simulador múltiples eventos para mejorar la
+experiencia del usuario que utiliza el juego en comparación con cómo sería
+llamar a cada uno de los eventos del simulador sin la interfaz gráfica. Por
+ejemplo, el comando ''Mostrar Dificultades Disponibles'' realmente manda invoca
+el evento ''ObtenerInformacionDificultad'' múltiples veces para mostrar la
+información de todas las dificultades requiriendo que el usuario ingrese solo
+un comando, en vez de un comando para ver la información de cada una de las 
+dificultades.
+
+Finalmente cabe destacar que para mejorar la consistencia de la interfaz y para
+que el juego se vea mas llamativo, también existen algunas funciones auxiliares
+como \lstinline{juego_titulo} y \lstinline{juego_prompt_exito}, que unifican la 
+forma en la que se muestran los titulos a lo largo del juego.
 
 \end{document}
 

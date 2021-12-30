@@ -4,6 +4,12 @@
 
 #define MAX_INICIAL 10
 
+/*
+ * Crea un heap binario utilizando un vector generico y dinamico con un
+ * tamanio inicial.
+ *
+ * En caso de exito retorna un puntero al heap creado y NULL en caso de error.
+ */
 heap_t* heap_crear(heap_comparador comparador) {
     if (!comparador)
         return NULL;
@@ -23,12 +29,24 @@ heap_t* heap_crear(heap_comparador comparador) {
     return heap;
 }
 
+/*
+ * Toma dos elementos del vector generico y los intercambia de posicion. Es
+ * utilizado por la funciones sift_up y sift_down para ir cambiando la
+ * posicion del elemento que se esta "hundiendo" o "flotando".
+ */
 void swap(void** elementos, size_t pos_a, size_t pos_b) {
     void* tmp = elementos[pos_a];
     elementos[pos_a] = elementos[pos_b];
     elementos[pos_b] = tmp;
 }
 
+/*
+ * Toma el elemento en la posicion inicial indicada y va retrocediendolo en 
+ * cuanto a la posicion que tienen el elemento en el vector si el elemento
+ * sigue cumpliendo la condicion del heap. En el caso de un heap minimal esta
+ * seria la accion "flotar" que lleva a un elemento en el fondo del heap hasta
+ * su nivel correcto.
+ */
 void sift_up(void** elementos, size_t pos_elemento, heap_comparador comparador) {
     if (pos_elemento == 0)
         return;
@@ -45,6 +63,13 @@ void sift_up(void** elementos, size_t pos_elemento, heap_comparador comparador) 
     }
 }
 
+/*
+ * Toma el elemento en la posicion inicial indicada y va "hundiendolo" en el 
+ * heap haciendolo avanzar en su posicion dentro del vector mientras siga
+ * cumpliendo la condicion del heap. En el caso de un heap minimal seria ir
+ * "hundiendo" el elemento si aun quedan elementos menores que estan por
+ * delante en el vector.
+ */
 void sift_down(void** elementos, size_t pos_elemento, size_t tope, heap_comparador comparador) {
     size_t pos_izquierdo = (pos_elemento * 2) + 1;
     size_t pos_derecho = (pos_elemento * 2) + 2;
@@ -70,6 +95,16 @@ void sift_down(void** elementos, size_t pos_elemento, size_t tope, heap_comparad
     }
 }
 
+/*
+ * Toma un heap binario valido y un elemento a insertar.
+ *
+ * Posiciona el elemento en la ubicacion correcta de acuardo con el compardor
+ * definido al crear el heap. Por la naturaleza del tda heap, lo elementos
+ * quedan reoganizados de ser necesario para que se siga cumpliendo la
+ * condicion de minimal o maximal del heap.
+ *
+ * En caso de exito retorna el tamanio del heap o cero en caso de error.
+ */
 size_t heap_insertar(heap_t* heap, void* elemento) {
     if (!heap)
         return 0;
@@ -90,6 +125,15 @@ size_t heap_insertar(heap_t* heap, void* elemento) {
     return heap->tamanio;
 }
 
+/*
+ * Recibe un heap binario valido.
+ *
+ * Si el heap tienen al menos un elemento, retorna ese elemento y lo elimina
+ * del heap. Luego reorganiza el heap de ser necesario para que siga cumpliendo
+ * la condicion de minimal o maximal.
+ *
+ * En caso de exito retorna el elemento en la raiz, o NULL en caso de error.
+ */
 void* heap_extraer_raiz(heap_t* heap) {
     if (!heap)
         return NULL;
@@ -108,6 +152,10 @@ void* heap_extraer_raiz(heap_t* heap) {
     return elemento_extraido;
 }
 
+/*
+ * Toma un heap binario valido.
+ * Retorna el tamanio del heap o cero en caso de error.
+ */
 size_t heap_tamanio(heap_t* heap) {
     if (!heap)
         return 0;
@@ -115,6 +163,11 @@ size_t heap_tamanio(heap_t* heap) {
     return heap->tamanio;
 }
 
+/*
+ * Toma un heap binario valido y un posible destrcutor. En caso de que se
+ * le pase un destructor, lo utiliza para destruir los elementos restantes
+ * en el heap. Finalmente libera la memoria del heap en si.
+ */
 void heap_destruir(heap_t* heap, void (*destructor)(void*)) {
 	if (!heap)
 		return;

@@ -31,19 +31,27 @@ void destruir_pokemon(void* _pokemon) {
 	free(pokemon);
 }
 
+/*
+ * Comparador de pokemones en base al nombre de cada uno utlizado por el abb
+ * que almacena los pokemones ordenados de manera alfabetica.
+ */
 int abb_comparador_pokemones_por_nombre(void* _p1, void* _p2) {
 	pokemon_t* p1 = _p1;
 	pokemon_t* p2 = _p2;
 	return strcmp(p1->nombre, p2->nombre);
 }
 
-/* TODO: Esta struct y la funcion que le sigue son las que utilizo
-   para recorrer los pokemones utilizando el iterador de ABB.*/
-
 typedef struct {
 	bool (*funcion)(pokemon_t* p);
 } wrapper_funcion_aux;
 
+/**
+ * Funcion auxiliar pasada para el recorrido del arbol binario de busqueda que
+ * almacena a los pokemones en orden alfabetico. Esta funcion toma como
+ * auxiliar un puntero del tipo wrapper_funcion_aux debido a que la firma del
+ * iterador de abb no concuerda con la firma de la funcion que se llama sobre
+ * cada pokemon.
+ */
 bool funcion_aux(void* _pokemon, void* _aux) {
 	pokemon_t* pokemon = _pokemon;
 	wrapper_funcion_aux* aux_funcion = _aux;

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/Arch Linux) (preloaded format=pdflatex 2021.11.25)  20 DEC 2021 23:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/Arch Linux) (preloaded format=pdflatex 2021.11.25)  21 DEC 2021 15:08
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -331,23 +331,77 @@ File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 ) (/usr/share/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
-) [2] [3] [4] [5] (/home/itscarlosecp/UBA/algo_2/planilla/build/main.aux
+) [2]
+<img/1_hospital.png, id=60, 684.5575pt x 323.2075pt>
+File: img/1_hospital.png Graphic file (type png)
+<use img/1_hospital.png>
+Package pdftex.def Info: img/1_hospital.png  used on input line 183.
+(pdftex.def)             Requested size: 382.12502pt x 180.42288pt.
+ [3pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.217 
+       <./img/1_hospital.png>]
+<img/2_iterador_entrenadores.png, id=68, 373.395pt x 122.4575pt>
+File: img/2_iterador_entrenadores.png Graphic file (type png)
+<use img/2_iterador_entrenadores.png>
+Package pdftex.def Info: img/2_iterador_entrenadores.png  used on input line 220.
+(pdftex.def)             Requested size: 275.97845pt x 90.51247pt.
+<img/3_pokemones_de_entrenador.png, id=69, 797.98125pt x 305.14pt>
+File: img/3_pokemones_de_entrenador.png Graphic file (type png)
+<use img/3_pokemones_de_entrenador.png>
+Package pdftex.def Info: img/3_pokemones_de_entrenador.png  used on input line 237.
+(pdftex.def)             Requested size: 382.12502pt x 146.12097pt.
+ [4pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.256 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.256 
+       <./img/2_iterador_entrenadores.png> <./img/3_pokemones_de_entrenador.png>]
+<img/4_heap_pokemones.png, id=79, 788.9475pt x 303.1325pt>
+File: img/4_heap_pokemones.png Graphic file (type png)
+<use img/4_heap_pokemones.png>
+Package pdftex.def Info: img/4_heap_pokemones.png  used on input line 283.
+(pdftex.def)             Requested size: 382.12502pt x 146.82019pt.
+ [5pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.308 
+       <./img/4_heap_pokemones.png>]
+<img/5_dificultades.png, id=86, 685.56125pt x 242.9075pt>
+File: img/5_dificultades.png Graphic file (type png)
+<use img/5_dificultades.png>
+Package pdftex.def Info: img/5_dificultades.png  used on input line 332.
+(pdftex.def)             Requested size: 382.12502pt x 135.39716pt.
+ [6pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.372 
+       <./img/5_dificultades.png>]
+Overfull \hbox (10.61304pt too wide) in paragraph at lines 373--377
+\T1/cmr/m/n/10 vea mas lla-ma-ti-vo, tam-bién exis-ten al-gu-nas fun-cio-nes au-xi-lia-res co-mo [][][][] y []
+ []
+
+[7] (/home/itscarlosecp/UBA/algo_2/planilla/build/main.aux
 LaTeX Info: Redefining \. on input line 26.
 LaTeX Info: Redefining \% on input line 26.
 ) ) 
 Here is how much of TeX's memory you used:
- 11848 strings out of 478994
- 168636 string characters out of 5864750
- 719666 words of memory out of 5000000
- 29146 multiletter control sequences out of 15000+600000
+ 11880 strings out of 478994
+ 169489 string characters out of 5864750
+ 719959 words of memory out of 5000000
+ 29170 multiletter control sequences out of 15000+600000
  412667 words of font info for 42 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  71i,11n,74p,444b,1220s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm0500.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt0800.pfb>
-Output written on /home/itscarlosecp/UBA/algo_2/planilla/build/main.pdf (6 pages, 329944 bytes).
+Output written on /home/itscarlosecp/UBA/algo_2/planilla/build/main.pdf (8 pages, 381964 bytes).
 PDF statistics:
- 149 PDF objects out of 1000 (max. 8388607)
- 129 compressed objects within 2 object streams
- 38 named destinations out of 1000 (max. 500000)
- 78 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 169 PDF objects out of 1000 (max. 8388607)
+ 137 compressed objects within 2 object streams
+ 39 named destinations out of 1000 (max. 500000)
+ 103 words of extra memory for PDF output out of 10000 (max. 10000000)
 
